@@ -15,7 +15,12 @@ module Iceboxer
         issues.items.each do |issue|
           unless already_iceboxed?(issue.number)
             puts "Closing #{@repo}/issues/#{issue.number}: #{issue.title}"
-            icebox(issue.number, closer)
+
+            if send_to_canny?
+              send_to_canny(issue)
+            else
+              icebox(issue.number, closer)
+            end
           end
         end
       end
@@ -39,12 +44,34 @@ module Iceboxer
       comments.any? { |c| c.body =~ /Icebox/ }
     end
 
+    def send_to_canny?
+      ENV['CANNY_COOKIE'].present?
+    end
+
     def icebox(issue, reason)
       Octokit.add_labels_to_an_issue(@repo, issue, ["Icebox"])
       Octokit.add_comment(@repo, issue, message(reason))
       Octokit.close_issue(@repo, issue)
 
       puts "Iceboxed #{@repo}/issues/#{issue}!"
+    end
+
+    def send_to_canny(issue)
+      company_name = ENV['CANNY_COMPANY_NAME']
+      board_id = ENV['CANNY_BOARD_ID']
+      github_url = "https://github.com/#{@repo}/issues/#{issue.number}"
+      canny_url = Iceboxer::Canny.create_issue(issue, github_url, company_name, board_id)
+      Octokit.add_labels_to_an_issue(@repo, issue.number, ["Icebox"])
+      Octokit.add_comment(@repo, issue.number, canny_message(canny_url))
+      Octokit.close_issue(@repo, issue.number)
+    end
+
+    def canny_message(url)
+      <<-MSG.strip_heredoc
+      Hi there! This issue is being closed because it has been inactive for a while.
+
+      But don't worry, it will live on with Canny! Check out its new home: #{url}
+      MSG
     end
 
     def message(reason)
@@ -63,4 +90,3 @@ module Iceboxer
     end
   end
 end
-
