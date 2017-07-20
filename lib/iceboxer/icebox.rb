@@ -10,6 +10,7 @@ module Iceboxer
 
     def perform
       closers.each do |closer|
+        Octokit.auto_paginate = true
         issues = Octokit.search_issues(closer[:search])
         puts "Found #{issues.items.count} issues to close in #{@repo} ..."
         issues.items.each do |issue|
@@ -29,12 +30,12 @@ module Iceboxer
     def closers
       [
         {
-          :search => "repo:#{@repo} is:open created:<#{12.months.ago.to_date.to_s} updated:<#{2.months.ago.to_date.to_s}",
-          :message => "This is older than a year and has not been touched in 2 months."
+          :search => "repo:#{@repo} is:open created:<#{6.months.ago.to_date.to_s} updated:<#{2.months.ago.to_date.to_s}",
+          :message => "This is older than six months and has not been touched in 2 months."
         },
         {
-          :search => "repo:#{@repo} is:open updated:<#{6.months.ago.to_date.to_s}",
-          :message => "This has not been touched in 6 months."
+          :search => "repo:#{@repo} is:open updated:<#{2.months.ago.to_date.to_s}",
+          :message => "This has not been touched in 2 months."
         }
       ]
     end
