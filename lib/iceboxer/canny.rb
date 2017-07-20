@@ -10,7 +10,7 @@ module Iceboxer
       headers = {'Cookie' => ENV['CANNY_COOKIE']}
       data = {
         boardID: board_id,
-        details: "Moved from #{github_url}.\n\nOriginal Issue: \n\n#{issue.body}",
+        details: "Moved from #{github_url}",
         title: issue.title,
         imageURLs: [].to_json
       }
