@@ -15,9 +15,31 @@ module Iceboxer
         imageURLs: [].to_json
       }
 
-      result = JSON.parse(HTTParty.post(uri, {body: data, headers: headers}))
-      "https://#{company_name}.canny.io/#{result['post']['board']['urlName']}/p/#{result['post']['urlName']}"
+      begin
+        result = JSON.parse(HTTParty.post(uri, {body: data, headers: headers}))
+        "https://#{company_name}.canny.io/#{result['post']['board']['urlName']}/p/#{result['post']['urlName']}"
+      rescue JSON::ParserError=>e
+        puts "Could not copy over to Canny: " + e.message
+        nil
+      end
     end
 
+    def self.delete_issue(company_name, post_id)
+      unless post_id
+        return nil
+      end
+
+      uri = "https://#{company_name}.canny.io/api/posts/delete"
+      headers = {'Cookie' => ENV['CANNY_COOKIE']}
+      data = {
+        postID: post_id
+      }
+
+      begin
+        result = JSON.parse(HTTParty.post(uri, {body: data, headers: headers}))
+      rescue JSON::ParserError=>e
+        puts "Could not confirm deletion on Canny: " + e.message
+      end
+    end
   end
 end
