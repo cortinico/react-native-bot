@@ -12,20 +12,6 @@ module Iceboxer
     def perform
       Octokit.auto_paginate = true
 
-      # edit older issues that got iceboxed, encourage contributions instead
-      needUpdates.each do |reason|
-        issues = Octokit.search_issues(reason[:search])
-        puts "Found #{issues.items.count} issues to edit in #{@repo} ..."
-        issues.items.each do |issue|
-          unless already_edited?(issue.number)
-            puts "Editing https://github.com/#{@repo}/issues/#{issue.number}: #{issue.title}"
-
-            edit_canny_message(issue, reason[:message])
-          end
-        end
-
-      end
-
       # close stale issues
       closers.each do |closer|
         issues = Octokit.search_issues(closer[:search])
@@ -40,15 +26,6 @@ module Iceboxer
       end
     end
 
-    def needUpdates
-      [
-        {
-          :search => "repo:#{@repo} is:closed is:issue label:icebox",
-          :message => "it has been inactive for a while"
-        }
-      ]
-    end
-
     def closers
       [
         {
@@ -58,31 +35,9 @@ module Iceboxer
       ]
     end
 
-    def already_edited?(issueNumber)
-      comments = Octokit.issue_comments(@repo, issueNumber)
-      not_edited = comments.any? { |c| c.body =~ /Canny/ }
-
-      !not_edited
-    end
-
     def already_iceboxed?(issue)
       comments = Octokit.issue_comments(@repo, issue)
       comments.any? { |c| c.body =~ /Icebox/ }
-    end
-
-    def edit_canny_message(issue, reason)
-      comments = Octokit.issue_comments(@repo, issue.number)
-      comments.each do |c|
-        # The script was run with Héctor's access token. Only edit comments by Héctor that mention Canny.
-        if c.body =~ /Canny/ && c.user.login == "hramos"
-          Octokit.update_comment(@repo, c.id, message(reason))
-          urls = URI.extract(c.body)
-          urls.each do |u|
-            # Just log this to the console for follow up.
-            puts "To Delete: #{u}" if u =~ /canny.io/
-          end
-        end
-      end
     end
 
     def icebox(issue, reason)
@@ -91,13 +46,6 @@ module Iceboxer
       Octokit.close_issue(@repo, issue)
 
       puts "Iceboxed #{@repo}/issues/#{issue}!"
-    end
-
-    # Not being used. We need a way to map canny.io URLs to post ids
-    def delete_on_canny(post_url)
-      company_name = ENV['CANNY_COMPANY_NAME']
-      post_id = nil # we can't get the post_id from a post_url
-      Iceboxer::Canny.delete_issue(company_name, post_id)
     end
 
     def message(reason)
