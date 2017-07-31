@@ -29,7 +29,7 @@ module Iceboxer
     def closers
       [
         {
-          :search => "repo:#{@repo} is:open is:issue updated:<#{2.months.ago.to_date.to_s}",
+          :search => "repo:#{@repo} is:open is:issue updated:<#{2.months.ago.to_date.to_s} -label:\"Good First Task\" -label:\"Help Wanted\"  -label:\"For Discussion\"",
           :message => "it has been inactive for a while"
         }
       ]
@@ -50,7 +50,7 @@ module Iceboxer
 
     def message(reason)
       <<-MSG.strip_heredoc
-      Hi there! This issue is being closed because #{reason}. Maybe the issue has been fixed in a recent release, or perhaps it is not affecting a lot of people. Either way, we're automatically closing issues after a period of inactivity. Please do not take it personally!
+      Hi there! This issue is being closed because #{reason[:message]}. Maybe the issue has been fixed in a recent release, or perhaps it is not affecting a lot of people. Either way, we're automatically closing issues after a period of inactivity. Please do not take it personally!
 
       If you think this issue should definitely remain open, please let us know. The following information is helpful when it comes to determining if the issue should be re-opened:
 
