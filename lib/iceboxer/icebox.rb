@@ -41,8 +41,14 @@ module Iceboxer
     end
 
     def icebox(issue, reason)
-      Octokit.add_labels_to_an_issue(@repo, issue, ["Icebox"])
+
+      # Perform as BOT
+      Octokit.access_token = ENV['GITHUB_API_TOKEN_PUBLIC']
       Octokit.add_comment(@repo, issue, message(reason))
+
+      # Perform as HECTOR
+      Octokit.access_token = ENV['GITHUB_API_TOKEN_WRITE']
+      Octokit.add_labels_to_an_issue(@repo, issue, ["Icebox"])
       Octokit.close_issue(@repo, issue)
 
       puts "Iceboxed #{@repo}/issues/#{issue}!"
