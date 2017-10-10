@@ -18,7 +18,7 @@ module Iceboxer
         puts "Found #{issues.items.count} issues to close in #{@repo} ..."
         issues.items.each do |issue|
           unless already_nagged?(issue.number)
-            puts "Closing https://github.com/#{@repo}/issues/#{issue.number}: #{issue.title}"
+            puts "Nagging https://github.com/#{@repo}/issues/#{issue.number}: #{issue.title}"
 
             templateNag(issue.number, closer)
           end
@@ -29,38 +29,26 @@ module Iceboxer
     def closers
       [
         {
-          :search => "repo:#{@repo} is:issue is:open NOT \"Is this a bug report?\" in:body NOT \"cherry-pick\" in:title -label:\"For Discussion\" comments:0 -label:\"Core Team\" -label:\"Documentation\" -label:\"For Stack Overflow\" -label:\"Icebox\" -label:\"Good First Task\""
+          # The latest template, with "Is this a bug report?", was introduced on June 27, 2017.
+          :search => "repo:#{@repo} is:issue is:open created:>=2017-06-27 NOT \"Is this a bug report?\" in:body NOT \"cherry-pick\" in:title -label:\"For Discussion\" comments:<5 -label:\"Core Team\" -label:\"Documentation\" -label:\"Missing required information from template\" -label:\"Needs more information\" -label:\"For Stack Overflow\" -label:\"Icebox\" -label:\"Good First Task\" NOT \"relicense\" in:title"
+        },
+        {
+          # Earlier than July, let's check if they at least have some sort of repro steps
+          :search => "repo:#{@repo} is:issue is:open created:<2017-06-27 NOT \"reproduction\" in:body NOT \"cherry-pick\" in:title -label:\"For Discussion\" comments:<5 -label:\"Core Team\" -label:\"Documentation\" -label:\"Missing required information from template\" -label:\"Needs more information\" -label:\"For Stack Overflow\" -label:\"Icebox\" -label:\"Good First Task\" NOT \"relicense\" in:title"
         }
+
       ]
     end
 
     def already_nagged?(issue)
-      labels = Octokit.labels_for_issue(@repo, issue)
-      labels.any? { |l| l =~ /Missing required information from template/ }
+      comments = Octokit.issue_comments(@repo, issue)
+      comments.any? { |c| c.body =~ /no-template/ }
     end
 
     def templateNag(issue, reason)
-
-      # # Perform as BOT
-      Octokit.access_token = ENV['GITHUB_API_TOKEN_PUBLIC']
-      Octokit.add_comment(@repo, issue, message(reason))
-
-      # # Perform as HECTOR
-      Octokit.access_token = ENV['GITHUB_API_TOKEN_WRITE']
-      Octokit.add_labels_to_an_issue(@repo, issue, ["Missing required information from template", "Needs more information"])
-      Octokit.close_issue(@repo, issue)
+      Octokit.add_comment(@repo, issue, "@facebook-github-bot no-template")
 
       puts "Template nagged #{@repo}/issues/#{issue}!"
-    end
-
-    def message(reason)
-      <<-MSG.strip_heredoc
-      Hey, thanks for reporting this issue!
-
-      It looks like your description is missing some necessary information, or the list of reproduction steps is not complete. Can you please add all the details specified in the [template](https://github.com/facebook/react-native/blob/master/.github/ISSUE_TEMPLATE.md)? This is necessary for people to be able to understand and reproduce the issue being reported.
-
-      I am going to close this, but feel free to open a new issue that meets the requirements set forth in the template. Thanks!
-      MSG
     end
   end
 end
