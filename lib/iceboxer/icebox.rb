@@ -29,8 +29,10 @@ module Iceboxer
     def closers
       [
         {
-          :search => "repo:#{@repo} is:open is:issue updated:<#{2.months.ago.to_date.to_s} -label:\"Good First Task\" -label:\"Help Wanted\" -label:\"For Discussion\"",
-          :message => "it has been inactive for a while"
+          :search => "repo:#{@repo} is:open is:issue created:<#{12.months.ago.to_date.to_s} updated:<#{2.months.ago.to_date.to_s} -label:\"Good First Task\" -label:\"Help Wanted\" -label:\"For Discussion\""
+        },
+        {
+          :search => "repo:#{@repo} is:open is:issue updated:<#{6.months.ago.to_date.to_s} -label:\"Good First Task\" -label:\"Help Wanted\" -label:\"For Discussion\""
         }
       ]
     end
