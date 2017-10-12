@@ -4,7 +4,6 @@ require 'active_support/all'
 module Iceboxer
 
   @@operations = [
-    Iceboxer::Icebox,
     Iceboxer::Template
   ]
 
