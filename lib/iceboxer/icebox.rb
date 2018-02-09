@@ -39,7 +39,7 @@ module Iceboxer
 
     def already_iceboxed?(issue)
       comments = Octokit.issue_comments(@repo, issue)
-      comments.any? { |c| c.body =~ /Icebox/ }
+      comments.any? { |c| c.body =~ /Icebox/ } || comments.any? { |c| c.body =~ /This issue is being closed/ }
     end
 
     def icebox(issue, reason)

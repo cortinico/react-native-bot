@@ -21,8 +21,6 @@ module Iceboxer
             puts "Nagging https://github.com/#{@repo}/issues/#{issue.number}: #{issue.title}"
 
             templateNag(issue.number, closer)
-          else
-            puts "Skipped https://github.com/#{@repo}/issues/#{issue.number}: #{issue.title}"
           end
         end
       end
@@ -44,7 +42,7 @@ module Iceboxer
 
     def already_nagged?(issue)
       comments = Octokit.issue_comments(@repo, issue)
-      comments.any? { |c| c.body =~ /no-template/ }
+      comments.any? { |c| c.body =~ /Issue Template/ }
     end
 
     def templateNag(issue, reason)
