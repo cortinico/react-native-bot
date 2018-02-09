@@ -15,12 +15,14 @@ module Iceboxer
       # close issues that lack a template
       closers.each do |closer|
         issues = Octokit.search_issues(closer[:search])
-        puts "Found #{issues.items.count} issues to close in #{@repo} ..."
+        puts "[TEMPLATE] Found #{issues.items.count} issues to close in #{@repo} ..."
         issues.items.each do |issue|
           unless already_nagged?(issue.number)
             puts "Nagging https://github.com/#{@repo}/issues/#{issue.number}: #{issue.title}"
 
             templateNag(issue.number, closer)
+          else
+            puts "Skipped https://github.com/#{@repo}/issues/#{issue.number}: #{issue.title}"
           end
         end
       end
