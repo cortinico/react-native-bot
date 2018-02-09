@@ -46,9 +46,22 @@ module Iceboxer
     end
 
     def templateNag(issue, reason)
-      Octokit.add_comment(@repo, issue, "@facebook-github-bot no-template")
+      Octokit.add_comment(@repo, issue, message("there"))
+      Octokit.update_issue(@repo, issue, :labels => "no-template, Ran Commands")
+      Octokit.close_issue(@repo, issue)
 
       puts "Template nagged #{@repo}/issues/#{issue}!"
+    end
+
+    def message(issue_author)
+      <<-MSG.strip_heredoc
+      Thanks for posting this! It looks like your issue is missing some required information. Can you please add all the details specified in the [Issue Template](https://raw.githubusercontent.com/facebook/react-native/master/.github/ISSUE_TEMPLATE.md)? This is necessary for people to be able to understand and reproduce your issue. 
+      
+      I am going to close this, but please feel free to open a new issue with the additional information provided. Thanks!
+      
+      <sub>[How to Contribute](https://facebook.github.io/react-native/docs/contributing.html#bugs) • [What to Expect from Maintainers](https://facebook.github.io/react-native/docs/maintainers.html#handling-issues)</sub>
+
+      MSG
     end
   end
 end
