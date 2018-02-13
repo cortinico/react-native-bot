@@ -44,7 +44,7 @@ module Iceboxer
 
     def icebox(issue, reason)
       Octokit.add_comment(@repo, issue, message("none"))
-      Octokit.update_issue(@repo, issue, :labels => "stale, Icebox, Ran Commands")
+      Octokit.update_issue(@repo, issue, :labels => ["stale", "Icebox", "Ran Commands"])
       Octokit.close_issue(@repo, issue)
 
       puts "Iceboxed #{@repo}/issues/#{issue}!"

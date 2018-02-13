@@ -47,7 +47,7 @@ module Iceboxer
 
     def templateNag(issue, reason)
       Octokit.add_comment(@repo, issue, message("there"))
-      Octokit.update_issue(@repo, issue, :labels => "no-template, Ran Commands")
+      Octokit.update_issue(@repo, issue, :labels => ["no-template", "Ran Commands"])
       Octokit.close_issue(@repo, issue)
 
       puts "Template nagged #{@repo}/issues/#{issue}!"
