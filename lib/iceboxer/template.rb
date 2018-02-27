@@ -30,7 +30,7 @@ module Iceboxer
       [
         {
           # The latest template, with "Is this a bug report?", was introduced on June 27, 2017.
-          :search => "repo:#{@repo} is:issue is:open created:>=2017-06-27 NOT \"Is this a bug report?\" in:body NOT \"cherry-pick\" in:title -label:\"For Discussion\" comments:<5 -label:\"Core Team\" -label:\"Documentation\" -label:\"Missing required information from template\" -label:\"Needs more information\" -label:\"For Stack Overflow\" -label:\"Icebox\" -label:\"Good First Task\" -label:\"no-template\""
+          :search => "repo:#{@repo} is:issue is:open created:>=2017-06-27 NOT \"Is this a bug report?\" in:body NOT \"cherry-pick\" in:title -label:\"For Discussion\" comments:<5 -label:\"Core Team\" -label:\"Documentation\" -label:\"Missing required information from template\" -label:\"Needs more information\" -label:\"For Stack Overflow\" -label:\"Icebox\" -label:\"Good First Task\" -label:\"no-template\" -label:\"No Template\""
         },
         {
           # Earlier than July, let's check if they at least have some sort of repro steps
@@ -46,7 +46,7 @@ module Iceboxer
 
     def templateNag(issue, reason)
       Octokit.add_comment(@repo, issue, message("there"))
-      Octokit.update_issue(@repo, issue, :labels => ["no-template", "Ran Commands"])
+      Octokit.update_issue(@repo, issue, :labels => ["No Template", "Ran Commands"])
       # Octokit.close_issue(@repo, issue)
 
       puts "Template nagged #{@repo}/issues/#{issue}!"
