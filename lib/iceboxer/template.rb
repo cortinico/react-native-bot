@@ -29,7 +29,7 @@ module Iceboxer
     def closers
       [
         {
-          :search => "repo:#{@repo} is:issue is:open created:>=2018-03-01 NOT \"This is a bug report\" in:body NOT \"Is this a bug report?\" in:body  NOT \"cherry-pick\" in:title -label:\"For Discussion\" comments:<3 -label:\"Core Team\" -label:\"Documentation\" -label:\"For Stack Overflow\" -label:\"Icebox\" -label:\"Good First Task\" -label:\"Good first issue\" -label:\"no-template\" -label:\"No Template\""
+          :search => "repo:#{@repo} is:issue is:open created:>=2018-03-01 NOT \"This is a bug report\" in:body NOT \"Is this a bug report?\" in:body NOT \"Environment\" in:body NOT \"cherry-pick\" in:title -label:\"For Discussion\" comments:<3 -label:\"Core Team\" -label:\"Documentation\" -label:\"For Stack Overflow\" -label:\"Icebox\" -label:\"Good First Task\" -label:\"Good first issue\" -label:\"no-template\" -label:\"No Template\""
         }
       ]
     end
