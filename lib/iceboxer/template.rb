@@ -29,12 +29,7 @@ module Iceboxer
     def closers
       [
         {
-          # The latest template, with "Is this a bug report?", was introduced on June 27, 2017.
-          :search => "repo:#{@repo} is:issue is:open created:>=2017-06-27 NOT \"Is this a bug report?\" in:body NOT \"cherry-pick\" in:title -label:\"For Discussion\" comments:<5 -label:\"Core Team\" -label:\"Documentation\" -label:\"Missing required information from template\" -label:\"Needs more information\" -label:\"For Stack Overflow\" -label:\"Icebox\" -label:\"Good First Task\" -label:\"no-template\" -label:\"No Template\""
-        },
-        {
-          # Earlier than July, let's check if they at least have some sort of repro steps
-          :search => "repo:#{@repo} is:issue is:open created:<2017-06-27 NOT \"reproduction\" in:body NOT \"cherry-pick\" in:title -label:\"For Discussion\" comments:<5 -label:\"Core Team\" -label:\"Documentation\" -label:\"Missing required information from template\" -label:\"Needs more information\" -label:\"For Stack Overflow\" -label:\"Icebox\" -label:\"Good First Task\""
+          :search => "repo:#{@repo} is:issue is:open created:>=2018-03-01 NOT \"This is a bug report\" in:body NOT \"Is this a bug report?\" in:body  NOT \"cherry-pick\" in:title -label:\"For Discussion\" comments:<3 -label:\"Core Team\" -label:\"Documentation\" -label:\"For Stack Overflow\" -label:\"Icebox\" -label:\"Good First Task\" -label:\"Good first issue\" -label:\"no-template\" -label:\"No Template\""
         }
       ]
     end
@@ -56,7 +51,7 @@ module Iceboxer
       <<-MSG.strip_heredoc
       Thanks for posting this! It looks like your issue may be missing some required information. Are all the fields required by the [Issue Template](https://raw.githubusercontent.com/facebook/react-native/master/.github/ISSUE_TEMPLATE.md) filled out?
       
-      This is a friendly reminder and you may safely ignore this message if you believe your issue contains all the relevant information. Thank you for your contributions.
+      This is a friendly reminder. You may safely ignore this if you believe your issue contains all the relevant information. Thank you for your contributions.
       
       <sub>[How to Contribute](https://facebook.github.io/react-native/docs/contributing.html#bugs) • [What to Expect from Maintainers](https://facebook.github.io/react-native/docs/maintainers.html#handling-issues)</sub>
 
