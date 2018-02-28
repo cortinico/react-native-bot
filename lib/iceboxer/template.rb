@@ -29,7 +29,7 @@ module Iceboxer
     def closers
       [
         {
-          :search => "repo:#{@repo} is:issue is:open created:>=2018-03-01 NOT \"This is a bug report\" in:body NOT \"Is this a bug report?\" in:body NOT \"Environment\" in:body NOT \"cherry-pick\" in:title -label:\"For Discussion\" comments:<3 -label:\"Core Team\" -label:\"Documentation\" -label:\"For Stack Overflow\" -label:\"Icebox\" -label:\"Good First Task\" -label:\"Good first issue\" -label:\"no-template\" -label:\"No Template\""
+          :search => "repo:#{@repo} is:issue is:open created:>=2018-03-01 NOT \"Environment\" in:body NOT \"cherry-pick\" in:title -label:\"For Discussion\" comments:<3 -label:\"Core Team\" -label:\"Documentation\" -label:\"For Stack Overflow\" -label:\"Good first issue\" -label:\"No Template\""
         }
       ]
     end
@@ -49,9 +49,9 @@ module Iceboxer
 
     def message(reason)
       <<-MSG.strip_heredoc
-      Thanks for posting this! It looks like your issue may be missing some required information. Are all the fields required by the [Issue Template](https://raw.githubusercontent.com/facebook/react-native/master/.github/ISSUE_TEMPLATE.md) filled out?
+      Thanks for posting this! It looks like your issue may be incomplete. Are all the fields required by the [Issue Template](https://raw.githubusercontent.com/facebook/react-native/master/.github/ISSUE_TEMPLATE.md) filled out?
       
-      This is a friendly reminder. You may safely ignore this if you believe your issue contains all the relevant information. Thank you for your contributions.
+      You may safely ignore this if you believe your issue contains all the relevant information. Thank you for your contributions.
       
       <sub>[How to Contribute](https://facebook.github.io/react-native/docs/contributing.html#bugs) • [What to Expect from Maintainers](https://facebook.github.io/react-native/docs/maintainers.html#handling-issues)</sub>
 
