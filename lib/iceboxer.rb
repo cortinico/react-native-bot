@@ -1,4 +1,5 @@
 require 'iceboxer/version'
 require 'iceboxer/icebox'
 require 'iceboxer/template'
+require 'iceboxer/old_version'
 require 'iceboxer/task'

@@ -4,7 +4,8 @@ require 'active_support/all'
 module Iceboxer
 
   @@operations = [
-    Iceboxer::Template
+    Iceboxer::Template,
+    Iceboxer::OldVersion
   ]
 
   def self.run
