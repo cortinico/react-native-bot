@@ -29,10 +29,10 @@ module Iceboxer
     def closers
       [
         {
-          :search => "repo:#{@repo} is:open is:issue created:<#{12.months.ago.to_date.to_s} updated:<#{2.months.ago.to_date.to_s} -label:\"Good first issue\" -label:\"Help Wanted\" -label:\"For Discussion\""
+          :search => "repo:#{@repo} is:open is:issue created:<#{12.months.ago.to_date.to_s} updated:<#{2.months.ago.to_date.to_s} -label:\"Good first issue\" -label:\"Help Wanted :octocat:\" -label:\"For Discussion\""
         },
         {
-          :search => "repo:#{@repo} is:open is:issue updated:<#{6.months.ago.to_date.to_s} -label:\"Good first issue\" -label:\"Help Wanted\" -label:\"For Discussion\""
+          :search => "repo:#{@repo} is:open is:issue updated:<#{6.months.ago.to_date.to_s} -label:\"Good first issue\" -label:\"Help Wanted :octocat:\" -label:\"For Discussion\""
         }
       ]
     end
@@ -44,7 +44,7 @@ module Iceboxer
 
     def icebox(issue, reason)
       Octokit.add_comment(@repo, issue, message("none"))
-      Octokit.update_issue(@repo, issue, :labels => ["stale", "Icebox", "Ran Commands"])
+      Octokit.update_issue(@repo, issue, :labels => ["Stale", "Icebox", "Ran Commands"])
       Octokit.close_issue(@repo, issue)
 
       puts "Iceboxed #{@repo}/issues/#{issue}!"
