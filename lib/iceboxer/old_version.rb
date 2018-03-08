@@ -21,6 +21,8 @@ module Iceboxer
             puts "Nagging https://github.com/#{@repo}/issues/#{issue.number}: #{issue.title}"
 
             oldVersionNag(issue.number, closer)
+          else
+            puts "Already nagged https://github.com/#{@repo}/issues/#{issue.number}"
           end
         end
       end
@@ -29,41 +31,41 @@ module Iceboxer
     def closers
       [
         {
-          :search => "repo:#{@repo} is:issue is:open created:>=2018-03-01 \"Environment\" in:body \"react-native: 0.53.3\" in:body -label:\"Core Team\"-label:\"Good first issue\" -label:\"Old Version\""
+          :search => "repo:#{@repo} is:issue is:open created:>=2018-03-01 \"Environment\" in:body \"react-native: 0.53.3\" in:body -label:\"Core Team\"-label:\"Good first issue\" -label:\"Old Version :rewind:\""
         },
         {
-          :search => "repo:#{@repo} is:issue is:open created:>=2018-03-01 \"Environment\" in:body \"react-native: 0.53.2\" in:body -label:\"Core Team\"-label:\"Good first issue\" -label:\"Old Version\""
+          :search => "repo:#{@repo} is:issue is:open created:>=2018-03-01 \"Environment\" in:body \"react-native: 0.53.2\" in:body -label:\"Core Team\"-label:\"Good first issue\" -label:\"Old Version :rewind:\""
         },
         {
-          :search => "repo:#{@repo} is:issue is:open created:>=2018-03-01 \"Environment\" in:body \"react-native: 0.53.1\" in:body -label:\"Core Team\"-label:\"Good first issue\" -label:\"Old Version\""
+          :search => "repo:#{@repo} is:issue is:open created:>=2018-03-01 \"Environment\" in:body \"react-native: 0.53.1\" in:body -label:\"Core Team\"-label:\"Good first issue\" -label:\"Old Version :rewind:\""
         },
         {
-          :search => "repo:#{@repo} is:issue is:open created:>=2018-03-01 \"Environment\" in:body \"react-native: 0.53.0\" in:body -label:\"Core Team\"-label:\"Good first issue\" -label:\"Old Version\""
+          :search => "repo:#{@repo} is:issue is:open created:>=2018-03-01 \"Environment\" in:body \"react-native: 0.53.0\" in:body -label:\"Core Team\"-label:\"Good first issue\" -label:\"Old Version :rewind:\""
         },
 
         {
-          :search => "repo:#{@repo} is:issue is:open created:>=2018-03-01 \"Environment\" in:body \"react-native: 0.52.0\" in:body -label:\"Core Team\"-label:\"Good first issue\" -label:\"Old Version\""
+          :search => "repo:#{@repo} is:issue is:open created:>=2018-03-01 \"Environment\" in:body \"react-native: 0.52.0\" in:body -label:\"Core Team\"-label:\"Good first issue\" -label:\"Old Version :rewind:\""
         },
         {
-          :search => "repo:#{@repo} is:issue is:open created:>=2018-02-01 \"Environment\" in:body \"react-native: 0.51.0\" in:body -label:\"Core Team\"-label:\"Good first issue\" -label:\"Old Version\""
+          :search => "repo:#{@repo} is:issue is:open created:>=2018-02-01 \"Environment\" in:body \"react-native: 0.51.0\" in:body -label:\"Core Team\"-label:\"Good first issue\" -label:\"Old Version :rewind:\""
         },
         {
-          :search => "repo:#{@repo} is:issue is:open created:>=2018-02-01 \"Environment\" in:body \"react-native: 0.50.4\" in:body -label:\"Core Team\"-label:\"Good first issue\" -label:\"Old Version\""
+          :search => "repo:#{@repo} is:issue is:open created:>=2018-02-01 \"Environment\" in:body \"react-native: 0.50.4\" in:body -label:\"Core Team\"-label:\"Good first issue\" -label:\"Old Version :rewind:\""
         },
         {
-          :search => "repo:#{@repo} is:issue is:open created:>=2018-02-01 \"Environment\" in:body \"react-native: 0.50.3\" in:body -label:\"Core Team\"-label:\"Good first issue\" -label:\"Old Version\""
+          :search => "repo:#{@repo} is:issue is:open created:>=2018-02-01 \"Environment\" in:body \"react-native: 0.50.3\" in:body -label:\"Core Team\"-label:\"Good first issue\" -label:\"Old Version :rewind:\""
         },
         {
-          :search => "repo:#{@repo} is:issue is:open created:>=2018-02-01 \"Environment\" in:body \"react-native: 0.50.2\" in:body -label:\"Core Team\"-label:\"Good first issue\" -label:\"Old Version\""
+          :search => "repo:#{@repo} is:issue is:open created:>=2018-02-01 \"Environment\" in:body \"react-native: 0.50.2\" in:body -label:\"Core Team\"-label:\"Good first issue\" -label:\"Old Version :rewind:\""
         },
         {
-          :search => "repo:#{@repo} is:issue is:open created:>=2018-02-01 \"Environment\" in:body \"react-native: 0.50.1\" in:body -label:\"Core Team\"-label:\"Good first issue\" -label:\"Old Version\""
+          :search => "repo:#{@repo} is:issue is:open created:>=2018-02-01 \"Environment\" in:body \"react-native: 0.50.1\" in:body -label:\"Core Team\"-label:\"Good first issue\" -label:\"Old Version :rewind:\""
         },
         {
-          :search => "repo:#{@repo} is:issue is:open created:>=2018-02-01 \"Environment\" in:body \"react-native: 0.50.0\" in:body -label:\"Core Team\"-label:\"Good first issue\" -label:\"Old Version\""
+          :search => "repo:#{@repo} is:issue is:open created:>=2018-02-01 \"Environment\" in:body \"react-native: 0.50.0\" in:body -label:\"Core Team\"-label:\"Good first issue\" -label:\"Old Version :rewind:\""
         },
         {
-          :search => "repo:#{@repo} is:issue is:open created:>=2018-02-01 \"Environment\" in:body \"react-native: 0.49.0\" in:body -label:\"Core Team\"-label:\"Good first issue\" -label:\"Old Version\""
+          :search => "repo:#{@repo} is:issue is:open created:>=2018-02-01 \"Environment\" in:body \"react-native: 0.49.0\" in:body -label:\"Core Team\"-label:\"Good first issue\" -label:\"Old Version :rewind:\""
         }
       ]
     end
