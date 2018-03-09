@@ -77,7 +77,7 @@ module Iceboxer
 
     def oldVersionNag(issue, reason)
       Octokit.add_comment(@repo, issue, message("there"))
-      Octokit.add_labels_to_an_issue(@repo, issue, ["Old Version", "Ran Commands"])
+      Octokit.add_labels_to_an_issue(@repo, issue, ["Old Version :rewind:", "Ran Commands"])
       # No longer close issues
       # Octokit.close_issue(@repo, issue)
 
