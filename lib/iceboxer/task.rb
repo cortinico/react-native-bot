@@ -5,6 +5,7 @@ module Iceboxer
 
   @@operations = [
     Iceboxer::Closer,
+    Iceboxer::Labeler,
     Iceboxer::OldVersion,
     Iceboxer::Template
   ]
