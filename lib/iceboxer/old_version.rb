@@ -42,7 +42,12 @@ module Iceboxer
         {
           :search => "repo:#{@repo} is:issue is:open created:>=2018-03-01 \"Environment\" in:body \"react-native: 0.53.0\" in:body -label:\"Core Team\"-label:\"Good first issue\" -label:\"Old Version :rewind:\""
         },
-
+        {
+          :search => "repo:#{@repo} is:issue is:open created:>=2018-03-01 \"Environment\" in:body \"react-native: 0.52.2\" in:body -label:\"Core Team\"-label:\"Good first issue\" -label:\"Old Version :rewind:\""
+        },
+        {
+          :search => "repo:#{@repo} is:issue is:open created:>=2018-03-01 \"Environment\" in:body \"react-native: 0.52.1\" in:body -label:\"Core Team\"-label:\"Good first issue\" -label:\"Old Version :rewind:\""
+        },
         {
           :search => "repo:#{@repo} is:issue is:open created:>=2018-03-01 \"Environment\" in:body \"react-native: 0.52.0\" in:body -label:\"Core Team\"-label:\"Good first issue\" -label:\"Old Version :rewind:\""
         },
