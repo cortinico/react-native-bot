@@ -65,6 +65,15 @@ module Iceboxer
           :search => "repo:#{@repo} is:issue is:open created:>=2018-02-01 \"Environment\" in:body \"react-native: 0.50.0\" in:body -label:\"Core Team\"-label:\"Good first issue\" -label:\"Old Version :rewind:\""
         },
         {
+          :search => "repo:#{@repo} is:issue is:open created:>=2018-02-01 \"Environment\" in:body \"react-native: 0.49.3\" in:body -label:\"Core Team\"-label:\"Good first issue\" -label:\"Old Version :rewind:\""
+        },
+        {
+          :search => "repo:#{@repo} is:issue is:open created:>=2018-02-01 \"Environment\" in:body \"react-native: 0.49.2\" in:body -label:\"Core Team\"-label:\"Good first issue\" -label:\"Old Version :rewind:\""
+        },
+        {
+          :search => "repo:#{@repo} is:issue is:open created:>=2018-02-01 \"Environment\" in:body \"react-native: 0.49.1\" in:body -label:\"Core Team\"-label:\"Good first issue\" -label:\"Old Version :rewind:\""
+        },
+        {
           :search => "repo:#{@repo} is:issue is:open created:>=2018-02-01 \"Environment\" in:body \"react-native: 0.49.0\" in:body -label:\"Core Team\"-label:\"Good first issue\" -label:\"Old Version :rewind:\""
         }
       ]
