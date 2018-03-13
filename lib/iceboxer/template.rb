@@ -41,7 +41,7 @@ module Iceboxer
 
     def templateNag(issue, reason)
       Octokit.add_comment(@repo, issue, message("there"))
-      Octokit.add_labels_to_an_issue(@repo, issue, ["No Template", "Ran Commands"])
+      Octokit.add_labels_to_an_issue(@repo, issue, ["No Template :clipboard:", "Ran Commands"])
       # No longer close issues
       # Octokit.close_issue(@repo, issue)
 
