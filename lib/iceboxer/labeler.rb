@@ -28,7 +28,40 @@ module Iceboxer
         {
           :search => "repo:#{@repo} is:issue is:open \"ios\" in:title -label:\"iOS :iphone:\"",
           :label => "iOS :iphone:"
+        },
+        {
+          :search => "repo:#{@repo} is:issue is:open \"tvos\" in:title -label:\"tvOS :tv:\"",
+          :label => "tvOS :tv:"
+        },
+        {
+          :search => "repo:#{@repo} is:issue is:open \"WebView\" in:title -label:\"WebView\"",
+          :label => "WebView"
+        },
+        {
+          :search => "repo:#{@repo} is:issue is:open \"react-native link\" in:title -label:\"CLI :computer:\"",
+          :label => "CLI :computer:"
+        },
+        {
+          :search => "repo:#{@repo} is:issue is:open \"react-native upgrade\" in:title -label:\"CLI :computer:\"",
+          :label => "CLI :computer:"
+        },
+        {
+          :search => "repo:#{@repo} is:issue is:open \"FlatList\" in:title -label:\"Lists :scroll:\"",
+          :label => "Lists :scroll:"
+        },
+        {
+          :search => "repo:#{@repo} is:issue is:open \"SectionList\" in:title -label:\"Lists :scroll:\"",
+          :label => "Lists :scroll:"
+        },
+        {
+          :search => "repo:#{@repo} is:issue is:open \"VirtualizedList\" in:title -label:\"Lists :scroll:\"",
+          :label => "Lists :scroll:"
+        },
+        {
+          :search => "repo:#{@repo} is:issue is:open \"Animated\" in:title -label:\"Animated\"",
+          :label => "Animated"
         }
+
       ]
     end
 
