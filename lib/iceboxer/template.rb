@@ -52,7 +52,7 @@ module Iceboxer
       <<-MSG.strip_heredoc
       Thanks for posting this! It looks like your issue may be incomplete. Are all the fields required by the [Issue Template](https://raw.githubusercontent.com/facebook/react-native/master/.github/ISSUE_TEMPLATE.md) filled out?
       
-      You may safely ignore this if you believe your issue contains all the relevant information. Thank you for your contributions.
+      If you believe your issue contains all the relevant information, let us know in order to have a maintainer remove the No Template label. Thank you for your contributions.
       
       <sub>[How to Contribute](https://facebook.github.io/react-native/docs/contributing.html#bugs) • [What to Expect from Maintainers](https://facebook.github.io/react-native/docs/maintainers.html#handling-issues)</sub>
 
