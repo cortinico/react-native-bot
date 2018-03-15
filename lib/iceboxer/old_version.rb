@@ -98,9 +98,18 @@ module Iceboxer
       puts "Old-version nagged #{@repo}/issues/#{issue}!"
     end
 
+    def latest_release
+      latest = Octokit.latest_release(@repo)
+      if latest
+        "[latest release, #{latest.tag_name}](#{latest.html_url})"
+      else
+        "[latest release](https://github.com/facebook/react-native/releases)"
+      end
+    end
+
     def message(reason)
       <<-MSG.strip_heredoc
-      Thanks for posting this! It looks like your issue may refer to an older version of React Native. Can you reproduce the issue on the [latest stable release](http://facebook.github.io/react-native/versions.html)?
+      Thanks for posting this! It looks like your issue may refer to an older version of React Native. Can you reproduce the issue on the #{latest_release}?
       
       Thank you for your contributions.
       
