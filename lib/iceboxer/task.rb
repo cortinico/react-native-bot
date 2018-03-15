@@ -22,6 +22,8 @@ module Iceboxer
     Octokit.access_token = ENV['GITHUB_API_TOKEN']
     repositories = ENV["ICEBOXER_REPOS"].split(',').map(&:strip)
 
+    puts "#{Octokit.rate_limit!.remaining} core API requests remaining... (search is limited to 30 req/min)"
+
     @@operations.each do |op|
       repositories.each do |repository|
         op.new(repository).perform
