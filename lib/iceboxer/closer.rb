@@ -29,7 +29,7 @@ module Iceboxer
         },
         {
           :search => "repo:#{@repo} is:issue is:open label:\"No Template :clipboard:\" -label:\"Core Team\" -label:\"For Discussion\" updated:<#{7.days.ago.to_date.to_s}",
-          :message => "This issue was marked as lacking information required by the issue template. There has been no activity on this issue for a while, so I will go ahead and close it.\n\nIf you found this thread after encountering the same issue in the [latest release](https://github.com/facebook/react-native/releases), please feel free to create a new issue with up-to-date information by clicking [here](https://github.com/facebook/react-native/issues/new)."
+          :message => "This issue was marked as lacking information required by the issue template. There has been no activity on this issue for a while, so I will go ahead and close it.\n\nIf you found this thread after encountering the same issue in the [latest release](https://github.com/facebook/react-native/releases), please feel free to create a new issue with up-to-date information by clicking [here](https://github.com/facebook/react-native/issues/new).\n\nIf you are the author of this issue and you believe this issue was closed in error (i.e. you have edited your issue to ensure it meets the template requirements), please let us know."
         }        
       ]
     end
