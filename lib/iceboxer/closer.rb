@@ -26,7 +26,11 @@ module Iceboxer
         {
           :search => "repo:#{@repo} is:issue is:open label:\"For Stack Overflow :question:\" created:>2018-03-12",
           :message => "This issue looks like a question that would be best asked on [Stack Overflow](http://stackoverflow.com/questions/tagged/react-native).\n\nStack Overflow is amazing for Q&A: it has a reputation system, voting, the ability to mark a question as answered. Because of the reputation system it is likely the community will see and answer your question there. This also helps us use the GitHub bug tracker for bugs only.\n\nWill close this as this is really a question that should be asked on Stack Overflow."
-        }
+        },
+        {
+          :search => "repo:#{@repo} is:issue is:open label:\"No Template :clipboard:\" -label:\"Core Team\" -label:\"For Discussion\" updated:<#{7.days.ago.to_date.to_s}",
+          :message => "This issue was marked as lacking information required by the issue template. There has been no activity on this issue for a while, so I will go ahead and close it.\n\nIf you found this thread after encountering the same issue in the [latest release](https://github.com/facebook/react-native/releases), please feel free to create a new issue with up-to-date information by clicking [here](https://github.com/facebook/react-native/issues/new)."
+        }        
       ]
     end
 
