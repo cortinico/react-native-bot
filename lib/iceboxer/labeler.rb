@@ -58,6 +58,10 @@ module Iceboxer
           :label => "Lists :scroll:"
         },
         {
+          :search => "repo:#{@repo} is:open \"TextInput\" in:title -label:\"TextInput\"",
+          :label => "TextInput"
+        },
+        {
           :search => "repo:#{@repo} is:open \"Animated\" in:title -label:\"Animated\"",
           :label => "Animated"
         }

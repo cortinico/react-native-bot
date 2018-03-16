@@ -7,7 +7,8 @@ module Iceboxer
     Iceboxer::Closer,
     Iceboxer::Labeler,
     Iceboxer::OldVersion,
-    Iceboxer::Template
+    Iceboxer::Template,
+    Iceboxer::PullRequests
   ]
 
   def self.run
