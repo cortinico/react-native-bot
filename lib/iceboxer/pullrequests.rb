@@ -39,8 +39,8 @@ module Iceboxer
     def candidates
       [
         {
-          :search => "repo:#{@repo} is:open -label:\"Core Team\" created:>#{1.hour.ago.to_date.to_s}",
-          :action => 'check_core_team'
+          :search => "repo:#{@repo} is:open created:>#{1.hour.ago.to_date.to_s}",
+          :action => 'lint_pr'
         },
         {
           :search => "repo:#{@repo} is:open is:pr -label:\"Release Notes :clipboard:\" -label:\"No Release Notes :clipboard:\" created:>#{1.hour.ago.to_date.to_s}",
@@ -53,10 +53,9 @@ module Iceboxer
       ]
     end
 
-    def strip_comments(pr)
-      body = pr.body
+    def strip_comments(text)
       regex = /(?=<!--)([\s\S]*?-->)/m
-      body.gsub(regex, "")
+      text.gsub(regex, "")
     end
 
     def process(pr, candidate)
@@ -66,20 +65,26 @@ module Iceboxer
       if candidate[:action] == 'check_core_team'
         check_core_team(pr)
       end
+      if candidate[:action] == 'lint_pr'
+        lint_pr(pr)
+      end
     end
 
     def check_release_notes(pr)
+      label_release_notes = "Release Notes :clipboard:"
+      label_no_release_notes = "No Release Notes :clipboard:"
+
       releaseNotesRegex = /\[\s?(?<platform>ANDROID|CLI|DOCS|GENERAL|INTERNAL|IOS|TVOS|WINDOWS)\s?\]\s*?\[\s?(?<category>BREAKING|BUGFIX|ENHANCEMENT|FEATURE|MINOR)\s?\]\s*?\[(.*)\]\s*?\-\s*?(.*)/
 
-      body = strip_comments(pr)
+      body = strip_comments(pr.body)
       releaseNotesCaptureGroups = releaseNotesRegex.match(body)
       labels = ["Ran Commands"]
       if releaseNotesCaptureGroups
-        labels.push "Release Notes :clipboard:" unless pr.labels.include? "Release Notes :clipboard:"
+
+        labels.push label_release_notes unless pr.labels.include? label_release_notes
 
         platform = releaseNotesCaptureGroups["platform"]
         category = releaseNotesCaptureGroups["category"]
-
 
         case platform
           when "ANDROID"
@@ -109,21 +114,45 @@ module Iceboxer
             labels.push "Minor Change"
         end
 
-        Octokit.remove_label(@repo, pr.number, "No Release Notes :clipboard:") if pr.labels.include? "No Release Notes :clipboard:"
+        Octokit.remove_label(@repo, pr.number, label_no_release_notes)if pr.labels.include? label_no_release_notes
       else
-        labels.push "No Release Notes :clipboard:" unless pr.labels.include? "No Release Notes :clipboard:"
+        labels.push label_no_release_notes unless pr.labels.include? label_no_release_notes
 
-        Octokit.remove_label(@repo, pr.number, "Release Notes :clipboard:") if pr.labels.include? "Release Notes :clipboard:"
+        Octokit.remove_label(@repo, pr.number, label_release_notes) if pr.labels.include? label_release_notes
       end
 
       puts "--> #{labels}"
       Octokit.add_labels_to_an_issue(@repo, pr.number, labels)
     end
 
-    def check_core_team(pr)
-      if @core_contributors.include? pr.user.login 
-        Octokit.add_labels_to_an_issue(@repo, pr.number, ["Core Team"]) unless pr.labels.include? "Core Team"
+    def lint_pr(pr)
+      comments = Octokit.issue_comments(@repo, pr.number)
+      is_large_pr = comments.any? { |c| c.body =~ /:exclamation: Big PR/ }
+
+      if is_large_pr
+        label = "Large PR :bangbang:"
+        labels.push label unless pr.labels.include? label
+      end
+
+      body = strip_comments(pr.body)
+      has_test_plan = body.downcase =~ /test plan/
+
+      unless has_test_plan
+        label = "No Test Plan :clipboard:"
+        labels.push label unless pr.labels.include? label
+      end
+
+      from_core_contributor = @core_contributors.include? pr.user.login 
+
+      if from_core_contributor
+        label = "Core Team"
+        labels.push label unless pr.labels.include? label
+      end
+
+      if labels.count > 0
+        Octokit.add_labels_to_an_issue(@repo, pr.number, labels)
       end
     end
+
   end
 end

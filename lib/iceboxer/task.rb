@@ -6,9 +6,9 @@ module Iceboxer
   @@operations = [
     Iceboxer::Closer,
     Iceboxer::Labeler,
-    Iceboxer::OldVersion,
     Iceboxer::Template,
-    Iceboxer::PullRequests
+    Iceboxer::PullRequests,
+    Iceboxer::OldVersion
   ]
 
   def self.run
