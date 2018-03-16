@@ -5,10 +5,10 @@ module Iceboxer
 
   @@operations = [
     Iceboxer::Closer,
-    Iceboxer::Labeler,
     Iceboxer::Template,
     Iceboxer::PullRequests,
-    Iceboxer::OldVersion
+    Iceboxer::OldVersion,
+    Iceboxer::Labeler
   ]
 
   def self.run
