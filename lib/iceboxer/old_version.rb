@@ -86,7 +86,7 @@ module Iceboxer
 
     def already_nagged?(issue)
       comments = Octokit.issue_comments(@repo, issue)
-      comments.any? { |c| c.body =~ /latest stable release/ }
+      comments.any? { |c| c.body =~ /older version/ }
     end
 
     def oldVersionNag(issue, reason)
