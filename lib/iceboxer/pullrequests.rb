@@ -9,6 +9,7 @@ module Iceboxer
       @core_contributors = [
         "anp",
         "ide",
+        "shergin",
         "brentvatne",
         "charpeni",
         "dlowder-salesforce",
@@ -38,7 +39,7 @@ module Iceboxer
     def candidates
       [
         {
-          :search => "repo:#{@repo} is:open is:pr -label:\"Core Team\" created:>#{1.day.ago.to_date.to_s}",
+          :search => "repo:#{@repo} is:open -label:\"Core Team\" created:>#{1.hour.ago.to_date.to_s}",
           :action => 'check_core_team'
         },
         {
