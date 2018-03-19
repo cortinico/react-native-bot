@@ -78,7 +78,7 @@ module Iceboxer
 
       body = strip_comments(pr.body)
       releaseNotesCaptureGroups = releaseNotesRegex.match(body)
-      labels = ["Ran Commands"]
+      labels = []
       if releaseNotesCaptureGroups
 
         labels.push label_release_notes unless pr.labels.include?(label_release_notes)
@@ -88,30 +88,41 @@ module Iceboxer
 
         case platform
           when "ANDROID"
-            labels.push "Android"
+            label = "Android"
+            labels.push label unless pr.labels.include? label
           when  "CLI"
-            labels.push "CLI :computer:"
+            label = "CLI :computer:"
+            labels.push label unless pr.labels.include? label
           when  "DOCS"
-            labels.push "Docs :blue_book:"
+            label = "Docs :blue_book:"
+            labels.push label unless pr.labels.include? label
           when  "IOS"
-            labels.push "iOS :iphone:"
+            label = "iOS :iphone:"
+            labels.push label unless pr.labels.include? label
           when  "TVOS"
-            labels.push "tvOS :tv:"
+            label = "tvOS :tv:"
+            labels.push label unless pr.labels.include? label
           when  "WINDOWS"
-            labels.push "Windows"
+            label = "Windows"
+            labels.push label unless pr.labels.include? label
         end
 
         case category
           when "BREAKING"
-            labels.push "Breaking Change :boom:"
+            label = "Breaking Change :boom:"
+            labels.push label unless pr.labels.include? label
           when "BUGFIX"
-            labels.push "Bug Fix :bug:"
+            label = "Bug Fix :bug:"
+            labels.push label unless pr.labels.include? label
           when "ENHANCEMENT"
-            labels.push "Feature Request :star2:"
+            label = "Feature Request :star2:"
+            labels.push label unless pr.labels.include? label
           when "FEATURE"
-            labels.push "Feature Request :star2:"
+            label = "Feature Request :star2:"
+            labels.push label unless pr.labels.include? label
           when "MINOR"
-            labels.push "Minor Change"
+            label = "Minor Change"
+            labels.push label unless pr.labels.include? label
         end
 
         Octokit.remove_label(@repo, pr.number, label_no_release_notes) if pr.labels.include?(label_no_release_notes)
@@ -121,8 +132,10 @@ module Iceboxer
         Octokit.remove_label(@repo, pr.number, label_release_notes) if pr.labels.include?(label_release_notes)
       end
 
-      puts "--> #{labels}"
-      Octokit.add_labels_to_an_issue(@repo, pr.number, labels)
+      if labels.count > 0
+        puts "--> #{labels}"
+        Octokit.add_labels_to_an_issue(@repo, pr.number, labels)
+      end
     end
 
     def lint_pr(pr)
@@ -151,6 +164,7 @@ module Iceboxer
       end
 
       if labels.count > 0
+        puts "--> #{labels}"
         Octokit.add_labels_to_an_issue(@repo, pr.number, labels)
       end
     end
