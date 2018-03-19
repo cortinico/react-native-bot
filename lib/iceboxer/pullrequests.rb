@@ -125,16 +125,15 @@ module Iceboxer
             labels.push label unless pr.labels.include? label
         end
 
-        Octokit.remove_label(@repo, pr.number, label_no_release_notes) if pr.labels.include?(label_no_release_notes)
+        remove_label(pr, label_no_release_notes)
       else
         labels.push label_no_release_notes unless pr.labels.include?(label_no_release_notes)
 
-        Octokit.remove_label(@repo, pr.number, label_release_notes) if pr.labels.include?(label_release_notes)
+        remove_label(pr, label_release_notes)
       end
 
       if labels.count > 0
-        puts "--> #{labels}"
-        Octokit.add_labels_to_an_issue(@repo, pr.number, labels)
+        add_labels(pr, labels)
       end
     end
 
@@ -163,10 +162,39 @@ module Iceboxer
         labels.push label unless pr.labels.include?(label)
       end
 
-      if labels.count > 0
-        puts "--> #{labels}"
-        Octokit.add_labels_to_an_issue(@repo, pr.number, labels)
+      add_labels(pr, labels)
+    end
+
+    def add_labels(pr, labels)
+      new_labels = []
+
+      labels.each do |label|
+        new_labels.push label unless issue_contains_label(pr, label)
       end
+
+      if new_labels.count > 0
+        puts "Adding labels to #{pr.html_url} --> #{new_labels}"
+        Octokit.add_labels_to_an_issue(@repo, pr.number, new_labels)
+      end
+
+    end
+
+    def remove_label(pr, label)
+      if pr.labels.include? label
+        puts "Removing label -> #{label}" if issue_contains_label(pr, label)
+        Octokit.remove_label(@repo, pr.number, label)
+      end
+
+    end
+
+    def issue_contains_label(issue, label)
+      existing_labels = []
+
+      issue.labels.each do |issue_label| 
+        existing_labels.push issue_label.name if issue_label.name
+      end
+
+      existing_labels.include? label
     end
 
   end
