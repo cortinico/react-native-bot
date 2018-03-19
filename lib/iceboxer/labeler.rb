@@ -22,7 +22,7 @@ module Iceboxer
     def candidates
       [
         {
-          :search => "repo:#{@repo} is:open created:>#{1.day.ago.to_date.to_s}"
+          :search => "repo:#{@repo} is:open created:>=#{1.day.ago.to_date.to_s}"
         }
       ]
     end
