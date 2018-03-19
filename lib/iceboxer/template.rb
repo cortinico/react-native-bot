@@ -18,7 +18,7 @@ module Iceboxer
         puts "#{@repo}: [TEMPLATE] Found #{issues.items.count} issues..."
         issues.items.each do |issue|
           unless already_nagged?(issue.number)
-            puts "Processing #{issue.html_url}: #{issue.title}"
+            puts "#{@repo}: Processing #{issue.html_url}: #{issue.title}"
             templateNag(issue, closer)
           end
         end
@@ -42,11 +42,16 @@ module Iceboxer
       Octokit.add_comment(@repo, issue.number, message("there"))
       Octokit.add_labels_to_an_issue(@repo, issue.number, [":clipboard:No Template"])
 
-      puts "❗️📋 [TEMPLATE] #{issue.html_url}: #{issue.title} -> Missing template, nagged."
+      puts "❗#{@repo}: ️📋 [TEMPLATE] #{issue.html_url}: #{issue.title} -> Missing template, nagged."
     end
 
     def message(reason)
       <<-MSG.strip_heredoc
+      <!-- 
+        {
+          "nag_reason": "no-template"
+        }
+      -->
       Thanks for posting this! It looks like your issue may be incomplete. Are all the fields required by the [Issue Template](https://raw.githubusercontent.com/facebook/react-native/master/.github/ISSUE_TEMPLATE.md) filled out?
       
       If you believe your issue contains all the relevant information, let us know in order to have a maintainer remove the No Template label. Thank you for your contributions.

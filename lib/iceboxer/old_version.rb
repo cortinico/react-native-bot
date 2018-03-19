@@ -21,7 +21,7 @@ module Iceboxer
         puts "#{@repo}: [OLD VERSION] Found #{issues.items.count} issues..."
         issues.items.each do |issue|
           unless already_nagged?(issue.number)
-            puts "Processing #{issue.html_url}: #{issue.title}"
+            puts "#{@repo}: Processing #{issue.html_url}: #{issue.title}"
             nag_if_using_old_version(issue, closer)
           end
         end
@@ -61,7 +61,7 @@ module Iceboxer
             Octokit.add_comment(@repo, issue.number, message("old_version"))
             add_labels(issue, [label_old_version])
       
-            puts "❗⏪ [OLD VERSION] #{issue.html_url}: #{issue.title} --> Nagged, wanted #{@latest_release_version_major_minor} got #{version_info["installed_version_major_minor"]}"
+            puts "#{@repo}: ❗⏪ [OLD VERSION] #{issue.html_url}: #{issue.title} --> Nagged, wanted #{@latest_release_version_major_minor} got #{version_info["installed_version_major_minor"]}"
           end
         end
       else
@@ -69,7 +69,7 @@ module Iceboxer
         label_needs_more_information = "Needs More Information :grey_question:"
         Octokit.add_comment(@repo, issue.number, message("no_envinfo"))
         add_labels(issue, [label_needs_more_information])
-        puts "️❗❔ [NO ENV INFO] #{issue.html_url}: #{issue.title} --> Nagged, no envinfo found"
+        puts "️#{@repo}: ❗❔ [NO ENV INFO] #{issue.html_url}: #{issue.title} --> Nagged, no envinfo found"
       end
     end
 
@@ -106,7 +106,7 @@ module Iceboxer
       end
 
       if new_labels.count > 0
-        puts "📍 [LABELS] #{issue.html_url}: #{issue.title} --> Adding #{new_labels}"
+        puts "#{@repo}: 📍 [LABELS] #{issue.html_url}: #{issue.title} --> Adding #{new_labels}"
         Octokit.add_labels_to_an_issue(@repo, issue.number, new_labels)
       end
     end

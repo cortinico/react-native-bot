@@ -30,7 +30,7 @@ module Iceboxer
         prs = Octokit.search_issues(candidate[:search])
         puts "#{@repo}: [PR] Found #{prs.items.count} PRs..."
         prs.items.each do |pr|
-          puts "Processing #{pr.html_url}: #{pr.title}"
+          puts "#{@repo}: Processing #{pr.html_url}: #{pr.title}"
           process(pr, candidate)
         end
       end
@@ -173,14 +173,14 @@ module Iceboxer
       end
 
       if new_labels.count > 0
-        puts "📍 [LABELS] #{issue.html_url}: #{issue.title} --> Adding #{new_labels}"
+        puts "#{@repo}: 📍 [LABELS] #{issue.html_url}: #{issue.title} --> Adding #{new_labels}"
         Octokit.add_labels_to_an_issue(@repo, issue.number, new_labels)
       end
     end
 
     def remove_label(issue, label)
       if issue.labels.include? label
-        puts "✂️ [LABELS] #{issue.html_url}: #{issue.title} --> Removing #{label}" if issue_contains_label(issue, label)
+        puts "#{@repo}: ✂️ [LABELS] #{issue.html_url}: #{issue.title} --> Removing #{label}" if issue_contains_label(issue, label)
         Octokit.remove_label(@repo, issue.number, label)
       end
 

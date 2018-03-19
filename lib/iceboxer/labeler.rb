@@ -13,7 +13,7 @@ module Iceboxer
         issues = Octokit.search_issues(candidate[:search])
         puts "#{@repo}: [LABELER] Found #{issues.items.count} recently created issues..."
         issues.items.each do |issue|
-          puts "Processing #{@repo}/issues/#{issue.number}: #{issue.title}"
+          puts "#{@repo}: Processing #{@repo}/issues/#{issue.number}: #{issue.title}"
           label_based_on_title(issue)
         end
       end
@@ -42,6 +42,8 @@ module Iceboxer
       labels.push ":large_orange_diamond:Lists" if issue_title =~ /virtualizedlist/
       labels.push ":computer:CLI" if issue_title =~ /react-native upgrade/
       labels.push ":computer:CLI" if issue_title =~ /react-native link/
+      labels.push ":computer:CLI" if issue_title =~ /local-cli/
+      labels.push ":globe_with_meridians:Networking" if issue_title =~ /xhr/
       labels.push ":globe_with_meridians:Networking" if issue_title =~ /netinfo/
       labels.push ":globe_with_meridians:Networking" if issue_title =~ /fetch/
       labels.push ":globe_with_meridians:Networking" if issue_title =~ /okhttp/
@@ -58,7 +60,7 @@ module Iceboxer
       end
 
       if new_labels.count > 0
-        puts "📍[LABELS] #{issue.html_url} --> Adding #{new_labels}"
+        puts "#{@repo}: 📍[LABELS] #{issue.html_url} --> Adding #{new_labels}"
         Octokit.add_labels_to_an_issue(@repo, issue.number, new_labels)
       end
     end
