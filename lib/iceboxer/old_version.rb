@@ -18,9 +18,10 @@ module Iceboxer
       # close issues that mention an old version
       closers.each do |closer|
         issues = Octokit.search_issues(closer[:search])
-        puts "[OLD VERSION] Found #{issues.items.count} issues to nag in #{@repo} ..."
+        puts "#{@repo}: [OLD VERSION] Found #{issues.items.count} issues..."
         issues.items.each do |issue|
           unless already_nagged?(issue.number)
+            puts "Processing #{issue.html_url}: #{issue.title}"
             nag_if_using_old_version(issue, closer)
           end
         end
@@ -58,7 +59,7 @@ module Iceboxer
           if version_info["installed_version_major_minor"] != @latest_release_version_major_minor
             label_old_version = "Old Version :rewind:"
             Octokit.add_comment(@repo, issue.number, message("old_version"))
-            Octokit.add_labels_to_an_issue(@repo, issue.number, [label_old_version, "Ran Commands"]) unless issue.labels.include?(label_old_version)
+            add_labels(issue, [label_old_version])
       
             puts "[OLD VERSION] Nagged #{issue.html_url} --> wanted #{@latest_release_version_major_minor} got #{version_info["installed_version_major_minor"]}"
           end
@@ -67,7 +68,7 @@ module Iceboxer
         # No envinfo block?
         label_needs_more_information = "Needs More Information :grey_question:"
         Octokit.add_comment(@repo, issue.number, message("no_envinfo"))
-        Octokit.add_labels_to_an_issue(@repo, issue.number, [label_needs_more_information, "Ran Commands"]) unless issue.labels.include?(label_needs_more_information)
+        add_labels(issue, [label_needs_more_information])
         puts "[OLD VERSION] Nagged #{issue.html_url} --> No envinfo found"
       end
     end
@@ -96,5 +97,28 @@ module Iceboxer
         MSG
       end
     end
+
+    def add_labels(issue, labels)
+      new_labels = []
+
+      labels.each do |label|
+        new_labels.push label unless issue_contains_label(issue, label)
+      end
+
+      if new_labels.count > 0
+        puts "Adding labels to #{issue.html_url} --> #{new_labels}"
+        Octokit.add_labels_to_an_issue(@repo, issue.number, new_labels)
+      end
+    end
+
+    def issue_contains_label(issue, label)
+      existing_labels = []
+
+      issue.labels.each do |issue_label| 
+        existing_labels.push issue_label.name if issue_label.name
+      end
+
+      existing_labels.include? label
+    end   
   end
 end

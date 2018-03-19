@@ -15,11 +15,10 @@ module Iceboxer
       # close issues that lack a template
       closers.each do |closer|
         issues = Octokit.search_issues(closer[:search])
-        puts "[TEMPLATE] Found #{issues.items.count} issues to nag in #{@repo} ..."
+        puts "#{@repo}: [TEMPLATE] Found #{issues.items.count} issues..."
         issues.items.each do |issue|
           unless already_nagged?(issue.number)
-            puts "Nagging https://github.com/#{@repo}/issues/#{issue.number}: #{issue.title}"
-
+            puts "Processing #{issue.html_url}: #{issue.title}"
             templateNag(issue.number, closer)
           end
         end
@@ -41,7 +40,7 @@ module Iceboxer
 
     def templateNag(issue, reason)
       Octokit.add_comment(@repo, issue, message("there"))
-      Octokit.add_labels_to_an_issue(@repo, issue, ["No Template :clipboard:", "Ran Commands"])
+      Octokit.add_labels_to_an_issue(@repo, issue, ["No Template :clipboard:"])
       # No longer close issues
       # Octokit.close_issue(@repo, issue)
 

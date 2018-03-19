@@ -28,7 +28,7 @@ module Iceboxer
     def perform
       candidates.each do |candidate|
         prs = Octokit.search_issues(candidate[:search])
-        puts "[PR] Found #{prs.items.count} new PRs to process in #{@repo} ..."
+        puts "#{@repo}: [PR] Found #{prs.items.count} PRs..."
         prs.items.each do |pr|
           puts "Processing #{pr.html_url}: #{pr.title}"
           process(pr, candidate)
@@ -176,7 +176,6 @@ module Iceboxer
         puts "Adding labels to #{pr.html_url} --> #{new_labels}"
         Octokit.add_labels_to_an_issue(@repo, pr.number, new_labels)
       end
-
     end
 
     def remove_label(pr, label)

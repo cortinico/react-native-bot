@@ -11,7 +11,7 @@ module Iceboxer
     def perform
       closers.each do |closer|
         issues = Octokit.search_issues(closer[:search])
-        puts "[CLOSERS] Found #{issues.items.count} issues to close in #{@repo} ..."
+        puts "#{@repo}: [CLOSERS] Found #{issues.items.count} issues..."
         issues.items.each do |issue|
           puts "Closing #{@repo}/issues/#{issue.number}: #{issue.title}"
           nag(issue.number, closer)
