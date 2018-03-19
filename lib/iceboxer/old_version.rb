@@ -66,7 +66,7 @@ module Iceboxer
         end
       else
         # No envinfo block?
-        label_needs_more_information = "Needs More Information :grey_question:"
+        label_needs_more_information = ":grey_question:Needs More Information"
         Octokit.add_comment(@repo, issue.number, message("no_envinfo"))
         add_labels(issue, [label_needs_more_information])
         puts "️#{@repo}: ❗❔ [NO ENV INFO] #{issue.html_url}: #{issue.title} --> Nagged, no envinfo found"

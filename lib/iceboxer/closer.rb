@@ -21,7 +21,7 @@ module Iceboxer
     def closers
       [
         {
-          :search => "repo:#{@repo} is:issue is:open label:\:no_entry_sign:For Stack Overflow\" NOT \"Stack Overflow\" in:comments NOT \"StackOverflow\" in:comments created:>2018-03-12",
+          :search => "repo:#{@repo} is:issue is:open label:\:no_entry_sign:For Stack Overflow\" NOT \"Stack Overflow\" in:comments NOT \"StackOverflow\" in:comments updated:>=#{1.week.ago.to_date.to_s}",
           :message => "This issue looks like a question that would be best asked on [Stack Overflow](http://stackoverflow.com/questions/tagged/react-native).\n\nStack Overflow is amazing for Q&A: it has a reputation system, voting, the ability to mark a question as answered. Because of the reputation system it is likely the community will see and answer your question there. This also helps us use the GitHub bug tracker for bugs only.\n\nWill close this as this is really a question that should be asked on Stack Overflow.",
           :close_reason => "For Stack Overflow"
         },
@@ -31,7 +31,7 @@ module Iceboxer
           :close_reason => "Missing information, issue not updated in last seven days"
         },
         {
-          :search => "repo:#{@repo} is:issue is:open  label:\":exclamation:Invalid\" created:>#{1.days.ago.to_date.to_s}",
+          :search => "repo:#{@repo} is:issue is:open  label:\":exclamation:Invalid\" updated:>=#{1.week.ago.to_date.to_s}",
           :message => "We use GitHub Issues exclusively for tracking bugs in React Native. Your issue has been flagged as not being a bug.\n\nSee the [React Native Community Support page](http://facebook.github.io/react-native/help.html) for a list of places where you may ask for help.",
           :close_reason => "Issue does not belong here."
         }
