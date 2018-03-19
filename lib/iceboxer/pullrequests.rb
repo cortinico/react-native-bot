@@ -43,11 +43,11 @@ module Iceboxer
           :action => 'lint_pr'
         },
         {
-          :search => "repo:#{@repo} is:open is:pr -label:\"Release Notes :clipboard:\" -label:\"No Release Notes :clipboard:\" created:>#{1.day.ago.to_date.to_s}",
+          :search => "repo:#{@repo} is:open is:pr -label:\":clipboard:Release Notes\" -label:\":clipboard:No Release Notes\" created:>#{1.day.ago.to_date.to_s}",
           :action => 'check_release_notes'
         },
         {
-          :search => "repo:#{@repo} is:open is:pr label:\"No Release Notes :clipboard:\" updated:>#{1.day.ago.to_date.to_s}",
+          :search => "repo:#{@repo} is:open is:pr label:\":clipboard:No Release Notes\" updated:>#{1.day.ago.to_date.to_s}",
           :action => 'check_release_notes'
         }                
       ]
@@ -71,8 +71,8 @@ module Iceboxer
     end
 
     def check_release_notes(pr)
-      label_release_notes = "Release Notes :clipboard:"
-      label_no_release_notes = "No Release Notes :clipboard:"
+      label_release_notes = ":clipboard:Release Notes"
+      label_no_release_notes = ":clipboard:No Release Notes"
 
       releaseNotesRegex = /\[\s?(?<platform>ANDROID|CLI|DOCS|GENERAL|INTERNAL|IOS|TVOS|WINDOWS)\s?\]\s*?\[\s?(?<category>BREAKING|BUGFIX|ENHANCEMENT|FEATURE|MINOR)\s?\]\s*?\[(.*)\]\s*?\-\s*?(.*)/
 
@@ -88,37 +88,37 @@ module Iceboxer
 
         case platform
           when "ANDROID"
-            label = "Android"
+            label = ":large_blue_diamond:Android"
             labels.push label unless pr.labels.include? label
           when  "CLI"
-            label = "CLI :computer:"
+            label = ":computer:CLI"
             labels.push label unless pr.labels.include? label
           when  "DOCS"
-            label = "Docs :blue_book:"
+            label = ":no_entry_sign:Docs"
             labels.push label unless pr.labels.include? label
           when  "IOS"
-            label = "iOS :iphone:"
+            label = ":large_blue_diamond:iOS"
             labels.push label unless pr.labels.include? label
           when  "TVOS"
-            label = "tvOS :tv:"
+            label = ":large_blue_diamond:tvOS"
             labels.push label unless pr.labels.include? label
           when  "WINDOWS"
-            label = "Windows"
+            label = ":large_blue_diamond:Windows"
             labels.push label unless pr.labels.include? label
         end
 
         case category
           when "BREAKING"
-            label = "Breaking Change :boom:"
+            label = ":boom:Breaking Change"
             labels.push label unless pr.labels.include? label
           when "BUGFIX"
-            label = "Bug Fix :bug:"
+            label = ":bug:Bug Fix"
             labels.push label unless pr.labels.include? label
           when "ENHANCEMENT"
-            label = "Feature Request :star2:"
+            label = ":star2:Enhancement PR"
             labels.push label unless pr.labels.include? label
           when "FEATURE"
-            label = "Feature Request :star2:"
+            label = ":star2:Feature Request"
             labels.push label unless pr.labels.include? label
           when "MINOR"
             label = "Minor Change"
@@ -143,7 +143,7 @@ module Iceboxer
       is_large_pr = comments.any? { |c| c.body =~ /:exclamation: Big PR/ }
 
       if is_large_pr
-        label = "Large PR :bangbang:"
+        label = ":clipboard:Large PR :bangbang:"
         labels.push label unless pr.labels.include?(label)
       end
 
@@ -151,7 +151,7 @@ module Iceboxer
       has_test_plan = body.downcase =~ /test plan/
 
       unless has_test_plan
-        label = "No Test Plan :clipboard:"
+        label = ":clipboard:No Test Plan"
         labels.push label unless pr.labels.include?(label)
       end
 
@@ -165,23 +165,23 @@ module Iceboxer
       add_labels(pr, labels)
     end
 
-    def add_labels(pr, labels)
+    def add_labels(issue, labels)
       new_labels = []
 
       labels.each do |label|
-        new_labels.push label unless issue_contains_label(pr, label)
+        new_labels.push label unless issue_contains_label(issue, label)
       end
 
       if new_labels.count > 0
-        puts "Adding labels to #{pr.html_url} --> #{new_labels}"
-        Octokit.add_labels_to_an_issue(@repo, pr.number, new_labels)
+        puts "📍 [LABELS] #{issue.html_url}: #{issue.title} --> Adding #{new_labels}"
+        Octokit.add_labels_to_an_issue(@repo, issue.number, new_labels)
       end
     end
 
-    def remove_label(pr, label)
-      if pr.labels.include? label
-        puts "Removing label -> #{label}" if issue_contains_label(pr, label)
-        Octokit.remove_label(@repo, pr.number, label)
+    def remove_label(issue, label)
+      if issue.labels.include? label
+        puts "✂️ [LABELS] #{issue.html_url}: #{issue.title} --> Removing #{label}" if issue_contains_label(issue, label)
+        Octokit.remove_label(@repo, issue.number, label)
       end
 
     end

@@ -31,21 +31,21 @@ module Iceboxer
       issue_title = issue.title.downcase
 
       labels = []
-      labels.push "Android" if issue_title =~ /android/
-      labels.push "iOS :iphone:" if issue_title =~ /ios/
-      labels.push "tvOS :tv:" if issue_title =~ /tvos/
-      labels.push "WebView" if issue_title =~ /webview/
-      labels.push "Animated" if issue_title =~ /animated/
-      labels.push "TextInput" if issue_title =~ /textinput/
-      labels.push "Lists :scroll:" if issue_title =~ /sectionlist/
-      labels.push "Lists :scroll:" if issue_title =~ /flatlist/
-      labels.push "Lists :scroll:" if issue_title =~ /virtualizedlist/
-      labels.push "CLI :computer:" if issue_title =~ /react-native upgrade/
-      labels.push "CLI :computer:" if issue_title =~ /react-native link/
-      labels.push "Networking :globe_with_meridians:" if issue_title =~ /netinfo/
-      labels.push "Networking :globe_with_meridians:" if issue_title =~ /fetch/
-      labels.push "Networking :globe_with_meridians:" if issue_title =~ /okhttp/
-      labels.push "Networking :globe_with_meridians:" if issue_title =~ /http/
+      labels.push ":large_blue_diamond:Android" if issue_title =~ /android/
+      labels.push ":large_blue_diamond:iOS" if issue_title =~ /ios/
+      labels.push ":large_blue_diamond:tvOS" if issue_title =~ /tvos/
+      labels.push ":large_orange_diamond:WebView" if issue_title =~ /webview/
+      labels.push ":large_orange_diamond:Animated" if issue_title =~ /animated/
+      labels.push ":large_orange_diamond:TextInput" if issue_title =~ /textinput/
+      labels.push ":large_orange_diamond:Lists" if issue_title =~ /sectionlist/
+      labels.push ":large_orange_diamond:Lists" if issue_title =~ /flatlist/
+      labels.push ":large_orange_diamond:Lists" if issue_title =~ /virtualizedlist/
+      labels.push ":computer:CLI" if issue_title =~ /react-native upgrade/
+      labels.push ":computer:CLI" if issue_title =~ /react-native link/
+      labels.push ":globe_with_meridians:Networking" if issue_title =~ /netinfo/
+      labels.push ":globe_with_meridians:Networking" if issue_title =~ /fetch/
+      labels.push ":globe_with_meridians:Networking" if issue_title =~ /okhttp/
+      labels.push ":globe_with_meridians:Networking" if issue_title =~ /http/
 
       add_labels(issue, labels)
     end
@@ -58,7 +58,7 @@ module Iceboxer
       end
 
       if new_labels.count > 0
-        puts "Adding labels to #{issue.html_url} --> #{new_labels}"
+        puts "📍[LABELS] #{issue.html_url} --> Adding #{new_labels}"
         Octokit.add_labels_to_an_issue(@repo, issue.number, new_labels)
       end
     end

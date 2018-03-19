@@ -31,7 +31,7 @@ module Iceboxer
     def closers
       [
         {
-          :search => "repo:#{@repo} is:issue is:open \"Environment\" in:body -label:\"Core Team\" -label:\"Old Version :rewind:\" created:>#{1.day.ago.to_date.to_s}"
+          :search => "repo:#{@repo} is:issue is:open \"Environment\" in:body -label:\"Core Team\" -label:\":rewind:Old Version\" created:>#{1.day.ago.to_date.to_s}"
         }
       ]
     end
@@ -57,11 +57,11 @@ module Iceboxer
         if version_info
           # Check if using latest_version
           if version_info["installed_version_major_minor"] != @latest_release_version_major_minor
-            label_old_version = "Old Version :rewind:"
+            label_old_version = ":rewind:Old Version"
             Octokit.add_comment(@repo, issue.number, message("old_version"))
             add_labels(issue, [label_old_version])
       
-            puts "[OLD VERSION] Nagged #{issue.html_url} --> wanted #{@latest_release_version_major_minor} got #{version_info["installed_version_major_minor"]}"
+            puts "❗⏪ [OLD VERSION] #{issue.html_url}: #{issue.title} --> Nagged, wanted #{@latest_release_version_major_minor} got #{version_info["installed_version_major_minor"]}"
           end
         end
       else
@@ -69,7 +69,7 @@ module Iceboxer
         label_needs_more_information = "Needs More Information :grey_question:"
         Octokit.add_comment(@repo, issue.number, message("no_envinfo"))
         add_labels(issue, [label_needs_more_information])
-        puts "[OLD VERSION] Nagged #{issue.html_url} --> No envinfo found"
+        puts "️❗❔ [NO ENV INFO] #{issue.html_url}: #{issue.title} --> Nagged, no envinfo found"
       end
     end
 
@@ -106,7 +106,7 @@ module Iceboxer
       end
 
       if new_labels.count > 0
-        puts "Adding labels to #{issue.html_url} --> #{new_labels}"
+        puts "📍 [LABELS] #{issue.html_url}: #{issue.title} --> Adding #{new_labels}"
         Octokit.add_labels_to_an_issue(@repo, issue.number, new_labels)
       end
     end
