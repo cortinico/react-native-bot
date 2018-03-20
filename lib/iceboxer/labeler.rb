@@ -14,7 +14,7 @@ module Iceboxer
         puts "#{@repo}: [LABELER] Found #{issues.items.count} recently created issues..."
         issues.items.each do |issue|
           puts "#{@repo}: [LABELER] Processing #{issue.html_url}: #{issue.title}"
-          # label_based_on_title(issue)
+          label_based_on_title(issue)
           label_based_on_envinfo(issue)
         end
       end
