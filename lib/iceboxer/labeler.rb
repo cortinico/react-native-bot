@@ -13,7 +13,7 @@ module Iceboxer
         issues = Octokit.search_issues(candidate[:search])
         puts "#{@repo}: [LABELER] Found #{issues.items.count} recently created issues..."
         issues.items.each do |issue|
-          puts "#{@repo}: Processing #{@repo}/issues/#{issue.number}: #{issue.title}"
+          puts "#{@repo}: [LABELER] Processing #{issue.html_url}: #{issue.title}"
           label_based_on_title(issue)
         end
       end
@@ -48,6 +48,7 @@ module Iceboxer
       labels.push ":globe_with_meridians:Networking" if issue_title =~ /fetch/
       labels.push ":globe_with_meridians:Networking" if issue_title =~ /okhttp/
       labels.push ":globe_with_meridians:Networking" if issue_title =~ /http/
+      labels.push ":warning:Regression" if issue_title =~ /regression/
 
       add_labels(issue, labels)
     end
@@ -60,7 +61,7 @@ module Iceboxer
       end
 
       if new_labels.count > 0
-        puts "#{@repo}: 📍[LABELS] #{issue.html_url} --> Adding #{new_labels}"
+        puts "#{@repo}: [LABELS] 📍 #{issue.html_url} --> Adding #{new_labels}"
         Octokit.add_labels_to_an_issue(@repo, issue.number, new_labels)
       end
     end
