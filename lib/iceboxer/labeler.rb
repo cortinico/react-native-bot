@@ -14,7 +14,8 @@ module Iceboxer
         puts "#{@repo}: [LABELER] Found #{issues.items.count} recently created issues..."
         issues.items.each do |issue|
           puts "#{@repo}: [LABELER] Processing #{issue.html_url}: #{issue.title}"
-          label_based_on_title(issue)
+          # label_based_on_title(issue)
+          label_based_on_envinfo(issue)
         end
       end
     end
@@ -53,11 +54,43 @@ module Iceboxer
       add_labels(issue, labels)
     end
 
+    def label_based_on_envinfo(issue)
+      issue_body = strip_comments issue.body
+      regex = /OS:\s?(?<OS>macOS|Windows|Linux)/
+
+      envinfo = regex.match(issue_body)
+
+      new_labels = []
+
+      if envinfo
+        case envinfo["OS"]
+          when "Windows"
+            label = ":small_blue_diamond:Windows"
+            new_labels.push label
+          when "Linux"
+            label = ":small_blue_diamond:Linux"
+            new_labels.push label
+          when "macOS"
+            label = ":small_blue_diamond:macOS"
+            new_labels.push label
+        end
+      end
+
+      add_labels(issue, new_labels)
+    end
+
+    def strip_comments(text)
+      regex = /(?=<!--)([\s\S]*?-->)/m
+      text.gsub(regex, "")
+    end
+
     def add_labels(issue, labels)
       new_labels = []
 
       labels.each do |label|
-        new_labels.push label unless issue_contains_label(issue, label)
+        if label
+          new_labels.push label unless issue_contains_label(issue, label)
+        end
       end
 
       if new_labels.count > 0

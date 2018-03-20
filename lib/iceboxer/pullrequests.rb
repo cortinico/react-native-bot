@@ -89,40 +89,46 @@ module Iceboxer
         case platform
           when "ANDROID"
             label = ":large_blue_diamond:Android"
-            labels.push label unless pr.labels.include? label
+            labels.push
           when  "CLI"
             label = ":computer:CLI"
-            labels.push label unless pr.labels.include? label
+            labels.push
           when  "DOCS"
             label = ":no_entry_sign:Docs"
-            labels.push label unless pr.labels.include? label
+            labels.push
           when  "IOS"
             label = ":large_blue_diamond:iOS"
-            labels.push label unless pr.labels.include? label
+            labels.push
           when  "TVOS"
             label = ":large_blue_diamond:tvOS"
-            labels.push label unless pr.labels.include? label
+            labels.push
           when  "WINDOWS"
-            label = ":large_blue_diamond:Windows"
-            labels.push label unless pr.labels.include? label
+            label = ":small_blue_diamond:Windows"
+            labels.push
+          when  "MACOS"
+            label = ":small_blue_diamond:macOS"
+            labels.push
+          when  "LINUX"
+            label = ":small_blue_diamond:Linux"
+            labels.push
         end
 
         case category
           when "BREAKING"
             label = ":boom:Breaking Change"
-            labels.push label unless pr.labels.include? label
+            labels.push
           when "BUGFIX"
             label = ":bug:Bug Fix"
-            labels.push label unless pr.labels.include? label
+            labels.push
           when "ENHANCEMENT"
             label = ":star2:Enhancement PR"
-            labels.push label unless pr.labels.include? label
+            labels.push
           when "FEATURE"
             label = ":star2:Feature Request"
-            labels.push label unless pr.labels.include? label
+            labels.push
           when "MINOR"
             label = "Minor Change"
-            labels.push label unless pr.labels.include? label
+            labels.push
         end
 
         remove_label(pr, label_no_release_notes)
