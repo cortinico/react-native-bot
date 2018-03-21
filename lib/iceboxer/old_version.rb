@@ -52,7 +52,7 @@ module Iceboxer
       if body =~ /Packages: \(wanted => installed\)/
         # Contains envinfo block
 
-        version_info = /(react-native:)\s?(?<requested_version>[0-9]{1,2}\.[0-9]{1,2}\.[0-9]{1,2})\s=>\s(?<installed_version_major_minor>[0-9]{1,2}\.[0-9]{1,2})\.[0-9]{1,2}/.match(body)
+        version_info = /(react-native:)\s?[\^~]?(?<requested_version>[0-9]{1,2}\.[0-9]{1,2}\.[0-9]{1,2})\s=>\s(?<installed_version_major_minor>[0-9]{1,2}\.[0-9]{1,2})\.[0-9]{1,2}/.match(body)
 
         if version_info
           # Check if using latest_version
