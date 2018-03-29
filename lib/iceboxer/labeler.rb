@@ -65,14 +65,16 @@ module Iceboxer
       if envinfo
         case envinfo["OS"]
           when "Windows"
-            label = ":small_blue_diamond:Windows"
-            new_labels.push label
+            puts "Skipping Windows"
+            # label = ":small_blue_diamond:Windows"
+            # new_labels.push label
           when "Linux"
             label = ":small_blue_diamond:Linux"
             new_labels.push label
           when "macOS"
-            label = ":small_blue_diamond:macOS"
-            new_labels.push label
+            puts "Skipping macOS"
+            # label = ":small_blue_diamond:macOS"
+            # new_labels.push label
         end
       end
 

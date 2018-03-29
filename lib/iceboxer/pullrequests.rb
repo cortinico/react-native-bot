@@ -39,15 +39,15 @@ module Iceboxer
     def candidates
       [
         {
-          :search => "repo:#{@repo} is:pr is:open created:>#{1.day.ago.to_date.to_s}",
+          :search => "repo:#{@repo} is:pr is:open created:>=#{2.days.ago.to_date.to_s}",
           :action => 'lint_pr'
         },
         {
-          :search => "repo:#{@repo} is:open is:pr -label:\":clipboard:Release Notes\" -label:\":clipboard:No Release Notes\" created:>#{1.day.ago.to_date.to_s}",
+          :search => "repo:#{@repo} is:open is:pr -label:\":clipboard:Release Notes\" -label:\":clipboard:No Release Notes\" created:>=#{2.days.ago.to_date.to_s}",
           :action => 'check_release_notes'
         },
         {
-          :search => "repo:#{@repo} is:open is:pr label:\":clipboard:No Release Notes\" updated:>#{1.day.ago.to_date.to_s}",
+          :search => "repo:#{@repo} is:open is:pr label:\":clipboard:No Release Notes\" updated:>=#{2.days.ago.to_date.to_s}",
           :action => 'check_release_notes'
         }                
       ]
@@ -80,7 +80,6 @@ module Iceboxer
       releaseNotesCaptureGroups = releaseNotesRegex.match(body)
       labels = []
       if releaseNotesCaptureGroups
-
         labels.push label_release_notes unless pr.labels.include?(label_release_notes)
 
         platform = releaseNotesCaptureGroups["platform"]
