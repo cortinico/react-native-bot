@@ -1,7 +1,0 @@
-require 'iceboxer/version'
-require 'iceboxer/template'
-require 'iceboxer/old_version'
-require 'iceboxer/closer'
-require 'iceboxer/labeler'
-require 'iceboxer/pullrequests'
-require 'iceboxer/task'

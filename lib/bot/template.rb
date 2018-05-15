@@ -2,7 +2,7 @@ require 'octokit'
 require 'active_support/all'
 require 'uri'
 
-module Iceboxer
+module Bot
   class Template
 
     def initialize(repo)
