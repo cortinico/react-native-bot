@@ -60,7 +60,7 @@ module Iceboxer
             label_old_version = ":rewind:Old Version"
             Octokit.add_comment(@repo, issue.number, message("old_version"))
             add_labels(issue, [label_old_version])
-      
+
             puts "#{@repo}: [OLD VERSION] ❗⏪ #{issue.html_url}: #{issue.title} --> Nagged, wanted #{@latest_release_version_major_minor} got #{version_info["installed_version_major_minor"]}"
           end
         end
@@ -86,13 +86,13 @@ module Iceboxer
       when "old_version"
         <<-MSG.strip_heredoc
         Thanks for posting this! It looks like your issue may refer to an older version of React Native. Can you reproduce the issue on the #{latest_release}?
-        
+
         Thank you for your contributions.
         MSG
       when "no_envinfo"
         <<-MSG.strip_heredoc
         Thanks for posting this! It looks like your issue may be missing some necessary information. Can you run `react-native info` and edit your issue to include these results under the **Environment** section?
-        
+
         Thank you for your contributions.
         MSG
       end
@@ -114,11 +114,11 @@ module Iceboxer
     def issue_contains_label(issue, label)
       existing_labels = []
 
-      issue.labels.each do |issue_label| 
+      issue.labels.each do |issue_label|
         existing_labels.push issue_label.name if issue_label.name
       end
 
       existing_labels.include? label
-    end   
+    end
   end
 end

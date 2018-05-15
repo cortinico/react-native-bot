@@ -49,7 +49,7 @@ module Iceboxer
         {
           :search => "repo:#{@repo} is:open is:pr label:\":clipboard:No Release Notes\" updated:>=#{2.days.ago.to_date.to_s}",
           :action => 'check_release_notes'
-        }                
+        }
       ]
     end
 
@@ -160,7 +160,7 @@ module Iceboxer
         labels.push label unless pr.labels.include?(label)
       end
 
-      from_core_contributor = @core_contributors.include? pr.user.login 
+      from_core_contributor = @core_contributors.include? pr.user.login
 
       if from_core_contributor
         label = "Core Team"
@@ -194,7 +194,7 @@ module Iceboxer
     def issue_contains_label(issue, label)
       existing_labels = []
 
-      issue.labels.each do |issue_label| 
+      issue.labels.each do |issue_label|
         existing_labels.push issue_label.name if issue_label.name
       end
 

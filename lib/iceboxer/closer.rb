@@ -32,7 +32,7 @@ module Iceboxer
         },
         {
           :search => "repo:#{@repo} is:issue is:open  label:\":no_entry_sign:Invalid\" updated:>=#{1.week.ago.to_date.to_s}",
-          :message => "We use GitHub Issues exclusively for tracking bugs in React Native. Your issue has been flagged as not being a bug.\n\nSee the [React Native Community Support page](http://facebook.github.io/react-native/help.html) for a list of places where you may ask for help.",
+          :message => "We use GitHub Issues exclusively for tracking bugs in React Native. See the [React Native Community Support page](http://facebook.github.io/react-native/help.html) for a list of places where you may ask for help.",
           :close_reason => "Issue does not belong here."
         }
       ]

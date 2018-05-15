@@ -7,30 +7,44 @@ module Iceboxer
 
     def initialize(repo)
       @repo = repo
+      @label_no_template = ":clipboard:No Template"
     end
 
     def perform
       Octokit.auto_paginate = true
 
-      # close issues that lack a template
-      closers.each do |closer|
-        issues = Octokit.search_issues(closer[:search])
+      candidates.each do |candidate|
+        issues = Octokit.search_issues(candidate[:search])
         puts "#{@repo}: [TEMPLATE] Found #{issues.items.count} issues..."
         issues.items.each do |issue|
-          unless already_nagged?(issue.number)
-            puts "#{@repo}: [TEMPLATE] Processing #{issue.html_url}: #{issue.title}"
-            templateNag(issue, closer)
-          end
+          process(issue, candidate)
         end
       end
     end
 
-    def closers
+    def candidates
       [
         {
-          :search => "repo:#{@repo} is:issue is:open NOT \"Environment\" in:body NOT \"cherry-pick\" in:title -label:\"For Discussion\" -label:\":star2:Feature Request\" -label:\"Core Team\" -label:\":no_entry_sign:Docs\" -label:\":no_entry_sign:For Stack Overflow\" -label:\"Good first issue\" -label:\":clipboard:No Template\" comments:<3 created:>=2018-03-19"
+          :search => "repo:#{@repo} is:issue is:open NOT \"Environment\" in:body NOT \"cherry-pick\" in:title -label:\"For Discussion\" -label:\":star2:Feature Request\" -label:\"Core Team\" -label:\":no_entry_sign:Docs\" -label:\":no_entry_sign:For Stack Overflow\" -label:\"Good first issue\" -label:\":clipboard:No Template\" -label:\":nut_and_bolt:Tests\" created:>=2018-03-19",
+          :action => 'nag_template'
+        },
+        {
+          :search => "repo:#{@repo} is:issue is:open \"Environment\" in:body label:\":clipboard:No Template\"",
+          :action => 'remove_label'
         }
       ]
+    end
+
+    def process(issue, candidate)
+      puts "#{@repo}: [TEMPLATE] Processing #{issue.html_url}: #{issue.title}"
+
+      if candidate[:action] == 'nag_template'
+        nag_template(issue)
+      end
+      if candidate[:action] == 'remove_template_label'
+        remove_template_label(issue)
+      end
+
     end
 
     def already_nagged?(issue)
@@ -38,26 +52,63 @@ module Iceboxer
       comments.any? { |c| c.body =~ /Issue Template/ }
     end
 
-    def templateNag(issue, reason)
-      Octokit.add_comment(@repo, issue.number, message("there"))
-      Octokit.add_labels_to_an_issue(@repo, issue.number, [":clipboard:No Template"])
+    def nag_template(issue)
+      labels = [@label_no_template];
 
-      puts "#{@repo}: ️[TEMPLATE] ❗📋  #{issue.html_url}: #{issue.title} -> Missing template, nagged."
+      unless already_nagged?(issue.number)
+        Octokit.add_comment(@repo, issue.number, message)
+        puts "#{@repo}: ️[TEMPLATE] ❗📋  #{issue.html_url}: #{issue.title} -> Missing template, nagged"
+      end
+
+      add_labels(issue, labels)
     end
 
-    def message(reason)
+    def remove_template_label(issue)
+      remove_label(issue, @label_no_template)
+    end
+
+    def add_labels(issue, labels)
+      new_labels = []
+
+      labels.each do |label|
+        new_labels.push label unless issue_contains_label(issue, label)
+      end
+
+      if new_labels.count > 0
+        puts "#{@repo}: [LABELS] 📍 #{issue.html_url}: #{issue.title} --> Adding #{new_labels}"
+        Octokit.add_labels_to_an_issue(@repo, issue.number, new_labels)
+      end
+    end
+
+
+    def remove_label(issue, label)
+      if issue.labels.include? label
+        puts "#{@repo}: [LABELS] ✂️ #{issue.html_url}: #{issue.title} --> Removing #{label}" if issue_contains_label(issue, label)
+        Octokit.remove_label(@repo, issue.number, label)
+      end
+    end
+
+    def issue_contains_label(issue, label)
+      existing_labels = []
+
+      issue.labels.each do |issue_label|
+        existing_labels.push issue_label.name if issue_label.name
+      end
+
+      existing_labels.include? label
+    end
+
+    def message
       <<-MSG.strip_heredoc
-      <!-- 
+      <!--
         {
+          "flagged_by":"react-native-bot",
           "nag_reason": "no-template"
         }
       -->
       Thanks for posting this! It looks like your issue may be incomplete. Are all the fields required by the [Issue Template](https://raw.githubusercontent.com/facebook/react-native/master/.github/ISSUE_TEMPLATE.md) filled out?
-      
-      If you believe your issue contains all the relevant information, let us know in order to have a maintainer remove the No Template label. Thank you for your contributions.
-      
-      <sub>[How to Contribute](https://facebook.github.io/react-native/docs/contributing.html#bugs) • [What to Expect from Maintainers](https://facebook.github.io/react-native/docs/maintainers.html#handling-issues)</sub>
 
+      If you believe your issue contains all the relevant information, let us know in order to have a maintainer remove the ":clipboard:No Template" label.
       MSG
     end
   end
