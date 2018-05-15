@@ -91,9 +91,8 @@ module Bot
             unless already_nagged_oldversion?(issue.number)
               Octokit.add_comment(@repo, issue.number, message("old_version"))
               add_labels(issue, [@label_old_version])
+              puts "#{@repo}: [OLD VERSION] ❗⏪ #{issue.html_url}: #{issue.title} --> Nagged, wanted #{@latest_release_version_major_minor} got #{version_info["installed_version_major_minor"]}"
             end
-
-            puts "#{@repo}: [OLD VERSION] ❗⏪ #{issue.html_url}: #{issue.title} --> Nagged, wanted #{@latest_release_version_major_minor} got #{version_info["installed_version_major_minor"]}" unless already_nagged_oldversion?(issue.number)
           end
         end
       else
