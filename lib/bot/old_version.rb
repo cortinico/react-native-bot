@@ -34,7 +34,7 @@ module Bot
           :action => "nag_old_version"
         },
         {
-          :search => "repo:#{@repo} is:issue is:open \"Environment\" in:body label:\":rewind:Old Version\" updated:>#{1.day.ago.to_date.to_s}",
+          :search => "repo:#{@repo} is:issue is:open \"Environment\" in:body label:\":rewind:Old Version\" updated:>#{2.day.ago.to_date.to_s}",
           :action => "remove_label_if_latest_version"
         }
       ]
@@ -100,7 +100,7 @@ module Bot
         if version_info
           # Check if using latest_version
           if version_info["installed_version_major_minor"] == @latest_release_version_major_minor
-            puts "#{@repo}: [OLD VERSION] ❗⏪ #{issue.html_url}: #{issue.title} --> Latest is #{@latest_release_version_major_minor}, got #{version_info["installed_version_major_minor"]}, removing label."
+            puts "#{@repo}: [OLD VERSION] ⏪ #{issue.html_url}: #{issue.title} --> Latest is #{@latest_release_version_major_minor}, got #{version_info["installed_version_major_minor"]}, should remove label."
             remove_label(issue, @label_old_version)
           end
         end
@@ -146,8 +146,8 @@ module Bot
     end
 
     def remove_label(issue, label)
-      if issue.labels.include? label
-        puts "#{@repo}: [LABELS] ✂️ #{issue.html_url}: #{issue.title} --> Removing #{label}" if issue_contains_label(issue, label)
+      if issue_contains_label(issue,label)
+        puts "#{@repo}: [LABELS] ✂️ #{issue.html_url}: #{issue.title} --> Removing #{label}"
         Octokit.remove_label(@repo, issue.number, label)
       end
     end

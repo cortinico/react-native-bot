@@ -81,11 +81,12 @@ module Bot
 
 
     def remove_label(issue, label)
-      if issue.labels.include? label
-        puts "#{@repo}: [LABELS] ✂️ #{issue.html_url}: #{issue.title} --> Removing #{label}" if issue_contains_label(issue, label)
+      if issue_contains_label(issue,label)
+        puts "#{@repo}: [LABELS] ✂️ #{issue.html_url}: #{issue.title} --> Removing #{label}"
         Octokit.remove_label(@repo, issue.number, label)
       end
     end
+
 
     def issue_contains_label(issue, label)
       existing_labels = []
