@@ -11,6 +11,8 @@ module Bot
       version_info = /v(?<major_minor>[0-9]{1,2}\.[0-9]{1,2})\.(?<patch>[0-9]{1,2})/.match(@latest_release.tag_name)
       @latest_release_version_major_minor = version_info['major_minor']
 
+      @label_needs_more_information = ":grey_question:Needs More Information"
+
       @label_old_version = ":rewind:Old Version"
     end
 
@@ -34,15 +36,28 @@ module Bot
           :action => "nag_old_version"
         },
         {
+          :search => "repo:#{@repo} is:issue is:open \"Environment\" in:body -label:\"Core Team\" -label:\":rewind:Old Version\" -label:\"Good first issue\" updated:>#{2.day.ago.to_date.to_s}",
+          :action => "nag_old_version"
+        },
+        {
+          :search => "repo:#{@repo} is:issue is:open \"Environment\" in:body label:\"#{@label_needs_more_information}\" -label:\":rewind:Old Version\" -label:\"Good first issue\" updated:>#{2.day.ago.to_date.to_s}",
+          :action => "nag_old_version"
+        },
+        {
           :search => "repo:#{@repo} is:issue is:open \"Environment\" in:body label:\":rewind:Old Version\" updated:>#{2.day.ago.to_date.to_s}",
           :action => "remove_label_if_latest_version"
         }
       ]
     end
 
-    def already_nagged?(issue)
+    def already_nagged_oldversion?(issue)
       comments = Octokit.issue_comments(@repo, issue)
-      comments.any? { |c| c.body =~ /older version/ } or comments.any? { |c| c.body =~ /react-native info/ }
+      comments.any? { |c| c.body =~ /older version/ }
+    end
+
+    def already_nagged_envinfo?(issue)
+      comments = Octokit.issue_comments(@repo, issue)
+      comments.any? { |c| c.body =~ /react-native info/ }
     end
 
     def strip_comments(text)
@@ -54,7 +69,7 @@ module Bot
       puts "#{@repo}: [OLD VERSION] Processing #{issue.html_url}: #{issue.title}"
 
       if candidate[:action] == 'nag_old_version'
-        nag_if_using_old_version(issue, candidate) unless already_nagged?(issue.number)
+        nag_if_using_old_version(issue, candidate)
       end
       if candidate[:action] == 'remove_label_if_latest_version'
         remove_label_if_latest_version(issue, candidate)
@@ -73,19 +88,19 @@ module Bot
         if version_info
           # Check if using latest_version
           if version_info["installed_version_major_minor"] != @latest_release_version_major_minor
-
             Octokit.add_comment(@repo, issue.number, message("old_version"))
-            add_labels(issue, [@label_old_version])
+            add_labels(issue, [@label_old_version]) unless already_nagged_oldversion?(issue.number)
 
-            puts "#{@repo}: [OLD VERSION] ❗⏪ #{issue.html_url}: #{issue.title} --> Nagged, wanted #{@latest_release_version_major_minor} got #{version_info["installed_version_major_minor"]}"
+            puts "#{@repo}: [OLD VERSION] ❗⏪ #{issue.html_url}: #{issue.title} --> Nagged, wanted #{@latest_release_version_major_minor} got #{version_info["installed_version_major_minor"]}" unless already_nagged_oldversion?(issue.number)
           end
         end
       else
         # No envinfo block?
-        label_needs_more_information = ":grey_question:Needs More Information"
-        Octokit.add_comment(@repo, issue.number, message("no_envinfo"))
-        add_labels(issue, [label_needs_more_information])
-        puts "️#{@repo}: [NO ENV INFO] ❗❔ #{issue.html_url}: #{issue.title} --> Nagged, no envinfo found"
+        unless already_nagged_envinfo?(issue.number)
+          Octokit.add_comment(@repo, issue.number, message("no_envinfo"))
+          add_labels(issue, [@label_needs_more_information])
+          puts "️#{@repo}: [NO ENV INFO] ❗❔ #{issue.html_url}: #{issue.title} --> Nagged, no envinfo found"
+        end
       end
     end
 
@@ -119,15 +134,11 @@ module Bot
       case reason
       when "old_version"
         <<-MSG.strip_heredoc
-        Thanks for posting this! It looks like your issue may refer to an older version of React Native. Can you reproduce the issue on the #{latest_release}?
-
-        Thank you for your contributions.
+        It looks like your issue may refer to an older version of React Native. Can you reproduce the issue on the #{latest_release}?
         MSG
       when "no_envinfo"
         <<-MSG.strip_heredoc
-        Thanks for posting this! It looks like your issue may be missing some necessary information. Can you run `react-native info` and edit your issue to include these results under the **Environment** section?
-
-        Thank you for your contributions.
+        It looks like your issue may be missing some necessary information. Can you run `react-native info` and edit your issue to include these results under the **Environment** section?
         MSG
       end
     end
