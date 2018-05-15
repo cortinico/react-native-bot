@@ -4,7 +4,11 @@ require 'active_support/all'
 module Bot
 
   @@operations = [
-
+    Bot::Closer,
+    Bot::Template,
+    Bot::PullRequests,
+    Bot::OldVersion,
+    Bot::Labeler,
     Bot::Locker
   ]
 
