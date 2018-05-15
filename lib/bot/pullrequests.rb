@@ -6,6 +6,10 @@ module Bot
 
     def initialize(repo)
       @repo = repo
+      @label_no_test_plan = ":clipboard:No Test Plan"
+      @label_has_test_plan = ":white_check_mark:Test Plan"
+      @label_no_release_notes = ":clipboard:No Release Notes"
+      @label_has_release_notes = ":white_check_mark:Release Notes"
       @core_contributors = [
         "anp",
         "ide",
@@ -42,11 +46,19 @@ module Bot
           :action => 'lint_pr'
         },
         {
-          :search => "repo:#{@repo} is:open is:pr -label:\":clipboard:Release Notes\" -label:\":clipboard:No Release Notes\" created:>=#{2.days.ago.to_date.to_s}",
+          :search => "repo:#{@repo} is:pr is:open updated:>=#{2.days.ago.to_date.to_s} label:\"#{@label_no_test_plan}\"",
+          :action => 'lint_pr'
+        },
+        {
+          :search => "repo:#{@repo} is:pr is:open updated:>=#{2.days.ago.to_date.to_s} label:\"#{@label_no_release_notes}\"",
+          :action => 'lint_pr'
+        },
+        {
+          :search => "repo:#{@repo} is:open is:pr -label:\"#{@label_has_release_notes}\" -label:\"#{@label_no_release_notes}\" created:>=#{2.days.ago.to_date.to_s}",
           :action => 'check_release_notes'
         },
         {
-          :search => "repo:#{@repo} is:open is:pr label:\":clipboard:No Release Notes\" updated:>=#{2.days.ago.to_date.to_s}",
+          :search => "repo:#{@repo} is:open is:pr label:\"#{@label_no_release_notes}\" updated:>=#{2.days.ago.to_date.to_s}",
           :action => 'check_release_notes'
         }
       ]
@@ -72,16 +84,13 @@ module Bot
     end
 
     def check_release_notes(pr)
-      label_release_notes = ":clipboard:Release Notes"
-      label_no_release_notes = ":clipboard:No Release Notes"
-
       releaseNotesRegex = /\[\s?(?<platform>ANDROID|CLI|DOCS|GENERAL|INTERNAL|IOS|TVOS|WINDOWS)\s?\]\s*?\[\s?(?<category>BREAKING|BUGFIX|ENHANCEMENT|FEATURE|MINOR)\s?\]\s*?\[(.*)\]\s*?\-\s*?(.*)/
 
       body = strip_comments(pr.body)
       releaseNotesCaptureGroups = releaseNotesRegex.match(body)
       labels = []
       if releaseNotesCaptureGroups
-        labels.push label_release_notes unless pr.labels.include?(label_release_notes)
+        labels.push @label_has_release_notes unless pr.labels.include?(@label_has_release_notes)
 
         platform = releaseNotesCaptureGroups["platform"]
         category = releaseNotesCaptureGroups["category"]
@@ -131,11 +140,11 @@ module Bot
             labels.push
         end
 
-        remove_label(pr, label_no_release_notes)
+        remove_label(pr, @label_no_release_notes)
       else
-        labels.push label_no_release_notes unless pr.labels.include?(label_no_release_notes)
+        labels.push @label_no_release_notes unless pr.labels.include?(@label_no_release_notes)
 
-        remove_label(pr, label_release_notes)
+        remove_label(pr, @label_has_release_notes)
       end
 
       if labels.count > 0
@@ -150,22 +159,25 @@ module Bot
 
       if is_large_pr
         label = ":clipboard:Large PR :bangbang:"
-        labels.push label unless pr.labels.include?(label)
+        labels.push label
       end
 
       body = strip_comments(pr.body)
       has_test_plan = body.downcase =~ /test plan/
 
-      unless has_test_plan
-        label = ":clipboard:No Test Plan"
-        labels.push label unless pr.labels.include?(label)
+      if has_test_plan
+        labels.push @label_has_test_plan
+        remove_label(pr, @label_no_test_plan)
+      else
+        labels.push @label_no_test_plan
+        remove_label(pr, @label_has_test_plan)
       end
 
       from_core_contributor = @core_contributors.include? pr.user.login
 
       if from_core_contributor
         label = "Core Team"
-        labels.push label unless pr.labels.include?(label)
+        labels.push label
       end
 
       add_labels(pr, labels)
