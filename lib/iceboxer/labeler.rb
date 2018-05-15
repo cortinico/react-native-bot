@@ -11,7 +11,7 @@ module Iceboxer
     def perform
       candidates.each do |candidate|
         issues = Octokit.search_issues(candidate[:search])
-        puts "#{@repo}: [LABELER] Found #{issues.items.count} recently created issues..."
+        puts "#{@repo}: [LABELER] Found #{issues.items.count} recently created issues for candidate #{candidate[:action]}..."
         issues.items.each do |issue|
           puts "#{@repo}: [LABELER] Processing #{issue.html_url}: #{issue.title}"
           label_based_on_title(issue)
@@ -23,7 +23,8 @@ module Iceboxer
     def candidates
       [
         {
-          :search => "repo:#{@repo} is:open created:>=#{1.day.ago.to_date.to_s}"
+          :search => "repo:#{@repo} is:open created:>=#{1.day.ago.to_date.to_s}",
+          :action => "label"
         }
       ]
     end
@@ -64,17 +65,17 @@ module Iceboxer
 
       if envinfo
         case envinfo["OS"]
-          when "Windows"
-            puts "Skipping Windows"
-            # label = ":small_blue_diamond:Windows"
-            # new_labels.push label
+          # when "Windows"
+          #   puts "Skipping Windows"
+          #   # label = ":small_blue_diamond:Windows"
+          #   # new_labels.push label
           when "Linux"
             label = ":small_blue_diamond:Linux"
             new_labels.push label
-          when "macOS"
-            puts "Skipping macOS"
-            # label = ":small_blue_diamond:macOS"
-            # new_labels.push label
+          # when "macOS"
+          #   puts "Skipping macOS"
+          #   # label = ":small_blue_diamond:macOS"
+          #   # new_labels.push label
         end
       end
 
@@ -104,11 +105,11 @@ module Iceboxer
     def issue_contains_label(issue, label)
       existing_labels = []
 
-      issue.labels.each do |issue_label| 
+      issue.labels.each do |issue_label|
         existing_labels.push issue_label.name if issue_label.name
       end
 
       existing_labels.include? label
-    end    
+    end
   end
 end

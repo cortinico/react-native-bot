@@ -10,28 +10,32 @@ module Iceboxer
       @latest_release = Octokit.latest_release(@repo)
       version_info = /v(?<major_minor>[0-9]{1,2}\.[0-9]{1,2})\.(?<patch>[0-9]{1,2})/.match(@latest_release.tag_name)
       @latest_release_version_major_minor = version_info['major_minor']
+
+      @label_old_version = ":rewind:Old Version"
     end
 
     def perform
       Octokit.auto_paginate = true
 
       # close issues that mention an old version
-      closers.each do |closer|
-        issues = Octokit.search_issues(closer[:search])
-        puts "#{@repo}: [OLD VERSION] Found #{issues.items.count} issues..."
+      candidates.each do |candidate|
+        issues = Octokit.search_issues(candidate[:search])
+        puts "#{@repo}: [OLD VERSION] Found #{issues.items.count} issues for candidate #{candidate[:action]}..."
         issues.items.each do |issue|
-          unless already_nagged?(issue.number)
-            puts "#{@repo}: [OLD VERSION] Processing #{issue.html_url}: #{issue.title}"
-            nag_if_using_old_version(issue, closer)
-          end
+          process(issue, candidate)
         end
       end
     end
 
-    def closers
+    def candidates
       [
         {
-          :search => "repo:#{@repo} is:issue is:open \"Environment\" in:body -label:\"Core Team\" -label:\":rewind:Old Version\" created:>#{1.day.ago.to_date.to_s}"
+          :search => "repo:#{@repo} is:issue is:open \"Environment\" in:body -label:\"Core Team\" -label:\":rewind:Old Version\" created:>#{1.day.ago.to_date.to_s}",
+          :action => "nag_old_version"
+        },
+        {
+          :search => "repo:#{@repo} is:issue is:open \"Environment\" in:body label:\":rewind:Old Version\" updated:>#{1.day.ago.to_date.to_s}",
+          :action => "remove_label_if_latest_version"
         }
       ]
     end
@@ -46,6 +50,18 @@ module Iceboxer
       text.gsub(regex, "")
     end
 
+    def process(issue, candidate)
+      puts "#{@repo}: [OLD VERSION] Processing #{issue.html_url}: #{issue.title}"
+
+      if candidate[:action] == 'nag_old_version'
+        nag_if_using_old_version(issue, candidate) unless already_nagged?(issue.number)
+      end
+      if candidate[:action] == 'remove_label_if_latest_version'
+        remove_label_if_latest_version(issue, candidate)
+      end
+
+    end
+
     def nag_if_using_old_version(issue, reason)
       body = strip_comments(issue.body)
 
@@ -57,9 +73,9 @@ module Iceboxer
         if version_info
           # Check if using latest_version
           if version_info["installed_version_major_minor"] != @latest_release_version_major_minor
-            label_old_version = ":rewind:Old Version"
+
             Octokit.add_comment(@repo, issue.number, message("old_version"))
-            add_labels(issue, [label_old_version])
+            add_labels(issue, [@label_old_version])
 
             puts "#{@repo}: [OLD VERSION] ❗⏪ #{issue.html_url}: #{issue.title} --> Nagged, wanted #{@latest_release_version_major_minor} got #{version_info["installed_version_major_minor"]}"
           end
@@ -70,6 +86,24 @@ module Iceboxer
         Octokit.add_comment(@repo, issue.number, message("no_envinfo"))
         add_labels(issue, [label_needs_more_information])
         puts "️#{@repo}: [NO ENV INFO] ❗❔ #{issue.html_url}: #{issue.title} --> Nagged, no envinfo found"
+      end
+    end
+
+    def remove_label_if_latest_version(issue, reason)
+      body = strip_comments(issue.body)
+
+      if body =~ /Packages: \(wanted => installed\)/
+        # Contains envinfo block
+
+        version_info = /(react-native:)\s?[\^~]?(?<requested_version>[0-9]{1,2}\.[0-9]{1,2}\.[0-9]{1,2})\s=>\s(?<installed_version_major_minor>[0-9]{1,2}\.[0-9]{1,2})\.[0-9]{1,2}/.match(body)
+
+        if version_info
+          # Check if using latest_version
+          if version_info["installed_version_major_minor"] == @latest_release_version_major_minor
+            puts "#{@repo}: [OLD VERSION] ❗⏪ #{issue.html_url}: #{issue.title} --> Latest is #{@latest_release_version_major_minor}, got #{version_info["installed_version_major_minor"]}, removing label."
+            remove_label(issue, @label_old_version)
+          end
+        end
       end
     end
 
@@ -108,6 +142,13 @@ module Iceboxer
       if new_labels.count > 0
         puts "#{@repo}: [LABELS] 📍 #{issue.html_url}: #{issue.title} --> Adding #{new_labels}"
         Octokit.add_labels_to_an_issue(@repo, issue.number, new_labels)
+      end
+    end
+
+    def remove_label(issue, label)
+      if issue.labels.include? label
+        puts "#{@repo}: [LABELS] ✂️ #{issue.html_url}: #{issue.title} --> Removing #{label}" if issue_contains_label(issue, label)
+        Octokit.remove_label(@repo, issue.number, label)
       end
     end
 

@@ -28,9 +28,8 @@ module Iceboxer
     def perform
       candidates.each do |candidate|
         prs = Octokit.search_issues(candidate[:search])
-        puts "#{@repo}: [PR] Found #{prs.items.count} PRs..."
+        puts "#{@repo}: [PR] Found #{prs.items.count} PRs for candidate #{candidate[:action]}..."
         prs.items.each do |pr|
-          puts "#{@repo}: [PR] Processing #{pr.html_url}: #{pr.title}"
           process(pr, candidate)
         end
       end
@@ -59,6 +58,8 @@ module Iceboxer
     end
 
     def process(pr, candidate)
+      puts "#{@repo}: [PR] Processing #{pr.html_url}: #{pr.title}"
+
       if candidate[:action] == 'check_release_notes'
         check_release_notes(pr)
       end

@@ -9,16 +9,16 @@ module Iceboxer
     end
 
     def perform
-      closers.each do |closer|
-        issues = Octokit.search_issues(closer[:search])
-        puts "#{@repo}: [CLOSERS] [#{closer[:close_reason]}] Found #{issues.items.count} issues..."
+      candidates.each do |candidate|
+        issues = Octokit.search_issues(candidate[:search])
+        puts "#{@repo}: [CLOSERS] [#{candidate[:close_reason]}] Found #{issues.items.count} issues..."
         issues.items.each do |issue|
-          nag(issue, closer)
+          nag(issue, candidate)
         end
       end
     end
 
-    def closers
+    def candidates
       [
         {
           :search => "repo:#{@repo} is:issue is:open label:\":no_entry_sign:For Stack Overflow\" created:>=#{1.week.ago.to_date.to_s}",

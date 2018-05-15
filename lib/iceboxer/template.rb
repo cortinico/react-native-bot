@@ -15,7 +15,7 @@ module Iceboxer
 
       candidates.each do |candidate|
         issues = Octokit.search_issues(candidate[:search])
-        puts "#{@repo}: [TEMPLATE] Found #{issues.items.count} issues..."
+        puts "#{@repo}: [TEMPLATE] Found #{issues.items.count} issues for candidate #{candidate[:action]}..."
         issues.items.each do |issue|
           process(issue, candidate)
         end
@@ -44,7 +44,6 @@ module Iceboxer
       if candidate[:action] == 'remove_template_label'
         remove_template_label(issue)
       end
-
     end
 
     def already_nagged?(issue)
