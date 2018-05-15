@@ -1,7 +1,7 @@
 require 'octokit'
 require 'active_support/all'
 
-module Iceboxer
+module Bot
   class Labeler
 
     def initialize(repo)

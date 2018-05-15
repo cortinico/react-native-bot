@@ -1,7 +1,7 @@
 $LOAD_PATH.unshift File.expand_path("../lib", __FILE__)
-require 'iceboxer'
+require 'bot'
 require 'dotenv/tasks'
 
-task :icebox => :dotenv do
-  Iceboxer.run
+task :bot => :dotenv do
+  Bot.run
 end
