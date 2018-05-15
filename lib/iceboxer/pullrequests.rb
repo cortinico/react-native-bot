@@ -14,7 +14,7 @@ module Iceboxer
         "charpeni",
         "dlowder-salesforce",
         "grabbou",
-        "keltset",
+        "kelset",
         "lelandrichardson",
         "skevy",
         "rozele",
