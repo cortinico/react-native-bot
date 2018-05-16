@@ -61,6 +61,7 @@ module Bot
     end
 
     def strip_comments(text)
+      return "" unless text
       regex = /(?=<!--)([\s\S]*?-->)/m
       text.gsub(regex, "")
     end
