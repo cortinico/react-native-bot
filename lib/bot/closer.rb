@@ -6,6 +6,7 @@ module Bot
 
     def initialize(repo)
       @repo = repo
+      @label_old_version = ":rewind:Old Version"
     end
 
     def perform
@@ -27,8 +28,13 @@ module Bot
         },
         {
           :search => "repo:#{@repo} is:issue is:open label:\":clipboard:No Template\" -label:\"Core Team\" -label:\"For Discussion\" updated:<#{7.days.ago.to_date.to_s}",
-          :message => "This issue was marked as lacking information required by the issue template. There has been no activity on this issue for a while, so I will go ahead and close it.\n\nIf you found this thread after encountering the same issue in the [latest release](https://github.com/facebook/react-native/releases), please feel free to create a new issue with up-to-date information by clicking [here](https://github.com/facebook/react-native/issues/new).\n\nIf you are the author of this issue and you believe this issue was closed in error (i.e. you have edited your issue to ensure it meets the template requirements), please let us know.",
+          :message => "This issue is flagged for not following the required issue template. There has been no activity on this issue for a while, so I will go ahead and close it.\n\nIf you found this thread after encountering the same issue in the [latest release](https://github.com/facebook/react-native/releases), please feel free to create a new issue with up-to-date information by clicking [here](https://github.com/facebook/react-native/issues/new).\n\nIf you are the author of this issue and you believe this issue was closed in error (i.e. you have edited your issue to ensure it meets the template requirements), please let us know.",
           :close_reason => "Missing information, issue not updated in last seven days"
+        },
+        {
+          :search => "repo:#{@repo} is:issue is:open label:\"#{@label_old_version}\" -label:\"Core Team\" -label:\"For Discussion\" comments:<1 updated:<#{7.days.ago.to_date.to_s}",
+          :message => "I am closing this issue because it does not appear to have been verified on the latest release, and there has been no followup in a while.\n\nIf you found this thread after encountering the same issue in the [latest release](https://github.com/facebook/react-native/releases), please feel free to create a new issue with up-to-date information by clicking [here](https://github.com/facebook/react-native/issues/new).",
+          :close_reason => "Old version, issue not updated in last seven days"
         },
         {
           :search => "repo:#{@repo} is:issue is:open  label:\":no_entry_sign:Invalid\" updated:>=#{1.week.ago.to_date.to_s}",
