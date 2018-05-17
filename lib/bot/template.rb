@@ -29,7 +29,7 @@ module Bot
           :action => 'nag_template'
         },
         {
-          :search => "repo:#{@repo} is:issue is:open \"Environment\" in:body label:\":clipboard:No Template\"",
+          :search => "repo:#{@repo} is:issue is:open \"Environment\" in:body label:\":clipboard:No Template\" created:>=2018-03-19 updated:>=#{3.day.ago.to_date.to_s}",
           :action => 'remove_label'
         }
       ]
@@ -106,7 +106,7 @@ module Bot
           "nag_reason": "no-template"
         }
       -->
-      Thanks for posting this! It looks like your issue may be incomplete. Are all the fields required by the [Issue Template](https://raw.githubusercontent.com/facebook/react-native/master/.github/ISSUE_TEMPLATE.md) filled out?
+      It looks like your issue may be incomplete. Are all the fields required by the [Issue Template](https://raw.githubusercontent.com/facebook/react-native/master/.github/ISSUE_TEMPLATE.md) filled out?
 
       If you believe your issue contains all the relevant information, let us know in order to have a maintainer remove the ":clipboard:No Template" label.
       MSG

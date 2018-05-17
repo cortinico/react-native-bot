@@ -27,9 +27,9 @@ module Bot
           :close_reason => "For Stack Overflow"
         },
         {
-          :search => "repo:#{@repo} is:issue is:open label:\":clipboard:No Template\" -label:\"Core Team\" -label:\"For Discussion\" updated:<#{7.days.ago.to_date.to_s}",
-          :message => "This issue is flagged for not following the required issue template. There has been no activity on this issue for a while, so I will go ahead and close it.\n\nIf you found this thread after encountering the same issue in the [latest release](https://github.com/facebook/react-native/releases), please feel free to create a new issue with up-to-date information by clicking [here](https://github.com/facebook/react-native/issues/new).\n\nIf you are the author of this issue and you believe this issue was closed in error (i.e. you have edited your issue to ensure it meets the template requirements), please let us know.",
-          :close_reason => "Missing information, issue not updated in last seven days"
+          :search => "repo:#{@repo} is:issue is:open label:\":clipboard:No Template\" -label:\"Core Team\" -label:\"For Discussion\" -label:\"Good first issue\" -label:\"Help Wanted :octocat:\" updated:<#{2.days.ago.to_date.to_s}",
+          :message => "If you are still encountering the issue described here, please open a new issue and make sure to fill out the [Issue Template](https://raw.githubusercontent.com/facebook/react-native/master/.github/ISSUE_TEMPLATE.md) when doing so.",
+          :close_reason => "No template, issue not updated in last two days"
         },
         {
           :search => "repo:#{@repo} is:issue is:open label:\"#{@label_old_version}\" -label:\"Core Team\" -label:\"For Discussion\" comments:<2 updated:<#{7.days.ago.to_date.to_s}",
