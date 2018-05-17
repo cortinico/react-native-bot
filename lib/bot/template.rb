@@ -108,7 +108,7 @@ module Bot
       -->
       It looks like your issue may be incomplete. Are all the fields required by the [Issue Template](https://raw.githubusercontent.com/facebook/react-native/master/.github/ISSUE_TEMPLATE.md) filled out?
 
-      If you believe your issue contains all the relevant information, let us know in order to have a maintainer remove the ":clipboard:No Template" label.
+      If you believe your issue contains all the relevant information, let us know in order to have a maintainer remove the `:clipboard:No Template` label.
       MSG
     end
   end

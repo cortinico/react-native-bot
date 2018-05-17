@@ -36,7 +36,7 @@ module Bot
           :action => "nag_old_version"
         },
         {
-          :search => "repo:#{@repo} is:issue is:open \"Environment\" in:body -label:\"Core Team\" -label:\":rewind:Old Version\" -label:\"Good first issue\" updated:>#{2.day.ago.to_date.to_s}",
+          :search => "repo:#{@repo} is:issue is:open \"Environment\" in:body -label:\"Core Team\" -label:\":rewind:Old Version\" -label:\"Good first issue\" created:>#{7.day.ago.to_date.to_s} updated:>#{2.day.ago.to_date.to_s}",
           :action => "nag_old_version"
         },
         {
