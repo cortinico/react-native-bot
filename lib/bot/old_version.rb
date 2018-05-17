@@ -12,8 +12,10 @@ module Bot
       @latest_release_version_major_minor = version_info['major_minor']
 
       @label_needs_more_information = ":grey_question:Needs More Information"
-
+      @label_pr_pending = ":clock1:PR Pending"
       @label_old_version = ":rewind:Old Version"
+      @label_good_first_issue = "Good first issue"
+      @label_core_team = "Core Team"
     end
 
     def perform
@@ -32,19 +34,19 @@ module Bot
     def candidates
       [
         {
-          :search => "repo:#{@repo} is:issue is:open \"Environment\" in:body -label:\"Core Team\" -label:\":rewind:Old Version\" created:>#{1.day.ago.to_date.to_s}",
+          :search => "repo:#{@repo} is:issue is:open \"Environment\" in:body -label:\"#{@label_core_team}\" -label:\"#{@label_old_version}\"  -label:\"#{@label_pr_pending}\" created:>#{1.day.ago.to_date.to_s}",
           :action => "nag_old_version"
         },
         {
-          :search => "repo:#{@repo} is:issue is:open \"Environment\" in:body -label:\"Core Team\" -label:\":rewind:Old Version\" -label:\"Good first issue\" created:>#{7.day.ago.to_date.to_s} updated:>#{2.day.ago.to_date.to_s}",
+          :search => "repo:#{@repo} is:issue is:open \"Environment\" in:body -label:\"#{@label_core_team}\" -label:\"#{@label_old_version}\" -label:\"#{@label_pr_pending}\" -label:\"#{@label_good_first_issue}\" created:>#{7.day.ago.to_date.to_s} updated:>#{2.day.ago.to_date.to_s}",
           :action => "nag_old_version"
         },
         {
-          :search => "repo:#{@repo} is:issue is:open \"Environment\" in:body label:\"#{@label_needs_more_information}\" -label:\":rewind:Old Version\" -label:\"Good first issue\" updated:>#{2.day.ago.to_date.to_s}",
+          :search => "repo:#{@repo} is:issue is:open \"Environment\" in:body label:\"#{@label_needs_more_information}\" -label:\"#{@label_pr_pending}\" -label:\"#{@label_old_version}\" -label:\"#{@label_good_first_issue}\" updated:>#{2.day.ago.to_date.to_s}",
           :action => "nag_old_version"
         },
         {
-          :search => "repo:#{@repo} is:issue is:open \"Environment\" in:body label:\":rewind:Old Version\" updated:>#{2.day.ago.to_date.to_s}",
+          :search => "repo:#{@repo} is:issue is:open \"Environment\" in:body label:\"#{@label_old_version}\" updated:>#{2.day.ago.to_date.to_s}",
           :action => "remove_label_if_latest_version"
         }
       ]
