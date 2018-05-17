@@ -83,7 +83,7 @@ module Bot
     def nag_if_using_old_version(issue, reason)
       body = strip_comments(issue.body)
 
-      if body =~ /Packages: \(wanted => installed\)/
+      if body =~ /Packages: \(wanted => installed\)/ || body =~ /React Native Environment Info:/
         # Contains envinfo block
 
         version_info = /(react-native:)\s?[\^~]?(?<requested_version>[0-9]{1,2}\.[0-9]{1,2}\.[0-9]{1,2})\s=>\s(?<installed_version_major_minor>[0-9]{1,2}\.[0-9]{1,2})\.[0-9]{1,2}/.match(body)
