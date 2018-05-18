@@ -8,6 +8,8 @@ module Bot
     def initialize(repo)
       @repo = repo
       @label_no_template = ":clipboard:No Template"
+      @label_stale = "Stale"
+      @label_for_discussion = "For Discussion"
     end
 
     def perform
@@ -25,11 +27,11 @@ module Bot
     def candidates
       [
         {
-          :search => "repo:#{@repo} is:issue is:open NOT \"Environment\" in:body NOT \"cherry-pick\" in:title -label:\"For Discussion\" -label:\":star2:Feature Request\" -label:\"Core Team\" -label:\":no_entry_sign:Docs\" -label:\":no_entry_sign:For Stack Overflow\" -label:\"Good first issue\" -label:\":clipboard:No Template\" -label:\":nut_and_bolt:Tests\" created:>=2018-03-19",
+          :search => "repo:#{@repo} is:issue is:open NOT \"Environment\" in:body NOT \"cherry-pick\" in:title -label:\"#{@label_for_discussion}\" -label:\"#{@label_stale}\" -label:\":star2:Feature Request\" -label:\"Core Team\" -label:\":no_entry_sign:Docs\" -label:\":no_entry_sign:For Stack Overflow\" -label:\"Good first issue\" -label:\"#{@label_no_template}\" -label:\":nut_and_bolt:Tests\" created:>=2018-05-17",
           :action => 'nag_template'
         },
         {
-          :search => "repo:#{@repo} is:issue is:open \"Environment\" in:body label:\":clipboard:No Template\" created:>=2018-03-19 updated:>=#{3.day.ago.to_date.to_s}",
+          :search => "repo:#{@repo} is:issue is:open \"Environment\" in:body -label:\"#{@label_stale}\" label:\"#{@label_no_template}\" created:>=2018-03-19 updated:>=#{3.day.ago.to_date.to_s}",
           :action => 'remove_label'
         }
       ]

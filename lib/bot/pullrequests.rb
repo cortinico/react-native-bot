@@ -10,6 +10,8 @@ module Bot
       @label_has_test_plan = ":white_check_mark:Test Plan"
       @label_no_release_notes = ":clipboard:No Release Notes"
       @label_has_release_notes = ":white_check_mark:Release Notes"
+      @label_large_pr = ":bangbang:Large PR"
+      @label_core_team = "Core Team"
       @core_contributors = [
         "anp",
         "ide",
@@ -99,46 +101,46 @@ module Bot
         case platform
           when "ANDROID"
             label = ":large_blue_diamond:Android"
-            labels.push
+            labels.push label
           when  "CLI"
             label = ":computer:CLI"
-            labels.push
+            labels.push label
           when  "DOCS"
             label = ":no_entry_sign:Docs"
-            labels.push
+            labels.push label
           when  "IOS"
             label = ":large_blue_diamond:iOS"
-            labels.push
+            labels.push label
           when  "TVOS"
             label = ":large_blue_diamond:tvOS"
-            labels.push
+            labels.push label
           when  "WINDOWS"
             label = ":small_blue_diamond:Windows"
-            labels.push
+            labels.push label
           when  "MACOS"
             label = ":small_blue_diamond:macOS"
-            labels.push
+            labels.push label
           when  "LINUX"
             label = ":small_blue_diamond:Linux"
-            labels.push
+            labels.push label
         end
 
         case category
           when "BREAKING"
             label = ":boom:Breaking Change"
-            labels.push
+            labels.push label
           when "BUGFIX"
             label = ":bug:Bug Fix"
-            labels.push
+            labels.push label
           when "ENHANCEMENT"
             label = ":star2:Enhancement PR"
-            labels.push
+            labels.push label
           when "FEATURE"
             label = ":star2:Feature Request"
-            labels.push
+            labels.push label
           when "MINOR"
             label = "Minor Change"
-            labels.push
+            labels.push label
         end
 
         remove_label(pr, @label_no_release_notes)
@@ -156,12 +158,7 @@ module Bot
     def lint_pr(pr)
       labels = []
       comments = Octokit.issue_comments(@repo, pr.number)
-      is_large_pr = comments.any? { |c| c.body =~ /:exclamation: Big PR/ }
-
-      if is_large_pr
-        label = ":clipboard:Large PR :bangbang:"
-        labels.push label
-      end
+      labels.push @label_large_pr if comments.any? { |c| c.body =~ /:exclamation: Big PR/ }
 
       body = strip_comments(pr.body)
       has_test_plan = body.downcase =~ /test plan/
@@ -174,12 +171,7 @@ module Bot
         remove_label(pr, @label_has_test_plan)
       end
 
-      from_core_contributor = @core_contributors.include? pr.user.login
-
-      if from_core_contributor
-        label = "Core Team"
-        labels.push label
-      end
+      labels.push @label_core_team if @core_contributors.include? pr.user.login
 
       add_labels(pr, labels)
     end

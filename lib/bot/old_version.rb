@@ -12,10 +12,13 @@ module Bot
       @latest_release_version_major_minor = version_info['major_minor']
 
       @label_needs_more_information = ":grey_question:Needs More Information"
+      @label_no_envinfo = ":clipboard:No Environment Info"
       @label_pr_pending = ":clock1:PR Pending"
       @label_old_version = ":rewind:Old Version"
       @label_good_first_issue = "Good first issue"
       @label_core_team = "Core Team"
+      @label_for_discussion = "For Discussion"
+      @label_stale = "Stale"
     end
 
     def perform
@@ -34,19 +37,19 @@ module Bot
     def candidates
       [
         {
-          :search => "repo:#{@repo} is:issue is:open \"Environment\" in:body -label:\"#{@label_core_team}\" -label:\"#{@label_old_version}\"  -label:\"#{@label_pr_pending}\" created:>#{1.day.ago.to_date.to_s}",
+          :search => "repo:#{@repo} is:issue is:open \"Environment\" in:body -label:\"#{@label_core_team}\" -label:\"#{@label_for_discussion}\" -label:\"#{@label_old_version}\" -label:\"#{@label_pr_pending}\" -label:\"#{@label_stale}\" created:>#{1.day.ago.to_date.to_s}",
           :action => "nag_old_version"
         },
         {
-          :search => "repo:#{@repo} is:issue is:open \"Environment\" in:body -label:\"#{@label_core_team}\" -label:\"#{@label_old_version}\" -label:\"#{@label_pr_pending}\" -label:\"#{@label_good_first_issue}\" created:>#{7.day.ago.to_date.to_s} updated:>#{2.day.ago.to_date.to_s}",
+          :search => "repo:#{@repo} is:issue is:open \"Environment\" in:body -label:\"#{@label_core_team}\" -label:\"#{@label_for_discussion}\" -label:\"#{@label_stale}\" -label:\"#{@label_old_version}\" -label:\"#{@label_pr_pending}\" -label:\"#{@label_good_first_issue}\" created:>#{7.day.ago.to_date.to_s} updated:>#{2.day.ago.to_date.to_s}",
           :action => "nag_old_version"
         },
         {
-          :search => "repo:#{@repo} is:issue is:open \"Environment\" in:body label:\"#{@label_needs_more_information}\" -label:\"#{@label_pr_pending}\" -label:\"#{@label_old_version}\" -label:\"#{@label_good_first_issue}\" updated:>#{2.day.ago.to_date.to_s}",
+          :search => "repo:#{@repo} is:issue is:open \"Environment\" in:body label:\"#{@label_no_envinfo}\" -label:\"#{@label_for_discussion}\" -label:\"#{@label_stale}\" -label:\"#{@label_pr_pending}\" -label:\"#{@label_old_version}\" -label:\"#{@label_good_first_issue}\" created:>#{7.day.ago.to_date.to_s} updated:>#{2.day.ago.to_date.to_s}",
           :action => "nag_old_version"
         },
         {
-          :search => "repo:#{@repo} is:issue is:open \"Environment\" in:body label:\"#{@label_old_version}\" updated:>#{2.day.ago.to_date.to_s}",
+          :search => "repo:#{@repo} is:issue is:open \"Environment\" in:body label:\"#{@label_old_version}\" -label:\"#{@label_stale}\" updated:>#{2.day.ago.to_date.to_s}",
           :action => "remove_label_if_latest_version"
         }
       ]
@@ -92,7 +95,6 @@ module Bot
           # Check if using latest_version
           if version_info["installed_version_major_minor"] != @latest_release_version_major_minor
             unless already_nagged_oldversion?(issue.number)
-              Octokit.add_comment(@repo, issue.number, message("old_version"))
               add_labels(issue, [@label_old_version])
               puts "#{@repo}: [OLD VERSION] ❗⏪ #{issue.html_url}: #{issue.title} --> Nagged, wanted #{@latest_release_version_major_minor} got #{version_info["installed_version_major_minor"]}"
             end
@@ -101,8 +103,7 @@ module Bot
       else
         # No envinfo block?
         unless already_nagged_envinfo?(issue.number)
-          Octokit.add_comment(@repo, issue.number, message("no_envinfo"))
-          add_labels(issue, [@label_needs_more_information])
+          add_labels(issue, [@label_no_envinfo])
           puts "️#{@repo}: [NO ENV INFO] ❗❔ #{issue.html_url}: #{issue.title} --> Nagged, no envinfo found"
         end
       end
