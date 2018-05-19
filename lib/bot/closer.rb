@@ -7,6 +7,7 @@ module Bot
     def initialize(repo)
       @repo = repo
       @label_old_version = ":rewind:Old Version"
+      @label_for_stack_overflow = ":no_entry_sign:For Stack Overflow"
     end
 
     def perform
@@ -22,7 +23,7 @@ module Bot
     def candidates
       [
         {
-          :search => "repo:#{@repo} is:issue is:open label:\":no_entry_sign:For Stack Overflow\" created:>=#{1.week.ago.to_date.to_s}",
+          :search => "repo:#{@repo} is:issue is:open label:\"#{@label_for_stack_overflow}\" created:>=#{1.week.ago.to_date.to_s}",
           :message => "Please use [Stack Overflow](http://stackoverflow.com/questions/tagged/react-native) for this type of question.",
           :close_reason => "For Stack Overflow"
         },

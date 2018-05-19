@@ -10,6 +10,7 @@ module Bot
       @label_no_template = ":clipboard:No Template"
       @label_stale = "Stale"
       @label_for_discussion = "For Discussion"
+      @label_for_stack_overflow = ":no_entry_sign:For Stack Overflow"
     end
 
     def perform
@@ -27,12 +28,16 @@ module Bot
     def candidates
       [
         {
-          :search => "repo:#{@repo} is:issue is:open NOT \"Environment\" in:body NOT \"cherry-pick\" in:title -label:\"#{@label_for_discussion}\" -label:\"#{@label_stale}\" -label:\":star2:Feature Request\" -label:\"Core Team\" -label:\":no_entry_sign:Docs\" -label:\":no_entry_sign:For Stack Overflow\" -label:\"Good first issue\" -label:\"#{@label_no_template}\" -label:\":nut_and_bolt:Tests\" created:>=2018-05-17",
+          :search => "repo:#{@repo} is:issue is:open NOT \"Environment\" in:body NOT \"cherry-pick\" in:title -label:\"#{@label_for_discussion}\" -label:\"#{@label_stale}\" -label:\":star2:Feature Request\" -label:\"Core Team\" -label:\":no_entry_sign:Docs\" -label:\"#{@label_for_stack_overflow}\" -label:\"Good first issue\" -label:\"#{@label_no_template}\" -label:\":nut_and_bolt:Tests\" created:>=2018-05-17",
           :action => 'nag_template'
         },
         {
           :search => "repo:#{@repo} is:issue is:open \"Environment\" in:body -label:\"#{@label_stale}\" label:\"#{@label_no_template}\" created:>=2018-03-19 updated:>=#{3.day.ago.to_date.to_s}",
           :action => 'remove_label'
+        },
+        {
+          :search => "repo:#{@repo} is:issue is:open \"Click \\\"Preview\\\" for a nicer view!\" in:body -label:\"#{@label_stale}\" -label:\"#{@label_for_stack_overflow}\" created:>=#{1.day.ago.to_date.to_s}",
+          :action => 'close_question'
         }
       ]
     end
@@ -45,6 +50,9 @@ module Bot
       end
       if candidate[:action] == 'remove_template_label'
         remove_template_label(issue)
+      end
+      if candidate[:action] == 'close_question'
+        close_question(issue)
       end
     end
 
@@ -61,6 +69,11 @@ module Bot
         puts "#{@repo}: ️[TEMPLATE] ❗📋  #{issue.html_url}: #{issue.title} -> Missing template, nagged"
       end
 
+      add_labels(issue, labels)
+    end
+
+    def close_question(issue)
+      labels = [@label_for_stack_overflow];
       add_labels(issue, labels)
     end
 
@@ -110,7 +123,7 @@ module Bot
       -->
       It looks like your issue may be incomplete. Are all the fields required by the [Issue Template](https://raw.githubusercontent.com/facebook/react-native/master/.github/ISSUE_TEMPLATE.md) filled out?
 
-      If you believe your issue contains all the relevant information, let us know in order to have a maintainer remove the `:clipboard:No Template` label.
+      If you believe your issue contains all the relevant information, let us know in order to have a maintainer remove the `No Template` label.
       MSG
     end
   end
