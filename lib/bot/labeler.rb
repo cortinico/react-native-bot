@@ -43,6 +43,7 @@ module Bot
       labels.push ":large_orange_diamond:Lists" if issue_title =~ /flatlist/
       labels.push ":large_orange_diamond:Lists" if issue_title =~ /virtualizedlist/
       labels.push ":large_orange_diamond:AsyncStorage" if issue_title =~ /asyncstorage/
+      labels.push ":computer:CLI" if issue_title =~ /react-native-cli/
       labels.push ":computer:CLI" if issue_title =~ /react-native upgrade/
       labels.push ":computer:CLI" if issue_title =~ /react-native link/
       labels.push ":computer:CLI" if issue_title =~ /local-cli/
