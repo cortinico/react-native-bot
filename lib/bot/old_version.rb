@@ -103,6 +103,7 @@ module Bot
       else
         # No envinfo block?
         unless already_nagged_envinfo?(issue.number)
+          Octokit.add_comment(@repo, issue.number, message("no_envinfo"))
           add_labels(issue, [@label_no_envinfo])
           puts "️#{@repo}: [NO ENV INFO] ❗❔ #{issue.html_url}: #{issue.title} --> Nagged, no envinfo found"
         end
