@@ -27,6 +27,11 @@ module Bot
           :lock_reason => "resolved"
         },
         {
+          :search => "repo:#{@repo} is:issue is:closed closed:<=#{4.year.ago.to_date.to_s}",
+          :lock_message => "Closed Over Four Years Ago",
+          :lock_reason => "resolved"
+        },
+        {
           :search => "repo:#{@repo} is:issue is:closed closed:<=#{3.year.ago.to_date.to_s}",
           :lock_message => "Closed Over Three Years Ago",
           :lock_reason => "resolved"

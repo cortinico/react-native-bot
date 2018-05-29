@@ -2,6 +2,10 @@ $LOAD_PATH.unshift File.expand_path("../lib", __FILE__)
 require 'bot'
 require 'dotenv/tasks'
 
-task :bot => :dotenv do
-  Bot.run
+task :runDaily => :dotenv do
+  Bot.runDaily
+end
+
+task :runHourly => :dotenv do
+  Bot.runHourly
 end

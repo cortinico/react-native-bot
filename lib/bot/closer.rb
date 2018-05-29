@@ -23,13 +23,13 @@ module Bot
     def candidates
       [
         {
-          :search => "repo:#{@repo} is:issue is:open label:\"#{@label_for_stack_overflow}\" created:>=#{1.week.ago.to_date.to_s}",
+          :search => "repo:#{@repo} is:issue is:open label:\"#{@label_for_stack_overflow}\" created:>=#{8.week.ago.to_date.to_s}",
           :message => "Please use [Stack Overflow](http://stackoverflow.com/questions/tagged/react-native) for this type of question.",
           :close_reason => "For Stack Overflow"
         },
         {
           :search => "repo:#{@repo} is:issue is:open label:\":clipboard:No Template\" -label:\"Core Team\" -label:\"For Discussion\" -label:\"Good first issue\" -label:\"Help Wanted :octocat:\" updated:<#{2.days.ago.to_date.to_s}",
-          :message => "If you are still encountering the issue described here, please open a new issue and make sure to fill out the [Issue Template](https://raw.githubusercontent.com/facebook/react-native/master/.github/ISSUE_TEMPLATE.md) when doing so.",
+          :message => "If you are still encountering the issue described here, please open a new issue and make sure to fill out the [Issue Template](https://github.com/facebook/react-native/issues/new/choose) when doing so.",
           :close_reason => "No template, issue not updated in last two days"
         },
         {
