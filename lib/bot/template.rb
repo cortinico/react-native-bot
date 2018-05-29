@@ -28,7 +28,11 @@ module Bot
     def candidates
       [
         {
-          :search => "repo:#{@repo} is:issue is:open NOT \"Environment\" in:body NOT \"cherry-pick\" in:title -label:\"#{@label_for_discussion}\" -label:\"#{@label_stale}\" -label:\":star2:Feature Request\" -label:\"Core Team\" -label:\":no_entry_sign:Docs\" -label:\"#{@label_for_stack_overflow}\" -label:\"Good first issue\" -label:\"#{@label_no_template}\" -label:\":nut_and_bolt:Tests\" created:>=2018-05-17",
+          :search => "repo:#{@repo} is:issue is:open \"For Discussion\" in:body -label:\"#{@label_for_discussion}\"created:>=2018-05-29",
+          :action => 'label_for_discussion'
+        },
+        {
+          :search => "repo:#{@repo} is:issue is:open NOT \"Environment\" NOT \"For Discussion\" in:body NOT \"cherry-pick\" in:title -label:\"#{@label_for_discussion}\" -label:\"#{@label_stale}\" -label:\":star2:Feature Request\" -label:\"Core Team\" -label:\":no_entry_sign:Docs\" -label:\"#{@label_for_stack_overflow}\" -label:\"Good first issue\" -label:\"#{@label_no_template}\" -label:\":nut_and_bolt:Tests\" created:>=2018-05-17",
           :action => 'nag_template'
         },
         {
@@ -45,6 +49,9 @@ module Bot
     def process(issue, candidate)
       puts "#{@repo}: [TEMPLATE] Processing #{issue.html_url}: #{issue.title}"
 
+      if candidate[:action] == 'label_for_discussion'
+        label_for_discussion(issue)
+      end
       if candidate[:action] == 'nag_template'
         nag_template(issue)
       end
@@ -61,8 +68,15 @@ module Bot
       comments.any? { |c| c.body =~ /Issue Template/ }
     end
 
+    def label_for_discussion(issue)
+      labels = [@label_for_discussion];
+      add_labels(issue, labels)
+    end
+
     def nag_template(issue)
       labels = [@label_no_template];
+
+      return if issue_contains_label(issue, @label_for_discussion)
 
       unless already_nagged?(issue.number)
         Octokit.add_comment(@repo, issue.number, message)
