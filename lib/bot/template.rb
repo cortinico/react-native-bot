@@ -10,6 +10,7 @@ module Bot
       @label_no_template = ":clipboard:No Template"
       @label_stale = "Stale"
       @label_for_discussion = "For Discussion"
+      @label_core_team = "Core Team"
       @label_for_stack_overflow = ":no_entry_sign:For Stack Overflow"
     end
 
@@ -32,12 +33,8 @@ module Bot
           :action => 'label_for_discussion'
         },
         {
-          :search => "repo:#{@repo} is:issue is:open NOT \"Environment\" NOT \"For Discussion\" in:body NOT \"cherry-pick\" in:title -label:\"#{@label_for_discussion}\" -label:\"#{@label_stale}\" -label:\":star2:Feature Request\" -label:\"Core Team\" -label:\":no_entry_sign:Docs\" -label:\"#{@label_for_stack_overflow}\" -label:\"Good first issue\" -label:\"#{@label_no_template}\" -label:\":nut_and_bolt:Tests\" created:>=2018-05-17",
-          :action => 'nag_template'
-        },
-        {
-          :search => "repo:#{@repo} is:issue is:open \"Environment\" in:body -label:\"#{@label_stale}\" label:\"#{@label_no_template}\" created:>=2018-03-19 updated:>=#{3.day.ago.to_date.to_s}",
-          :action => 'remove_label'
+          :search => "repo:#{@repo} is:issue is:open NOT \"Environment\" NOT \"For Discussion\" in:body NOT \"cherry-pick\" in:title -label:\"#{@label_for_discussion}\" -label:\"#{@label_stale}\" -label:\":star2:Feature Request\" -label:\"Core Team\" -label:\":no_entry_sign:Docs\" -label:\"#{@label_for_stack_overflow}\" -label:\"Good first issue\" -label:\"#{@label_no_template}\" -label:\":nut_and_bolt:Tests\" created:>=2018-06-14",
+          :action => 'close_template'
         },
         {
           :search => "repo:#{@repo} is:issue is:open \"Click \\\"Preview\\\" for a nicer view!\" in:body -label:\"#{@label_stale}\" -label:\"#{@label_for_stack_overflow}\" created:>=#{1.day.ago.to_date.to_s}",
@@ -52,8 +49,8 @@ module Bot
       if candidate[:action] == 'label_for_discussion'
         label_for_discussion(issue)
       end
-      if candidate[:action] == 'nag_template'
-        nag_template(issue)
+      if candidate[:action] == 'close_template'
+        close_template(issue)
       end
       if candidate[:action] == 'remove_template_label'
         remove_template_label(issue)
@@ -73,14 +70,17 @@ module Bot
       add_labels(issue, labels)
     end
 
-    def nag_template(issue)
+    def close_template(issue)
       labels = [@label_no_template];
 
       return if issue_contains_label(issue, @label_for_discussion)
+      return if issue_contains_label(issue, @label_core_team)
 
       unless already_nagged?(issue.number)
         Octokit.add_comment(@repo, issue.number, message)
-        puts "#{@repo}: ️[TEMPLATE] ❗📋  #{issue.html_url}: #{issue.title} -> Missing template, nagged"
+        Octokit.close_issue(@repo, issue.number)
+        add_labels(issue, ["Ran Commands"])
+        puts "#{@repo}: ️[TEMPLATE] ❗📋  #{issue.html_url}: #{issue.title} -> Missing template, closed"
       end
 
       add_labels(issue, labels)
@@ -135,9 +135,11 @@ module Bot
           "nag_reason": "no-template"
         }
       -->
-      It looks like your issue may be incomplete. Are all the fields required by the [Issue Template](https://raw.githubusercontent.com/facebook/react-native/master/.github/ISSUE_TEMPLATE/bug_report.md) filled out?
+      We are automatically closing this issue because it does not appear to follow any of the provided [issue templates](https://github.com/facebook/react-native/issues/new/choose).
 
-      If you believe your issue contains all the relevant information, let us know in order to have a maintainer remove the `No Template` label.
+      Please make use of the [bug report template](https://github.com/facebook/react-native/issues/new?template=bug_report.md) to let us know about a **reproducible bug or regression** in the **core** React Native library.
+
+      If you'd like to start a discussion, check out https://discuss.reactjs.org or follow the [discussion template](https://github.com/facebook/react-native/issues/new?template=discussion.md).
       MSG
     end
   end
