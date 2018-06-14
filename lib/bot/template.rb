@@ -78,10 +78,11 @@ module Bot
 
       unless already_nagged?(issue.number)
         Octokit.add_comment(@repo, issue.number, message)
-        Octokit.close_issue(@repo, issue.number)
-        add_labels(issue, ["Ran Commands"])
-        puts "#{@repo}: ️[TEMPLATE] ❗📋  #{issue.html_url}: #{issue.title} -> Missing template, closed"
       end
+
+      Octokit.close_issue(@repo, issue.number)
+      add_labels(issue, ["Ran Commands"])
+      puts "#{@repo}: ️[TEMPLATE] ❗📋  #{issue.html_url}: #{issue.title} -> Missing template, closed"
 
       add_labels(issue, labels)
     end
