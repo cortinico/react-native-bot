@@ -8,7 +8,8 @@ module Bot
     Bot::PullRequests,
     Bot::OldVersion,
     Bot::Closer,
-    Bot::Labeler
+    Bot::Labeler,
+    Bot::Events
   ]
 
   @@dailyOperations = [
