@@ -8,6 +8,7 @@ module Bot
       @repo = repo
       @label_old_version = ":rewind:Old Version"
       @label_for_stack_overflow = ":no_entry_sign:For Stack Overflow"
+      @label_no_envinfo = ":clipboard:No Environment Info"
     end
 
     def perform
@@ -36,6 +37,11 @@ module Bot
           :search => "repo:#{@repo} is:issue is:open label:\"#{@label_old_version}\" -label:\"Core Team\" -label:\"For Discussion\" comments:<2 updated:<#{7.days.ago.to_date.to_s}",
           :message => "I am closing this issue because it does not appear to have been verified on the latest release, and there has been no followup in a while.\n\nIf you found this thread after encountering the same issue in the [latest release](https://github.com/facebook/react-native/releases), please feel free to create a new issue with up-to-date information by clicking [here](https://github.com/facebook/react-native/issues/new).",
           :close_reason => "Old version, issue not updated in last seven days"
+        },
+        {
+          :search => "repo:#{@repo} is:issue is:open label:\"#{@label_no_envinfo}\" -label:\"Core Team\" -label:\"For Discussion\" updated:<#{7.days.ago.to_date.to_s}",
+          :message => "I am closing this issue because it does not contain the necessary environment info, and there has been no followup in a while.\n\nIf you found this thread after encountering the same issue in the [latest release](https://github.com/facebook/react-native/releases), please feel free to create a new issue with up-to-date information by clicking [here](https://github.com/facebook/react-native/issues/new).",
+          :close_reason => "No environment info, issue not updated in last seven days"
         },
         {
           :search => "repo:#{@repo} is:issue is:open  label:\":no_entry_sign:Invalid\" updated:>=#{1.week.ago.to_date.to_s}",

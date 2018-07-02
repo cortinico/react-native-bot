@@ -51,6 +51,10 @@ module Bot
         {
           :search => "repo:#{@repo} is:issue is:open \"Environment\" in:body label:\"#{@label_old_version}\" -label:\"#{@label_stale}\" updated:>#{2.day.ago.to_date.to_s}",
           :action => "remove_label_if_latest_version"
+        },
+        {
+          :search => "repo:#{@repo} is:issue is:open label:\"#{@label_no_envinfo}\" updated:>#{1.week.ago.to_date.to_s}",
+          :action => "remove_label_if_contains_envinfo"
         }
       ]
     end
@@ -83,10 +87,20 @@ module Bot
 
     end
 
+    def contains_envinfo?(issue)
+      body = strip_comments(issue.body)
+      body =~ /Packages: \(wanted => installed\)/ || body =~ /React Native Environment Info:/
+    end
+
+    def optout_envinfo?(issue)
+      body = strip_comments(issue.body)
+      body =~ /\[skip envinfo\]/
+    end
+
     def nag_if_using_old_version(issue, reason)
       body = strip_comments(issue.body)
 
-      if body =~ /Packages: \(wanted => installed\)/ || body =~ /React Native Environment Info:/
+      if contains_envinfo?(issue)
         # Contains envinfo block
 
         version_info = /(react-native:)\s?[\^~]?(?<requested_version>[0-9]{1,2}\.[0-9]{1,2}\.[0-9]{1,2})\s=>\s(?<installed_version_major_minor>[0-9]{1,2}\.[0-9]{1,2})\.[0-9]{1,2}/.match(body)
@@ -100,20 +114,21 @@ module Bot
             end
           end
         end
+      elsif optout_envinfo?(issue) || already_nagged_envinfo?(issue.number)
+        # Skip
+        return
       else
         # No envinfo block?
-        unless already_nagged_envinfo?(issue.number)
-          Octokit.add_comment(@repo, issue.number, message("no_envinfo"))
-          add_labels(issue, [@label_no_envinfo])
-          puts "️#{@repo}: [NO ENV INFO] ❗❔ #{issue.html_url}: #{issue.title} --> Nagged, no envinfo found"
-        end
+        Octokit.add_comment(@repo, issue.number, message("no_envinfo"))
+        add_labels(issue, [@label_no_envinfo])
+        puts "️#{@repo}: [NO ENV INFO] ❗❔ #{issue.html_url}: #{issue.title} --> Nagged, no envinfo found"
       end
     end
 
     def remove_label_if_latest_version(issue, reason)
       body = strip_comments(issue.body)
 
-      if body =~ /Packages: \(wanted => installed\)/
+      if contains_envinfo?(issue)
         # Contains envinfo block
 
         version_info = /(react-native:)\s?[\^~]?(?<requested_version>[0-9]{1,2}\.[0-9]{1,2}\.[0-9]{1,2})\s=>\s(?<installed_version_major_minor>[0-9]{1,2}\.[0-9]{1,2})\.[0-9]{1,2}/.match(body)
@@ -126,6 +141,11 @@ module Bot
           end
         end
       end
+    end
+
+    def remove_label_if_contains_envinfo(issue, reason)
+      body = strip_comments(issue.body)
+      remove_label(issue, @label_no_envinfo) if contains_envinfo?(issue)
     end
 
     def latest_release
