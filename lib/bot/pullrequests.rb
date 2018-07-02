@@ -29,6 +29,7 @@ module Bot
         "matthargett",
         "hramos"
       ]
+      @releaseNotesRegex = /\[\s?(?<platform>ANDROID|CLI|DOCS|GENERAL|INTERNAL|IOS|TVOS|WINDOWS)\s?\]\s*?\[\s?(?<category>BREAKING|BUGFIX|ENHANCEMENT|FEATURE|MINOR)\s?\]\s*?\[(.*)\]\s*?\-\s*?(.*)/
     end
 
     def perform
@@ -87,10 +88,10 @@ module Bot
     end
 
     def check_release_notes(pr)
-      releaseNotesRegex = /\[\s?(?<platform>ANDROID|CLI|DOCS|GENERAL|INTERNAL|IOS|TVOS|WINDOWS)\s?\]\s*?\[\s?(?<category>BREAKING|BUGFIX|ENHANCEMENT|FEATURE|MINOR)\s?\]\s*?\[(.*)\]\s*?\-\s*?(.*)/
+
 
       body = strip_comments(pr.body)
-      releaseNotesCaptureGroups = releaseNotesRegex.match(body)
+      releaseNotesCaptureGroups = @releaseNotesRegex.match(body)
       labels = []
       if releaseNotesCaptureGroups
         labels.push @label_has_release_notes unless pr.labels.include?(@label_has_release_notes)
@@ -169,6 +170,12 @@ module Bot
       else
         labels.push @label_no_test_plan
         remove_label(pr, @label_has_test_plan)
+      end
+
+      releaseNotesCaptureGroups = @releaseNotesRegex.match(body)
+      if releaseNotesCaptureGroups
+        labels.push @label_has_release_notes
+        remove_label(pr, @label_no_release_notes)
       end
 
       labels.push @label_core_team if @core_contributors.include? pr.user.login
