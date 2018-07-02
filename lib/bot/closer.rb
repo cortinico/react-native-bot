@@ -23,7 +23,7 @@ module Bot
     def candidates
       [
         {
-          :search => "repo:#{@repo} is:issue is:open label:\"#{@label_for_stack_overflow}\" created:>=#{8.week.ago.to_date.to_s}",
+          :search => "repo:#{@repo} is:issue is:open label:\"#{@label_for_stack_overflow}\"",
           :message => "Please use [Stack Overflow](http://stackoverflow.com/questions/tagged/react-native) for this type of question.",
           :close_reason => "For Stack Overflow"
         },

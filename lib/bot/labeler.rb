@@ -43,6 +43,7 @@ module Bot
       labels.push ":large_orange_diamond:Lists" if issue_title =~ /flatlist/
       labels.push ":large_orange_diamond:Lists" if issue_title =~ /virtualizedlist/
       labels.push ":large_orange_diamond:AsyncStorage" if issue_title =~ /asyncstorage/
+      labels.push ":large_orange_diamond:PanResponder" if issue_title =~ /panresponder/
       labels.push ":computer:CLI" if issue_title =~ /react-native-cli/
       labels.push ":computer:CLI" if issue_title =~ /react-native upgrade/
       labels.push ":computer:CLI" if issue_title =~ /react-native link/
@@ -53,6 +54,7 @@ module Bot
       labels.push ":globe_with_meridians:Networking" if issue_title =~ /okhttp/
       labels.push ":globe_with_meridians:Networking" if issue_title =~ /http/
       labels.push ":warning:Regression" if issue_title =~ /regression/
+      labels.push ":x:CI Test Failure" if issue_title =~ /\[CI\] Test failure - ([D][0-9]{5,})/
 
       add_labels(issue, labels)
     end
