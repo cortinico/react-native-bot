@@ -9,6 +9,11 @@ module Bot
       @label_old_version = ":rewind:Old Version"
       @label_for_stack_overflow = ":no_entry_sign:For Stack Overflow"
       @label_no_envinfo = ":clipboard:No Environment Info"
+      @label_for_discussion = "For Discussion"
+      @label_help_wanted = "Help Wanted :octocat:"
+      @label_good_first_issue = "Good first issue"
+      @label_core_team = "Core Team"
+      @label_invalid = ":no_entry_sign:Invalid"
     end
 
     def perform
@@ -29,22 +34,22 @@ module Bot
           :close_reason => "For Stack Overflow"
         },
         {
-          :search => "repo:#{@repo} is:issue is:open label:\":clipboard:No Template\" -label:\"Core Team\" -label:\"For Discussion\" -label:\"Good first issue\" -label:\"Help Wanted :octocat:\" updated:<#{2.days.ago.to_date.to_s}",
+          :search => "repo:#{@repo} is:issue is:open label:\":clipboard:No Template\" -label:\"#{@label_core_team}\" -label:\"#{@label_for_discussion}\" -label:\"#{@label_good_first_issue}\" -label:\"#{@label_help_wanted}\" updated:<#{2.days.ago.to_date.to_s}",
           :message => "If you are still encountering the issue described here, please open a new issue and make sure to fill out the [Issue Template](https://github.com/facebook/react-native/issues/new/choose) when doing so.",
           :close_reason => "No template, issue not updated in last two days"
         },
         {
-          :search => "repo:#{@repo} is:issue is:open label:\"#{@label_old_version}\" -label:\"Core Team\" -label:\"For Discussion\" comments:<2 updated:<#{7.days.ago.to_date.to_s}",
+          :search => "repo:#{@repo} is:issue is:open label:\"#{@label_old_version}\" -label:\"#{@label_core_team}\" -label:\"#{@label_for_discussion}\" comments:<5 updated:<#{7.days.ago.to_date.to_s}",
           :message => "I am closing this issue because it does not appear to have been verified on the latest release, and there has been no followup in a while.\n\nIf you found this thread after encountering the same issue in the [latest release](https://github.com/facebook/react-native/releases), please feel free to create a new issue with up-to-date information by clicking [here](https://github.com/facebook/react-native/issues/new).",
           :close_reason => "Old version, issue not updated in last seven days"
         },
         {
-          :search => "repo:#{@repo} is:issue is:open label:\"#{@label_no_envinfo}\" -label:\"Core Team\" -label:\"For Discussion\" updated:<#{7.days.ago.to_date.to_s}",
+          :search => "repo:#{@repo} is:issue is:open label:\"#{@label_no_envinfo}\" -label:\"#{@label_core_team}\" -label:\"#{@label_for_discussion}\" updated:<#{7.days.ago.to_date.to_s}",
           :message => "I am closing this issue because it does not contain the necessary environment info, and there has been no followup in a while.\n\nIf you found this thread after encountering the same issue in the [latest release](https://github.com/facebook/react-native/releases), please feel free to create a new issue with up-to-date information by clicking [here](https://github.com/facebook/react-native/issues/new).",
           :close_reason => "No environment info, issue not updated in last seven days"
         },
         {
-          :search => "repo:#{@repo} is:issue is:open  label:\":no_entry_sign:Invalid\" updated:>=#{1.week.ago.to_date.to_s}",
+          :search => "repo:#{@repo} is:issue is:open label:\"#{@label_invalid}\" updated:>=#{1.week.ago.to_date.to_s}",
           :message => "We use GitHub Issues exclusively for tracking bugs in React Native. See the [React Native Community Support page](http://facebook.github.io/react-native/help.html) for a list of places where you may ask for help.",
           :close_reason => "Issue does not belong here."
         }
