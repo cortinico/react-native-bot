@@ -10,7 +10,7 @@ module Bot
 
     def perform
       events = Octokit.user_public_events("facebook-github-bot")
-      puts "#{@repo}: [EVENTS] Found #{events.count} events..."
+      puts "#{@repo}: [EVENTS] Found #{events.count} events for the Facebook GitHub Bot..."
       events.each do |event|
         if event.payload && event.payload.commits
           event.payload.commits.each do |commit|
@@ -40,12 +40,15 @@ module Bot
     end
 
     def is_pullrequest_closing_commit(commit)
-      commit.message =~ /Closes https:\/\/github.com\/facebook\/react-native\/pull\/[0-9]+/
+      commit.message =~ /Closes https:\/\/github.com\/facebook\/react-native\/pull\/([0-9]+)|Pull Request resolved: https:\/\/github.com\/facebook\/react-native\/pull\/([0-9]+)/
     end
 
     def closed_pullrequest(commit)
-      commit.message =~ /Closes https:\/\/github.com\/facebook\/react-native\/pull\/([0-9]+)/
-      $1
+      pr_number = nil
+      commit.message =~ /Closes https:\/\/github.com\/facebook\/react-native\/pull\/([0-9]+)|Pull Request resolved: https:\/\/github.com\/facebook\/react-native\/pull\/([0-9]+)/
+      pr_number = $1 if $1
+      pr_number = $2 if $2
+      pr_number
     end
 
     def already_nagged_closing_commit?(pr_number)

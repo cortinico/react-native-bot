@@ -39,9 +39,9 @@ module Bot
           :close_reason => "No template, issue not updated in last two days"
         },
         {
-          :search => "repo:#{@repo} is:issue is:open label:\"#{@label_old_version}\" -label:\"#{@label_core_team}\" -label:\"#{@label_for_discussion}\" comments:<5 updated:<#{7.days.ago.to_date.to_s}",
+          :search => "repo:#{@repo} is:issue is:open label:\"#{@label_old_version}\" -label:\"#{@label_core_team}\" -label:\"#{@label_for_discussion}\" comments:<5 updated:<#{14.days.ago.to_date.to_s}",
           :message => "I am closing this issue because it does not appear to have been verified on the latest release, and there has been no followup in a while.\n\nIf you found this thread after encountering the same issue in the [latest release](https://github.com/facebook/react-native/releases), please feel free to create a new issue with up-to-date information by clicking [here](https://github.com/facebook/react-native/issues/new).",
-          :close_reason => "Old version, issue not updated in last seven days"
+          :close_reason => "Old version, issue not updated in last fourteen days"
         },
         {
           :search => "repo:#{@repo} is:issue is:open label:\"#{@label_no_envinfo}\" -label:\"#{@label_core_team}\" -label:\"#{@label_for_discussion}\" updated:<#{7.days.ago.to_date.to_s}",
