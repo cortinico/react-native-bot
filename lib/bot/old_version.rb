@@ -37,15 +37,15 @@ module Bot
     def candidates
       [
         {
-          :search => "repo:#{@repo} is:issue is:open \"Environment\" in:body -label:\"#{@label_core_team}\" -label:\"#{@label_for_discussion}\" -label:\"#{@label_old_version}\" -label:\"#{@label_pr_pending}\" -label:\"#{@label_stale}\" created:>#{1.day.ago.to_date.to_s}",
+          :search => "repo:#{@repo} is:issue is:open \"Environment\" in:body -label:\"#{@label_core_team}\" -label:\"#{@label_for_discussion}\" -label:\"#{@label_stale}\" -label:\"#{@label_pr_pending}\" -label:\"#{@label_old_version}\" created:>#{1.day.ago.to_date.to_s}",
           :action => "nag_old_version"
         },
         {
-          :search => "repo:#{@repo} is:issue is:open \"Environment\" in:body -label:\"#{@label_core_team}\" -label:\"#{@label_for_discussion}\" -label:\"#{@label_stale}\" -label:\"#{@label_old_version}\" -label:\"#{@label_pr_pending}\" -label:\"#{@label_good_first_issue}\" created:>#{7.day.ago.to_date.to_s} updated:>#{2.day.ago.to_date.to_s}",
+          :search => "repo:#{@repo} is:issue is:open \"Environment\" in:body -label:\"#{@label_core_team}\" -label:\"#{@label_for_discussion}\" -label:\"#{@label_stale}\" -label:\"#{@label_good_first_issue}\" -label:\"#{@label_pr_pending}\" -label:\"#{@label_old_version}\" created:>#{7.day.ago.to_date.to_s} updated:>#{2.day.ago.to_date.to_s}",
           :action => "nag_old_version"
         },
         {
-          :search => "repo:#{@repo} is:issue is:open \"Environment\" in:body label:\"#{@label_no_envinfo}\" -label:\"#{@label_for_discussion}\" -label:\"#{@label_stale}\" -label:\"#{@label_pr_pending}\" -label:\"#{@label_old_version}\" -label:\"#{@label_good_first_issue}\" created:>#{7.day.ago.to_date.to_s} updated:>#{2.day.ago.to_date.to_s}",
+          :search => "repo:#{@repo} is:issue is:open \"Environment\" in:body -label:\"#{@label_core_team}\" -label:\"#{@label_for_discussion}\" -label:\"#{@label_stale}\" -label:\"#{@label_good_first_issue}\" -label:\"#{@label_pr_pending}\" -label:\"#{@label_old_version}\"  label:\"#{@label_no_envinfo}\" created:>#{7.day.ago.to_date.to_s} updated:>#{2.day.ago.to_date.to_s}",
           :action => "nag_old_version"
         },
         {
@@ -53,7 +53,7 @@ module Bot
           :action => "remove_label_if_latest_version"
         },
         {
-          :search => "repo:#{@repo} is:issue is:open label:\"#{@label_no_envinfo}\" updated:>#{1.week.ago.to_date.to_s}",
+          :search => "repo:#{@repo} is:issue is:open label:\"#{@label_no_envinfo}\"",
           :action => "remove_label_if_contains_envinfo"
         }
       ]
@@ -144,8 +144,9 @@ module Bot
     end
 
     def remove_label_if_contains_envinfo(issue, reason)
-      body = strip_comments(issue.body)
-      remove_label(issue, @label_no_envinfo) if contains_envinfo?(issue)
+      if contains_envinfo?(issue) || optout_envinfo?(issue)
+        remove_label(issue, @label_no_envinfo)
+      end
     end
 
     def latest_release
@@ -164,7 +165,7 @@ module Bot
         MSG
       when "no_envinfo"
         <<-MSG.strip_heredoc
-        It looks like your issue may be missing some necessary information. Can you run `react-native info` and edit your issue to include these results under the **Environment** section?
+        It looks like your issue may be missing some necessary information. Can you run `react-native info` and edit your issue to include these results under the **Environment** section?\n\nIf you believe this information is irrelevant to the reported issue, you may write `[skip envinfo]` under **Environment** to let us know.
         MSG
       end
     end
