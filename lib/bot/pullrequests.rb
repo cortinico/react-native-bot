@@ -29,7 +29,7 @@ module Bot
         "matthargett",
         "hramos",
         "dryganets",
-        "AdamComella"
+        "rigdern"
       ]
       @releaseNotesRegex = /\[\s?(?<platform>ANDROID|CLI|DOCS|GENERAL|INTERNAL|IOS|TVOS|WINDOWS)\s?\]\s*?\[\s?(?<category>BREAKING|BUGFIX|ENHANCEMENT|FEATURE|MINOR)\s?\]\s*?\[(.*)\]\s*?\-\s*?(.*)/
     end
