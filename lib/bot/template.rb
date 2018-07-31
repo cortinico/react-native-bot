@@ -141,7 +141,7 @@ module Bot
 
       Please make use of the [bug report template](https://github.com/facebook/react-native/issues/new?template=bug_report.md) to let us know about a **reproducible bug or regression** in the **core** React Native library.
 
-      If you'd like to start a discussion, check out https://discuss.reactjs.org or follow the [discussion template](https://github.com/facebook/react-native/issues/new?template=discussion.md).
+      If you'd like to propose a change or discuss a feature request, there is a repository dedicated to [Discussions and Proposals](https://github.com/react-native-community/discussions-and-proposals) you may use for this purpose.
       MSG
     end
   end

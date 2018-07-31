@@ -161,11 +161,11 @@ module Bot
       case reason
       when "old_version"
         <<-MSG.strip_heredoc
-        It looks like your issue may refer to an older version of React Native. Can you reproduce the issue on the #{latest_release}?
+Can you reproduce the issue on the #{latest_release}?
         MSG
       when "no_envinfo"
         <<-MSG.strip_heredoc
-        It looks like your issue may be missing some necessary information. Can you run `react-native info` and edit your issue to include these results under the **Environment** section?\n\nIf you believe this information is irrelevant to the reported issue, you may write `[skip envinfo]` under **Environment** to let us know.
+Can you run `react-native info` and edit your issue to include these results under the **Environment** section?\n\nIf you believe this information is irrelevant to the reported issue, you may write `[skip envinfo]` under **Environment** to let us know.
         MSG
       end
     end
