@@ -94,7 +94,7 @@ module Bot
 
     def contains_envinfo?(issue)
       body = strip_comments(issue.body)
-      body =~ /Packages: \(wanted => installed\)/ || body =~ /React Native Environment Info:/
+      body =~ /Packages: \(wanted => installed\)/ || body =~ /React Native Environment Info:/ || body =~ /Environment:/
     end
 
     def optout_envinfo?(issue)
@@ -107,6 +107,7 @@ module Bot
 
       if contains_envinfo?(issue)
         # Contains envinfo block
+        remove_label(issue, @label_no_envinfo)
 
         version_info = /(react-native:)\s?[\^~]?(?<requested_version>[0-9]{1,2}\.[0-9]{1,2}\.[0-9]{1,2})\s=>\s(?<installed_version_major_minor>[0-9]{1,2}\.[0-9]{1,2})\.[0-9]{1,2}/.match(body)
 
@@ -138,6 +139,7 @@ module Bot
 
       if contains_envinfo?(issue)
         # Contains envinfo block
+        remove_label(issue, @label_no_envinfo)
 
         version_info = /(react-native:)\s?[\^~]?(?<requested_version>[0-9]{1,2}\.[0-9]{1,2}\.[0-9]{1,2})\s=>\s(?<installed_version_major_minor>[0-9]{1,2}\.[0-9]{1,2})\.[0-9]{1,2}/.match(body)
 
