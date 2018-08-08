@@ -4,11 +4,11 @@ require 'active_support/all'
 module Bot
 
   @@hourlyOperations = [
+    Bot::Labeler,
     Bot::Template,
     Bot::PullRequests,
     Bot::OldVersion,
     Bot::Closer,
-    Bot::Labeler,
     Bot::Events
   ]
 

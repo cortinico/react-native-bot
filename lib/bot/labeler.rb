@@ -6,6 +6,26 @@ module Bot
 
     def initialize(repo)
       @repo = repo
+      @label_core_team = "Core Team"
+      @core_contributors = [
+        "anp",
+        "ide",
+        "shergin",
+        "brentvatne",
+        "charpeni",
+        "dlowder-salesforce",
+        "grabbou",
+        "kelset",
+        "lelandrichardson",
+        "skevy",
+        "rozele",
+        "satya164",
+        "janicduplessis",
+        "matthargett",
+        "hramos",
+        "dryganets",
+        "rigdern"
+      ]
     end
 
     def perform
@@ -16,6 +36,7 @@ module Bot
           puts "#{@repo}: [LABELER] Processing #{issue.html_url}: #{issue.title}"
           label_based_on_title(issue)
           label_based_on_envinfo(issue)
+          label_based_on_author(issue)
         end
       end
     end
@@ -27,6 +48,13 @@ module Bot
           :action => "label"
         }
       ]
+    end
+
+    def label_based_on_author(issue)
+      labels = []
+      labels.push @label_core_team if @core_contributors.include? issue.user.login
+
+      add_labels(issue, labels)
     end
 
     def label_based_on_title(issue)

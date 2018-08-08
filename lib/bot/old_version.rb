@@ -64,6 +64,11 @@ module Bot
       comments.any? { |c| c.body =~ /older version/ }
     end
 
+    def already_nagged_latest?(issue)
+      comments = Octokit.issue_comments(@repo, issue)
+      comments.any? { |c| c.body =~ /latest release/ }
+    end
+
     def already_nagged_envinfo?(issue)
       comments = Octokit.issue_comments(@repo, issue)
       comments.any? { |c| c.body =~ /react-native info/ }
@@ -108,8 +113,11 @@ module Bot
         if version_info
           # Check if using latest_version
           if version_info["installed_version_major_minor"] != @latest_release_version_major_minor
-            unless already_nagged_oldversion?(issue.number)
+            if already_nagged_oldversion?(issue.number) || already_nagged_latest?(issue.number)
+              puts "#{@repo}: [OLD VERSION] ❗⏪ #{issue.html_url}: #{issue.title} --> Skipping as already nagged, wanted #{@latest_release_version_major_minor} got #{version_info["installed_version_major_minor"]}"
+            else
               add_labels(issue, [@label_old_version])
+              Octokit.add_comment(@repo, issue.number, message("old_version"))
               puts "#{@repo}: [OLD VERSION] ❗⏪ #{issue.html_url}: #{issue.title} --> Nagged, wanted #{@latest_release_version_major_minor} got #{version_info["installed_version_major_minor"]}"
             end
           end
