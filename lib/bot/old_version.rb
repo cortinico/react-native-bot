@@ -171,7 +171,9 @@ module Bot
       case reason
       when "old_version"
         <<-MSG.strip_heredoc
-Can you reproduce the issue on the #{latest_release}?
+It looks like you are using an older version of React Native. Please update to the #{latest_release} and verify if the issue still exists.
+
+The "#{@label_old_version}" label will be removed automatically once you edit your original post with the results of running `react-native info` on a project using the latest release.
         MSG
       when "no_envinfo"
         <<-MSG.strip_heredoc
