@@ -24,7 +24,8 @@ module Bot
         "matthargett",
         "hramos",
         "dryganets",
-        "rigdern"
+        "psivaram",
+	"rigdern"
       ]
     end
 
