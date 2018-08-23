@@ -53,7 +53,7 @@ module Bot
 
     def already_nagged_closing_commit?(pr_number)
       comments = Octokit.issue_comments(@repo, pr_number)
-      comments.any? { |c| c.user.login == "react-native-bot" && c.body =~ /This pull request was closed by/ }
+      comments.any? { |c| c.user.login == "react-native-bot" && (c.body =~ /This pull request was closed by/ || c.body =~ /merged commit/) }
     end
 
   end
