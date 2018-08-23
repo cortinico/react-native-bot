@@ -9,3 +9,7 @@ end
 task :runHourly => :dotenv do
   Bot.runHourly
 end
+
+task :runFrequent => :dotenv do
+  Bot.runFrequent
+end

@@ -29,7 +29,7 @@ module Bot
                 if full_commit && full_commit.author && full_commit.author.login
                   commit_author = "@#{full_commit.author.login}"
                 end
-                Octokit.add_comment(@repo, pr_number, "This pull request was closed by #{commit_author} in #{commit.sha}.\n\nOnce this commit is added to a release, you will see the corresponding version tag below the description at #{commit.sha}. If the commit has a single `master` tag, [it is not yet part of a release](https://github.com/react-native-community/react-native-releases#when-will-my-fix-make-it-into-a-release).")
+                Octokit.add_comment(@repo, pr_number, "#{commit_author} merged commit **#{commit.sha}** into `facebook:master`.\n\n---\n\nOnce this commit is added to a release, you will see the corresponding version tag below the description at #{commit.sha}. If the commit has a single `master` tag, [it is not yet part of a release](https://github.com/react-native-community/react-native-releases#when-will-my-fix-make-it-into-a-release).")
                 Octokit.lock_issue(@repo, pr_number, { :lock_reason => "resolved", :accept => "application/vnd.github.sailor-v-preview+json" })
                 Octokit.add_labels_to_an_issue(@repo, pr_number, ["Merged"])
               end
