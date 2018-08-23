@@ -63,7 +63,7 @@ module Bot
     end
   end
 
-  def self.runFrequent
+  def self.runFrequently
     unless ENV['GITHUB_API_TOKEN'].present?
       raise "Set GITHUB_API_TOKEN with a token with repo access"
     end
