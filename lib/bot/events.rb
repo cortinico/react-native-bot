@@ -16,9 +16,10 @@ module Bot
           event.payload.commits.each do |commit|
             if commit.sha && is_pullrequest_closing_commit(commit)
               pr_number = closed_pullrequest(commit)
-              unless already_nagged_closing_commit?(pr_number)
+              if already_nagged_closing_commit?(pr_number, commit)
+                puts "Skipping #{commit.sha}, which closed #{pr_number}, as we already processed it"
+              else
                 puts "Commit #{commit.sha} potentially closed #{pr_number}"
-
                 full_commit = Octokit.commit(@repo, commit.sha)
 
                 commit_author = "@facebook-github-bot"
@@ -51,10 +52,9 @@ module Bot
       pr_number
     end
 
-    def already_nagged_closing_commit?(pr_number)
+    def already_nagged_closing_commit?(pr_number, commit)
       comments = Octokit.issue_comments(@repo, pr_number)
-      comments.any? { |c| c.user.login == "react-native-bot" && (c.body =~ /This pull request was closed by/ || c.body =~ /merged commit/) }
+      comments.any? { |c| c.user.login == "react-native-bot" && (c.body.include?("merged commit") || c.body.include?("pull requested was closed by") ) }
     end
-
   end
 end
