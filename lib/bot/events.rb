@@ -18,6 +18,8 @@ module Bot
               pr_number = closed_pullrequest(commit)
               if already_nagged_closing_commit?(pr_number, commit)
                 puts "Skipping #{commit.sha}, which closed #{pr_number}, as we already processed it"
+              elsif already_labeled_merged?(pr_number)
+                puts "Skipping #{commit.sha}, which closed #{pr_number}, as we already processed it (Merged label)"
               else
                 puts "Commit #{commit.sha} potentially closed #{pr_number}"
                 full_commit = Octokit.commit(@repo, commit.sha)
@@ -52,9 +54,23 @@ module Bot
       pr_number
     end
 
+    def already_labeled_merged?(pr_number)
+      labels_for_issue(pr_number).each do |label|
+        if label.name == "Merged"
+          return true
+        end
+      end
+
+      return false
+    end
+
     def already_nagged_closing_commit?(pr_number, commit)
       comments = Octokit.issue_comments(@repo, pr_number)
       comments.any? { |c| c.user.login == "react-native-bot" && (c.body.include?("merged commit") || c.body.include?("pull requested was closed by") ) }
+    end
+
+    def labels_for_issue(issue_number)
+      existing_labels = Octokit.labels_for_issue(@repo, issue_number)
     end
   end
 end
