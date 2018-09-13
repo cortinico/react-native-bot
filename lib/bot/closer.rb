@@ -8,6 +8,7 @@ module Bot
       @repo = repo
       @label_old_version = ":rewind:Old Version"
       @label_for_stack_overflow = ":no_entry_sign:For Stack Overflow"
+      @label_question = ":question:Question"
       @label_no_envinfo = ":clipboard:No Environment Info"
       @label_for_discussion = "For Discussion"
       @label_help_wanted = "Help Wanted :octocat:"
@@ -29,6 +30,11 @@ module Bot
 
     def candidates
       [
+        {
+          :search => "repo:#{@repo} is:issue is:open label:\"#{@label_question}\"",
+          :message => "We are using GitHub issues exclusively to track bugs in React Native. GitHub may not be the ideal place to ask a question, but you can try asking over on [Stack Overflow](http://stackoverflow.com/questions/tagged/react-native), or on [Reactiflux](https://www.reactiflux.com/). You may also use [discuss.reactjs.org/](https://discuss.reactjs.org/) to discuss best practices.",
+          :close_reason => "Issue is a Question"
+        },
         {
           :search => "repo:#{@repo} is:issue is:open label:\"#{@label_for_stack_overflow}\"",
           :message => "Please use [Stack Overflow](http://stackoverflow.com/questions/tagged/react-native) for this type of question.",
