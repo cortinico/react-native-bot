@@ -6,7 +6,6 @@ module Bot
 
     def initialize(repo)
       @repo = repo
-      @label_core_team = "Core Team"
       @core_contributors = [
         "anp",
         "ide",
@@ -27,6 +26,109 @@ module Bot
         "dryganets",
         "psivaram",
 	"rigdern"
+      ]
+      @label_core_team = "Core Team"
+      @label_android = ":large_blue_diamond:Android"
+      @label_ios = ":large_blue_diamond:iOS"
+      @label_tvos = ":large_blue_diamond:tvOS"
+
+      @label_components = ":large_orange_diamond:Components"
+      @label_textinput = ":large_orange_diamond:TextInput"
+      @label_webview = ":large_orange_diamond:WebView"
+
+      @label_lists = ":large_orange_diamond:Lists"
+
+      @label_apis = ":large_orange_diamond:APIs"
+      @label_animated = ":large_orange_diamond:Animated"
+      @label_asyncstorage = ":large_orange_diamond:AsyncStorage"
+      @label_panresponder = ":large_orange_diamond:PanResponder"
+      @label_networking = ":globe_with_meridians:Networking"
+
+      @label_bundler = "📦Bundler"
+      @label_cli = ":computer:CLI"
+      @label_regression = ":warning:Regression"
+      @label_ci_test_failure = ":x:CI Test Failure"
+
+      @components = [
+        "activityindicator",
+        "button",
+        "datepickerios",
+        "drawerlayoutandroid",
+        "flatlist",
+        "image",
+        "inputaccessoryview",
+        "keyboardavoidingview",
+        "listview",
+        "maskedviewios",
+        "modal",
+        "navigatorios",
+        "picker",
+        "pickerios",
+        "progressbarandroid",
+        "progressviewios",
+        "refreshcontrol",
+        "safeareaview",
+        "scrollview",
+        "sectionlist",
+        "segmentedcontrolios",
+        "slider",
+        "snapshotviewios",
+        "statusbar",
+        "switch",
+        "tabbarios",
+        "text",
+        "textinput",
+        "toolbarandroid",
+        "touchablehighlight",
+        "touchablenativefeedback",
+        "touchableopacity",
+        "touchablewithoutfeedback",
+        "view",
+        "viewpagerandroid",
+        "virtualizedlist",
+        "webview"
+      ]
+
+      @apis = [
+        "accessibilityinfo",
+        "actionsheetios",
+        "alert",
+        "alertios",
+        "animated",
+        "appregistry",
+        "appstate",
+        "asyncstorage",
+        "backandroid",
+        "backhandler",
+        "cameraroll",
+        "clipboard",
+        "datepickerandroid",
+        "dimensions",
+        "easing",
+        "geolocation",
+        "imageeditor",
+        "imagepickerios",
+        "imagestore",
+        "interactionmanager",
+        "keyboard",
+        "layoutanimation",
+        "linking",
+        "listviewdatasource",
+        "netinfo",
+        "panresponder",
+        "permissionsandroid",
+        "pixelratio",
+        "pushnotificationios",
+        "settings",
+        "share",
+        "statusbarios",
+        "stylesheet",
+        "systrace",
+        "timepickerandroid",
+        "toastandroid",
+        "transforms",
+        "vibration",
+        "vibrationios"
       ]
     end
 
@@ -63,28 +165,45 @@ module Bot
       issue_title = issue.title.downcase
 
       labels = []
-      labels.push ":large_blue_diamond:Android" if issue_title =~ /android/
-      labels.push ":large_blue_diamond:iOS" if issue_title =~ /ios/
-      labels.push ":large_blue_diamond:tvOS" if issue_title =~ /tvos/
-      labels.push ":large_orange_diamond:WebView" if issue_title =~ /webview/
-      labels.push ":large_orange_diamond:Animated" if issue_title =~ /animated/
-      labels.push ":large_orange_diamond:TextInput" if issue_title =~ /textinput/
-      labels.push ":large_orange_diamond:Lists" if issue_title =~ /sectionlist/
-      labels.push ":large_orange_diamond:Lists" if issue_title =~ /flatlist/
-      labels.push ":large_orange_diamond:Lists" if issue_title =~ /virtualizedlist/
-      labels.push ":large_orange_diamond:AsyncStorage" if issue_title =~ /asyncstorage/
-      labels.push ":large_orange_diamond:PanResponder" if issue_title =~ /panresponder/
-      labels.push ":computer:CLI" if issue_title =~ /react-native-cli/
-      labels.push ":computer:CLI" if issue_title =~ /react-native upgrade/
-      labels.push ":computer:CLI" if issue_title =~ /react-native link/
-      labels.push ":computer:CLI" if issue_title =~ /local-cli/
-      labels.push ":globe_with_meridians:Networking" if issue_title =~ /xhr/
-      labels.push ":globe_with_meridians:Networking" if issue_title =~ /netinfo/
-      labels.push ":globe_with_meridians:Networking" if issue_title =~ /fetch/
-      labels.push ":globe_with_meridians:Networking" if issue_title =~ /okhttp/
-      labels.push ":globe_with_meridians:Networking" if issue_title =~ /http/
-      labels.push ":warning:Regression" if issue_title =~ /regression/
-      labels.push ":x:CI Test Failure" if issue_title =~ /\[CI\] Test failure - ([D][0-9]{5,})/
+
+      labels.push @label_android if issue_title =~ /android/
+      labels.push @label_ios if issue_title =~ /ios/
+      labels.push @label_tvos if issue_title =~ /tvos/
+
+      labels.push @label_cli if issue_title =~ /react-native-cli/
+      labels.push @label_cli if issue_title =~ /react-native upgrade/
+      labels.push @label_cli if issue_title =~ /react-native link/
+      labels.push @label_cli if issue_title =~ /local-cli/
+
+      labels.push @label_regression if issue_title =~ /regression/
+      labels.push @label_ci_test_failure if issue_title =~ /\[CI\] Test failure - ([D][0-9]{5,})/
+
+      @components.each do |component|
+        labels.push @label_components if issue_title =~ /#{component.downcase}/
+      end
+      labels.push @label_lists if issue_title =~ /sectionlist/
+      labels.push @label_lists if issue_title =~ /flatlist/
+      labels.push @label_lists if issue_title =~ /virtualizedlist/
+      labels.push @label_textinput if issue_title =~ /textinput/
+      labels.push @label_webview if issue_title =~ /webview/
+
+      @apis.each do |api|
+        labels.push @label_apis if issue_title =~ /#{api.downcase}/
+      end
+      labels.push @label_animated if issue_title =~ /animated/
+      labels.push @label_asyncstorage if issue_title =~ /asyncstorage/
+      labels.push @label_panresponder if issue_title =~ /panresponder/
+
+      labels.push @label_networking if issue_title =~ /xhr/
+      labels.push @label_networking if issue_title =~ /netinfo/
+      labels.push @label_networking if issue_title =~ /fetch/
+      labels.push @label_networking if issue_title =~ /okhttp/
+      labels.push @label_networking if issue_title =~ /http/
+
+      labels.push @label_bundler if issue_title =~ /bundle/
+      labels.push @label_bundler if issue_title =~ /bundling/
+      labels.push @label_bundler if issue_title =~ /packager/
+      labels.push @label_bundler if issue_title =~ /unable to resolve module/
 
       add_labels(issue, labels)
     end
@@ -125,7 +244,7 @@ module Bot
     def add_labels(issue, labels)
       new_labels = []
 
-      labels.each do |label|
+      labels.uniq.each do |label|
         if label
           new_labels.push label unless issue_contains_label(issue, label)
         end
