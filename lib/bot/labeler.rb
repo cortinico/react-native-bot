@@ -7,7 +7,8 @@ module Bot
     def initialize(repo)
       @repo = repo
       @core_contributors = [
-        "anp",
+        "gengjiawen",
+	"anp",
         "ide",
         "shergin",
         "brentvatne",
