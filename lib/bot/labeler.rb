@@ -6,9 +6,9 @@ module Bot
 
     def initialize(repo)
       @repo = repo
-      @core_contributors = [
+      @flag_prs_by_these_authors = [
         "gengjiawen",
-	"anp",
+        "anp",
         "ide",
         "shergin",
         "brentvatne",
@@ -26,7 +26,7 @@ module Bot
         "hramos",
         "dryganets",
         "psivaram",
-	"rigdern"
+        "rigdern"
       ]
       @label_core_team = "Core Team"
       @label_android = ":large_blue_diamond:Android"
@@ -157,7 +157,7 @@ module Bot
 
     def label_based_on_author(issue)
       labels = []
-      labels.push @label_core_team if @core_contributors.include? issue.user.login
+      labels.push @label_core_team if @flag_prs_by_these_authors.include? issue.user.login
 
       add_labels(issue, labels)
     end
