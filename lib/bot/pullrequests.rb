@@ -166,10 +166,7 @@ module Bot
       body = strip_comments(pr.body)
       has_test_plan = body.downcase =~ /test plan/
 
-      if has_test_plan
-        labels.push @label_has_test_plan
-        remove_label(pr, @label_no_test_plan)
-      else
+      if ! has_test_plan
         labels.push @label_no_test_plan
         remove_label(pr, @label_has_test_plan)
       end
