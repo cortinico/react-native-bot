@@ -22,12 +22,12 @@ module Bot
         "lelandrichardson",
         "matthargett",
         "psivaram",
-        "rigdern"
+        "rigdern",
         "rozele",
         "satya164",
         "shergin",
         "skevy",
-        "thesavior",
+        "thesavior"
       ]
       @label_core_team = "Core Team"
       @label_android = ":large_blue_diamond:Android"
