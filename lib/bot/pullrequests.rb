@@ -163,7 +163,6 @@ module Bot
       has_test_plan = body.downcase =~ /test plan/
 
       if ! has_test_plan
-        labels.push @label_no_test_plan
         remove_label(pr, @label_has_test_plan)
       end
 
