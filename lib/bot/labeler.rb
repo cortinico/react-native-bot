@@ -7,26 +7,27 @@ module Bot
     def initialize(repo)
       @repo = repo
       @flag_prs_by_these_authors = [
-        "gengjiawen",
         "anp",
-        "ide",
-        "shergin",
         "brentvatne",
         "charpeni",
         "dlowder-salesforce",
-        "grabbou",
-        "kelset",
-        "empyrical",
-        "lelandrichardson",
-        "skevy",
-        "rozele",
-        "satya164",
-        "janicduplessis",
-        "matthargett",
-        "hramos",
         "dryganets",
+        "empyrical",
+        "gengjiawen",
+        "grabbou",
+        "hramos",
+        "ide",
+        "janicduplessis",
+        "kelset",
+        "lelandrichardson",
+        "matthargett",
         "psivaram",
         "rigdern"
+        "rozele",
+        "satya164",
+        "shergin",
+        "skevy",
+        "thesavior",
       ]
       @label_core_team = "Core Team"
       @label_android = ":large_blue_diamond:Android"
