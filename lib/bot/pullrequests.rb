@@ -31,7 +31,7 @@ module Bot
         "dryganets",
         "rigdern"
       ]
-      @releaseNotesRegex = /\[\s?(?<platform>ANDROID|CLI|DOCS|GENERAL|INTERNAL|IOS|TVOS|WINDOWS)\s?\]\s*?\[\s?(?<category>BREAKING|BUGFIX|ENHANCEMENT|FEATURE|MINOR)\s?\]\s*?\[(.*)\]\s*?\-\s*?(.*)/
+      @releaseNotesRegex = /\[\s?(?<platform>ANDROID|CLI|DOCS|GENERAL|INTERNAL|IOS|TVOS|WINDOWS|.*)\s?\]\s*?\[\s?(?<category>BREAKING|BUGFIX|ENHANCEMENT|FEATURE|MINOR)\s?\]\s*?\[(.*)\]\s*?\-\s*?(.*)/
     end
 
     def perform
@@ -147,10 +147,6 @@ module Bot
         end
 
         remove_label(pr, @label_no_release_notes)
-      else
-        labels.push @label_no_release_notes unless pr.labels.include?(@label_no_release_notes)
-
-        remove_label(pr, @label_has_release_notes)
       end
 
       if labels.count > 0
