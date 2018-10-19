@@ -7,7 +7,8 @@ module Bot
     def initialize(repo)
       @repo = repo
       @flag_prs_by_these_authors = [
-        "anp",
+        "acoates-ms",
+	"anp",
         "brentvatne",
         "charpeni",
         "dlowder-salesforce",
