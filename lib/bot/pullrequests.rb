@@ -142,7 +142,7 @@ module Bot
             label = ":star2:Feature Request"
             labels.push label
           when "MINOR"
-            label = "Minor Change"
+            label = "Minor"
             labels.push label
         end
 

@@ -13,7 +13,7 @@ module Bot
 
       @label_needs_more_information = ":grey_question:Needs More Information"
       @label_no_envinfo = ":clipboard:No Environment Info"
-      @label_pr_pending = ":clock1:PR Pending"
+      @label_pr_pending = "PR Submitted"
       @label_old_version = ":rewind:Old Version"
       @label_good_first_issue = "Good first issue"
       @label_core_team = "Core Team"

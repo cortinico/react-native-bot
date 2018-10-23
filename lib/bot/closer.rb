@@ -8,14 +8,14 @@ module Bot
       @repo = repo
       @label_old_version = ":rewind:Old Version"
       @label_for_stack_overflow = ":no_entry_sign:For Stack Overflow"
-      @label_question = ":question:Question"
+      @label_question = "Question"
       @label_no_envinfo = ":clipboard:No Environment Info"
       @label_for_discussion = "For Discussion"
       @label_help_wanted = "Help Wanted :octocat:"
       @label_good_first_issue = "Good first issue"
       @label_core_team = "Core Team"
       @label_invalid = "Invalid"
-      @label_pr_pending = ":clock1:PR Pending"
+      @label_pr_pending = "PR Submitted"
     end
 
     def perform
