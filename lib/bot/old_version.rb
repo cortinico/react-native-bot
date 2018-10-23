@@ -27,7 +27,6 @@ module Bot
       # close issues that mention an old version
       candidates.each do |candidate|
         issues = Octokit.search_issues(candidate[:search])
-        puts "#{@repo}: [OLD VERSION] Found #{issues.items.count} issues for candidate #{candidate[:action]}..."
         issues.items.each do |issue|
           process(issue, candidate)
         end
@@ -81,8 +80,6 @@ module Bot
     end
 
     def process(issue, candidate)
-      puts "#{@repo}: [OLD VERSION] Processing #{issue.html_url}: #{issue.title}"
-
       if candidate[:action] == 'nag_old_version'
         nag_if_using_old_version(issue, candidate)
       end

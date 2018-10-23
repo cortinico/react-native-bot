@@ -10,7 +10,6 @@ module Bot
 
     def perform
       events = Octokit.user_public_events("facebook-github-bot")
-      puts "#{@repo}: [EVENTS] Found #{events.count} events for the Facebook GitHub Bot..."
       events.each do |event|
         if event.payload && event.payload.commits
           event.payload.commits.each do |commit|

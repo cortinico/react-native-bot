@@ -14,7 +14,6 @@ module Bot
       candidates.each do |candidate|
         Octokit.auto_paginate = true
         issues = Octokit.search_issues(candidate[:search])
-        puts "#{@repo}: [LOCKERS] [#{candidate[:lock_message]}] Found #{issues.items.count} issues to lock..."
         issues.items.each do |issue|
           lock(issue, candidate)
         end

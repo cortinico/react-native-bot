@@ -20,7 +20,6 @@ module Bot
 
       candidates.each do |candidate|
         issues = Octokit.search_issues(candidate[:search])
-        puts "#{@repo}: [TEMPLATE] Found #{issues.items.count} issues for candidate #{candidate[:action]}..."
         issues.items.each do |issue|
           process(issue, candidate)
         end
@@ -45,8 +44,6 @@ module Bot
     end
 
     def process(issue, candidate)
-      puts "#{@repo}: [TEMPLATE] Processing #{issue.html_url}: #{issue.title}"
-
       if candidate[:action] == 'label_for_discussion'
         label_for_discussion(issue)
       end

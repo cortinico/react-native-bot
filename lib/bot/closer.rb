@@ -21,7 +21,6 @@ module Bot
     def perform
       candidates.each do |candidate|
         issues = Octokit.search_issues(candidate[:search])
-        puts "#{@repo}: [CLOSERS] [#{candidate[:close_reason]}] Found #{issues.items.count} issues..."
         issues.items.each do |issue|
           nag(issue, candidate)
         end

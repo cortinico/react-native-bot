@@ -138,9 +138,7 @@ module Bot
     def perform
       candidates.each do |candidate|
         issues = Octokit.search_issues(candidate[:search])
-        puts "#{@repo}: [LABELER] Found #{issues.items.count} recently created issues for candidate #{candidate[:action]}..."
         issues.items.each do |issue|
-          puts "#{@repo}: [LABELER] Processing #{issue.html_url}: #{issue.title}"
           label_based_on_title(issue)
           label_based_on_envinfo(issue)
           label_based_on_author(issue)
