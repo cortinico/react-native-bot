@@ -6,9 +6,10 @@ module Bot
 
     def initialize(repo)
       @repo = repo
+
       @flag_prs_by_these_authors = [
         "acoates-ms",
-	"anp",
+    	  "anp",
         "brentvatne",
         "charpeni",
         "dlowder-salesforce",
@@ -31,107 +32,102 @@ module Bot
         "thesavior"
       ]
       @label_core_team = "Core Team"
-      @label_android = ":large_blue_diamond:Android"
-      @label_ios = ":large_blue_diamond:iOS"
-      @label_tvos = ":large_blue_diamond:tvOS"
+      @label_android = "🔷Android"
+      @label_ios = "🔷iOS"
+      @label_tvos = "🔷tvOS"
 
-      @label_components = ":large_orange_diamond:Components"
-      @label_textinput = ":large_orange_diamond:TextInput"
-      @label_webview = ":large_orange_diamond:WebView"
+      @label_components = "🔶Components"
 
-      @label_lists = ":large_orange_diamond:Lists"
+      @label_lists = "🔶Lists"
 
-      @label_apis = ":large_orange_diamond:APIs"
-      @label_animated = ":large_orange_diamond:Animated"
-      @label_asyncstorage = ":large_orange_diamond:AsyncStorage"
-      @label_panresponder = ":large_orange_diamond:PanResponder"
-      @label_networking = ":globe_with_meridians:Networking"
+      @label_apis = "🔶APIs"
+      @label_networking = "🌐Networking"
 
       @label_bundler = "📦Bundler"
-      @label_cli = ":computer:CLI"
-      @label_regression = ":warning:Regression"
-      @label_ci_test_failure = ":x:CI Test Failure"
+      @label_cli = "💻CLI"
+      @label_regression = "⚠️ Regression"
+      @label_ci_test_failure = "❌CI Test Failure"
 
       @components = [
-        "activityindicator",
-        "button",
-        "datepickerios",
-        "drawerlayoutandroid",
-        "flatlist",
-        "image",
-        "inputaccessoryview",
-        "keyboardavoidingview",
-        "listview",
-        "maskedviewios",
-        "modal",
-        "navigatorios",
-        "picker",
-        "pickerios",
-        "progressbarandroid",
-        "progressviewios",
-        "refreshcontrol",
-        "safeareaview",
-        "scrollview",
-        "sectionlist",
-        "segmentedcontrolios",
-        "slider",
-        "snapshotviewios",
-        "statusbar",
-        "switch",
-        "tabbarios",
-        "text",
-        "textinput",
-        "toolbarandroid",
-        "touchablehighlight",
-        "touchablenativefeedback",
-        "touchableopacity",
-        "touchablewithoutfeedback",
-        "view",
-        "viewpagerandroid",
-        "virtualizedlist",
-        "webview"
+        "ActivityIndicator",
+        "Button",
+        "DatePickerIOS",
+        "DrawerLayoutAndroid",
+        "FlatList",
+        "Image",
+        "InputAccessoryView",
+        "KeyboardAvoidingView",
+        "ListView",
+        "MaskedViewIOS",
+        "Modal",
+        "NavigatorIOS",
+        "Picker",
+        "PickerIOS",
+        "ProgressBarAndroid",
+        "ProgressViewIOS",
+        "RefreshControl",
+        "SafeAreaView",
+        "ScrollView",
+        "SectionList",
+        "SegmentedControlIOS",
+        "Slider",
+        "SnapshotViewIOS",
+        "StatusBar",
+        "Switch",
+        "TabBarIOS",
+        "Text",
+        "TextInput",
+        "ToolbarAndroid",
+        "TouchableHighlight",
+        "TouchableNativeFeedback",
+        "TouchableOpacity",
+        "TouchableWithoutFeedback",
+        "View",
+        "ViewPagerAndroid",
+        "VirtualizedList",
+        "WebView"
       ]
 
       @apis = [
-        "accessibilityinfo",
-        "actionsheetios",
-        "alert",
-        "alertios",
-        "animated",
-        "appregistry",
-        "appstate",
-        "asyncstorage",
-        "backandroid",
-        "backhandler",
-        "cameraroll",
-        "clipboard",
-        "datepickerandroid",
-        "dimensions",
-        "easing",
-        "geolocation",
-        "imageeditor",
-        "imagepickerios",
-        "imagestore",
-        "interactionmanager",
-        "keyboard",
-        "layoutanimation",
-        "linking",
-        "listviewdatasource",
-        "netinfo",
-        "panresponder",
-        "permissionsandroid",
-        "pixelratio",
-        "pushnotificationios",
-        "settings",
-        "share",
-        "statusbarios",
-        "stylesheet",
-        "systrace",
-        "timepickerandroid",
-        "toastandroid",
-        "transforms",
-        "vibration",
-        "vibrationios"
+        "AccessibilityInfo",
+        "ActionSheetIOS",
+        "Alert",
+        "AlertIOS",
+        "Animated",
+        "AppRegistry",
+        "AppState",
+        "AsyncStorage",
+        "BackAndroid",
+        "BackHandler",
+        "CameraRoll",
+        "Clipboard",
+        "DatePickerAndroid",
+        "Dimensions",
+        "Easing",
+        "Geolocation",
+        "ImageEditor",
+        "ImagePickerIOS",
+        "ImageStore",
+        "InteractionManager",
+        "Keyboard",
+        "LayoutAnimation",
+        "Linking",
+        "ListViewDataSource",
+        "NetInfo",
+        "PanResponder",
+        "PermissionsAndroid",
+        "PixelRatio",
+        "PushNotificationIOS",
+        "Settings",
+        "Share",
+        "StatusBarIOS",
+        "StyleSheet",
+        "Systrace",
+        "TimePickerAndroid",
+        "ToastAndroid",
+        "Transforms",
+        "Vibration",
+        "VibrationIOS"
       ]
     end
 
@@ -181,19 +177,16 @@ module Bot
 
       @components.each do |component|
         labels.push @label_components if issue_title =~ /#{component.downcase}/
+        labels.push "🔶#{component}" if issue_title =~ /#{component.downcase}/
       end
       labels.push @label_lists if issue_title =~ /sectionlist/
       labels.push @label_lists if issue_title =~ /flatlist/
       labels.push @label_lists if issue_title =~ /virtualizedlist/
-      labels.push @label_textinput if issue_title =~ /textinput/
-      labels.push @label_webview if issue_title =~ /webview/
 
       @apis.each do |api|
         labels.push @label_apis if issue_title =~ /#{api.downcase}/
+        labels.push "🔶#{api}" if issue_title =~ /#{api.downcase}/
       end
-      labels.push @label_animated if issue_title =~ /animated/
-      labels.push @label_asyncstorage if issue_title =~ /asyncstorage/
-      labels.push @label_panresponder if issue_title =~ /panresponder/
 
       labels.push @label_networking if issue_title =~ /xhr/
       labels.push @label_networking if issue_title =~ /netinfo/
@@ -221,14 +214,14 @@ module Bot
         case envinfo["OS"]
           # when "Windows"
           #   puts "Skipping Windows"
-          #   # label = ":small_blue_diamond:Windows"
+          #   # label = "🔷Windows"
           #   # new_labels.push label
           when "Linux"
-            label = ":small_blue_diamond:Linux"
+            label = "🔷Linux"
             new_labels.push label
           # when "macOS"
           #   puts "Skipping macOS"
-          #   # label = ":small_blue_diamond:macOS"
+          #   # label = "🔷macOS"
           #   # new_labels.push label
         end
       end

@@ -7,11 +7,11 @@ module Bot
 
     def initialize(repo)
       @repo = repo
-      @label_no_template = ":clipboard:No Template"
+      @label_no_template = "📋No Template"
       @label_stale = "Stale"
       @label_for_discussion = "For Discussion"
       @label_core_team = "Core Team"
-      @label_for_stack_overflow = ":no_entry_sign:For Stack Overflow"
+      @label_for_stack_overflow = "🚫For Stack Overflow"
       @label_ci_test_failure = ":x:CI Test Failure"
     end
 
@@ -33,7 +33,7 @@ module Bot
           :action => 'label_for_discussion'
         },
         {
-          :search => "repo:#{@repo} is:issue is:open NOT \"Environment\" NOT \"For Discussion\" in:body NOT \"cherry-pick\" in:title -label:\"#{@label_for_discussion}\" -label:\"#{@label_stale}\" -label:\":star2:Feature Request\" -label:\"Core Team\" -label:\":no_entry_sign:Docs\" -label:\"#{@label_for_stack_overflow}\" -label:\"Good first issue\" -label:\"#{@label_no_template}\" -label:\":nut_and_bolt:Tests\" -label:\"#{@label_ci_test_failure}\" created:>=2018-06-01",
+          :search => "repo:#{@repo} is:issue is:open NOT \"Environment\" NOT \"For Discussion\" in:body NOT \"cherry-pick\" in:title -label:\"#{@label_for_discussion}\" -label:\"#{@label_stale}\" -label:\"🌟Feature Request\" -label:\"Core Team\" -label:\"🚫Docs\" -label:\"#{@label_for_stack_overflow}\" -label:\"Good first issue\" -label:\"#{@label_no_template}\" -label:\"🔩Tests\" -label:\"#{@label_ci_test_failure}\" created:>=2018-06-01",
           :action => 'close_template'
         },
         {

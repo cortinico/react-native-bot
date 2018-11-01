@@ -6,11 +6,11 @@ module Bot
 
     def initialize(repo)
       @repo = repo
-      @label_no_test_plan = ":clipboard:No Test Plan"
-      @label_has_test_plan = ":white_check_mark:Test Plan"
-      @label_no_release_notes = ":clipboard:No Release Notes"
-      @label_has_release_notes = ":white_check_mark:Release Notes"
-      @label_large_pr = ":bangbang:Large PR"
+      @label_no_test_plan = "📋No Test Plan"
+      @label_has_test_plan = "✅Test Plan"
+      @label_no_release_notes = "📋No Release Notes"
+      @label_has_release_notes = "✅Release Notes"
+      @label_large_pr = "‼ Large PR"
       @label_core_team = "Core Team"
       @core_contributors = [
         "anp",
@@ -100,28 +100,28 @@ module Bot
 
         case platform
           when "ANDROID"
-            label = ":large_blue_diamond:Android"
+            label = "🔷Android"
             labels.push label
           when  "CLI"
-            label = ":computer:CLI"
+            label = "💻CLI"
             labels.push label
           when  "DOCS"
-            label = ":no_entry_sign:Docs"
+            label = "🚫Docs"
             labels.push label
           when  "IOS"
-            label = ":large_blue_diamond:iOS"
+            label = "🔷iOS"
             labels.push label
           when  "TVOS"
-            label = ":large_blue_diamond:tvOS"
+            label = "🔷tvOS"
             labels.push label
           when  "WINDOWS"
-            label = ":small_blue_diamond:Windows"
+            label = "🔷Windows"
             labels.push label
           when  "MACOS"
-            label = ":small_blue_diamond:macOS"
+            label = "🔷macOS"
             labels.push label
           when  "LINUX"
-            label = ":small_blue_diamond:Linux"
+            label = "🔷Linux"
             labels.push label
         end
 
@@ -130,13 +130,13 @@ module Bot
             label = ":boom:Breaking Change"
             labels.push label
           when "BUGFIX"
-            label = ":bug:Bug Fix"
+            label = "🐛Bug Fix"
             labels.push label
           when "ENHANCEMENT"
-            label = ":star2:Enhancement PR"
+            label = "🌟Enhancement PR"
             labels.push label
           when "FEATURE"
-            label = ":star2:Feature Request"
+            label = "🌟Feature Request"
             labels.push label
           when "MINOR"
             label = "Minor"

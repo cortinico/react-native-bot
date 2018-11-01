@@ -12,9 +12,9 @@ module Bot
       @latest_release_version_major_minor = version_info['major_minor']
 
       @label_needs_more_information = ":grey_question:Needs More Information"
-      @label_no_envinfo = ":clipboard:No Environment Info"
+      @label_no_envinfo = "📋No Environment Info"
       @label_pr_pending = "PR Submitted"
-      @label_old_version = ":rewind:Old Version"
+      @label_old_version = "⏪Old Version"
       @label_good_first_issue = "Good first issue"
       @label_core_team = "Core Team"
       @label_for_discussion = "For Discussion"

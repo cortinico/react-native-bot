@@ -6,10 +6,10 @@ module Bot
 
     def initialize(repo)
       @repo = repo
-      @label_old_version = ":rewind:Old Version"
-      @label_for_stack_overflow = ":no_entry_sign:For Stack Overflow"
+      @label_old_version = "⏪Old Version"
+      @label_for_stack_overflow = "🚫For Stack Overflow"
       @label_question = "Question"
-      @label_no_envinfo = ":clipboard:No Environment Info"
+      @label_no_envinfo = "📋No Environment Info"
       @label_for_discussion = "For Discussion"
       @label_help_wanted = "Help Wanted :octocat:"
       @label_good_first_issue = "Good first issue"
@@ -40,7 +40,7 @@ module Bot
           :close_reason => "For Stack Overflow"
         },
         {
-          :search => "repo:#{@repo} is:issue is:open label:\":clipboard:No Template\" -label:\"#{@label_core_team}\" -label:\"#{@label_for_discussion}\" -label:\"#{@label_good_first_issue}\" -label:\"#{@label_help_wanted}\" -label:\"#{@label_pr_pending}\" updated:<#{2.days.ago.to_date.to_s}",
+          :search => "repo:#{@repo} is:issue is:open label:\"📋No Template\" -label:\"#{@label_core_team}\" -label:\"#{@label_for_discussion}\" -label:\"#{@label_good_first_issue}\" -label:\"#{@label_help_wanted}\" -label:\"#{@label_pr_pending}\" updated:<#{2.days.ago.to_date.to_s}",
           :message => "If you are still encountering the issue described here, please open a new issue and make sure to fill out the [Issue Template](https://github.com/facebook/react-native/issues/new/choose) when doing so.",
           :close_reason => "No template, issue not updated in last two days"
         },
