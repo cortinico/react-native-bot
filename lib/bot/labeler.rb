@@ -55,6 +55,7 @@ module Bot
         "DrawerLayoutAndroid",
         "FlatList",
         "Image",
+        "ImageBackground",
         "InputAccessoryView",
         "KeyboardAvoidingView",
         "ListView",
