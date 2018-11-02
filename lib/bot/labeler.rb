@@ -45,7 +45,7 @@ module Bot
 
       @label_bundler = "📦Bundler"
       @label_cli = "💻CLI"
-      @label_regression = "⚠️ Regression"
+      @label_regression = "⚠️Regression"
       @label_ci_test_failure = "❌CI Test Failure"
 
       @components = [
