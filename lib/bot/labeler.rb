@@ -130,6 +130,31 @@ module Bot
         "Vibration",
         "VibrationIOS"
       ]
+
+      @topics = {
+        "Flow": "🔶Flow",
+        "Flow-Strict": "🔶Flow",
+        "xhr": @label_networking,
+        "netinfo": @label_networking,
+        "fetch": @label_networking,
+        "okhttp": @label_networking,
+        "http": @label_networking,
+        "bundle": @label_bundler,
+        "bundling": @label_bundler,
+        "packager": @label_bundler,
+        "unable to resolve module": @label_bundler,
+        "sectionlist": @label_lists,
+        "flatlist": @label_lists,
+        "virtualizedlist": @label_lists,
+        "android": @label_android,
+        "ios": @label_ios,
+        "tvos": @label_tvos,
+        "react-native-cli": @label_cli,
+        "react-native upgrade": @label_cli,
+        "react-native link": @label_cli,
+        "local-cli": @label_cli,
+        "regression": @label_regression
+      }
     end
 
     def perform
@@ -164,41 +189,23 @@ module Bot
 
       labels = []
 
-      labels.push @label_android if issue_title =~ /android/
-      labels.push @label_ios if issue_title =~ /ios/
-      labels.push @label_tvos if issue_title =~ /tvos/
 
-      labels.push @label_cli if issue_title =~ /react-native-cli/
-      labels.push @label_cli if issue_title =~ /react-native upgrade/
-      labels.push @label_cli if issue_title =~ /react-native link/
-      labels.push @label_cli if issue_title =~ /local-cli/
-
-      labels.push @label_regression if issue_title =~ /regression/
       labels.push @label_ci_test_failure if issue_title =~ /\[CI\] Test failure - ([D][0-9]{5,})/
 
       @components.each do |component|
         labels.push @label_components if issue_title =~ /#{component.downcase}/
         labels.push "🔶#{component}" if issue_title =~ /#{component.downcase}/
       end
-      labels.push @label_lists if issue_title =~ /sectionlist/
-      labels.push @label_lists if issue_title =~ /flatlist/
-      labels.push @label_lists if issue_title =~ /virtualizedlist/
+
 
       @apis.each do |api|
         labels.push @label_apis if issue_title =~ /#{api.downcase}/
         labels.push "🔶#{api}" if issue_title =~ /#{api.downcase}/
       end
 
-      labels.push @label_networking if issue_title =~ /xhr/
-      labels.push @label_networking if issue_title =~ /netinfo/
-      labels.push @label_networking if issue_title =~ /fetch/
-      labels.push @label_networking if issue_title =~ /okhttp/
-      labels.push @label_networking if issue_title =~ /http/
-
-      labels.push @label_bundler if issue_title =~ /bundle/
-      labels.push @label_bundler if issue_title =~ /bundling/
-      labels.push @label_bundler if issue_title =~ /packager/
-      labels.push @label_bundler if issue_title =~ /unable to resolve module/
+      @topics.each do |topic, label|
+        labels.push label if issue_title =~ /#{topic.downcase}/
+      end
 
       add_labels(issue, labels)
     end
