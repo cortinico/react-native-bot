@@ -154,7 +154,7 @@ module Bot
 
     def label_based_on_author(issue)
       labels = []
-      labels.push @label_core_team if @flag_prs_by_these_authors.include? issue.user.login
+      labels.push @label_core_team if @flag_prs_by_these_authors.include? issue.user.login.downcase
 
       add_labels(issue, labels)
     end
