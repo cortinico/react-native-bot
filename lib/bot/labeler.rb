@@ -132,8 +132,8 @@ module Bot
       ]
 
       @topics = {
-        "Flow": "🔶Flow",
-        "Flow-Strict": "🔶Flow",
+        "Flow": "Flow",
+        "Flow-Strict": "Flow",
         "xhr": @label_networking,
         "netinfo": @label_networking,
         "fetch": @label_networking,
