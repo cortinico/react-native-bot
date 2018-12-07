@@ -83,7 +83,6 @@ module Bot
         "TouchableNativeFeedback",
         "TouchableOpacity",
         "TouchableWithoutFeedback",
-        "View",
         "ViewPagerAndroid",
         "VirtualizedList",
         "WebView"
