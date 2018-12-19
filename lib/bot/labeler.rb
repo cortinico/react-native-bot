@@ -76,7 +76,6 @@ module Bot
         "StatusBar",
         "Switch",
         "TabBarIOS",
-        "Text",
         "TextInput",
         "ToolbarAndroid",
         "TouchableHighlight",
