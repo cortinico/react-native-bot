@@ -8,8 +8,8 @@ module Bot
       @repo = repo
       @label_no_test_plan = "📋No Test Plan"
       @label_has_test_plan = "✅Test Plan"
-      @label_no_release_notes = "📋No Changelog"
-      @label_has_release_notes = "✅Changelog"
+      @label_no_changelog = "📋No Changelog"
+      @label_has_changelog = "✅Changelog"
       @label_large_pr = "‼ Large PR"
       @label_core_team = "Core Team"
       @core_contributors = [
@@ -33,7 +33,7 @@ module Bot
         "kudo",
         "fkgozali"
       ]
-      @releaseNotesRegex = /\[\s?(?<category>General|iOS|Android|.*)\s?\]\s*?\[\s?(?<type>Added|Changed|Deprecated|Removed|Fixed|Security)\s?\]\s?\-\s?(?<message>.*)/
+      @changelogRegex = /\[\s?(?<category>General|iOS|Android|.*)\s?\]\s*?\[\s?(?<type>Added|Changed|Deprecated|Removed|Fixed|Security)\s?\]\s?\-\s?(?<message>.*)/
     end
 
     def perform
@@ -56,17 +56,17 @@ module Bot
           :action => 'lint_pr'
         },
         {
-          :search => "repo:#{@repo} is:pr is:open updated:>=#{2.days.ago.to_date.to_s} label:\"#{@label_no_release_notes}\"",
+          :search => "repo:#{@repo} is:pr is:open updated:>=#{2.days.ago.to_date.to_s} label:\"#{@label_no_changelog}\"",
           :action => 'lint_pr'
         },
         {
-          :search => "repo:#{@repo} is:open is:pr -label:\"#{@label_has_release_notes}\" -label:\"#{@label_no_release_notes}\" created:>=#{2.days.ago.to_date.to_s}",
-          :action => 'check_release_notes'
+          :search => "repo:#{@repo} is:open is:pr -label:\"#{@label_has_changelog}\" -label:\"#{@label_no_changelog}\"",
+          :action => 'check_changelog'
         },
         {
-          :search => "repo:#{@repo} is:open is:pr label:\"#{@label_no_release_notes}\" updated:>=#{2.days.ago.to_date.to_s}",
-          :action => 'check_release_notes'
-        }
+          :search => "repo:#{@repo} is:open is:pr label:\"#{@label_no_changelog}\" updated:>=#{2.days.ago.to_date.to_s}",
+          :action => 'check_changelog'
+        },
       ]
     end
 
@@ -77,8 +77,8 @@ module Bot
     end
 
     def process(pr, candidate)
-      if candidate[:action] == 'check_release_notes'
-        check_release_notes(pr)
+      if candidate[:action] == 'check_changelog'
+        check_changelog(pr)
       end
       if candidate[:action] == 'check_core_team'
         check_core_team(pr)
@@ -88,17 +88,15 @@ module Bot
       end
     end
 
-    def check_release_notes(pr)
-
-
+    def check_changelog(pr)
       body = strip_comments(pr.body)
-      releaseNotesCaptureGroups = @releaseNotesRegex.match(body)
+      changelogCaptureGroups = @changelogRegex.match(body)
       labels = []
-      if releaseNotesCaptureGroups
-        labels.push @label_has_release_notes unless pr.labels.include?(@label_has_release_notes)
+      if changelogCaptureGroups
+        labels.push @label_has_changelog unless pr.labels.include?(@label_has_changelog)
 
-        category = releaseNotesCaptureGroups["category"].upcase
-        type = releaseNotesCaptureGroups["type"].upcase
+        category = changelogCaptureGroups["category"].upcase
+        type = changelogCaptureGroups["type"].upcase
 
         case category
           when "ANDROID"
@@ -133,7 +131,7 @@ module Bot
             labels.push label
         end
 
-        remove_label(pr, @label_no_release_notes)
+        remove_label(pr, @label_no_changelog)
       end
 
       if labels.count > 0
@@ -153,10 +151,10 @@ module Bot
         remove_label(pr, @label_has_test_plan)
       end
 
-      releaseNotesCaptureGroups = @releaseNotesRegex.match(body)
-      if releaseNotesCaptureGroups
-        labels.push @label_has_release_notes
-        remove_label(pr, @label_no_release_notes)
+      changelogCaptureGroups = @changelogRegex.match(body)
+      if changelogCaptureGroups
+        labels.push @label_has_changelog
+        remove_label(pr, @label_no_changelog)
       end
 
       labels.push @label_core_team if @core_contributors.include? pr.user.login
