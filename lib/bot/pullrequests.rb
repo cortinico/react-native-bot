@@ -64,7 +64,7 @@ module Bot
           :action => 'check_changelog'
         },
         {
-          :search => "repo:#{@repo} is:open is:pr label:\"#{@label_no_changelog}\" updated:>=#{2.days.ago.to_date.to_s}",
+          :search => "repo:#{@repo} is:open is:pr label:\"#{@label_no_changelog}\"",
           :action => 'check_changelog'
         },
       ]
