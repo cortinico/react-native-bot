@@ -93,7 +93,7 @@ module Bot
       changelogCaptureGroups = @changelogRegex.match(body)
       labels = []
       if changelogCaptureGroups
-        labels.push @label_has_changelog unless pr.labels.include?(@label_has_changelog)
+        labels.push @label_has_changelog
 
         category = changelogCaptureGroups["category"].upcase
         type = changelogCaptureGroups["type"].upcase
