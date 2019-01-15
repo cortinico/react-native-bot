@@ -29,7 +29,9 @@ module Bot
         "matthargett",
         "hramos",
         "dryganets",
-        "rigdern"
+        "rigdern",
+        "kudo",
+        "fkgozali"
       ]
       @releaseNotesRegex = /\[\s?(?<category>General|iOS|Android|.*)\s?\]\s*?\[\s?(?<type>Added|Changed|Deprecated|Removed|Fixed|Security)\s?\]\s?\-\s?(?<message>.*)/
     end
