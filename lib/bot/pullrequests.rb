@@ -31,7 +31,7 @@ module Bot
         "dryganets",
         "rigdern"
       ]
-      @releaseNotesRegex = /\[\s?(?<platform>ANDROID|CLI|DOCS|GENERAL|INTERNAL|IOS|TVOS|WINDOWS|.*)\s?\]\s*?\[\s?(?<category>BREAKING|BUGFIX|ENHANCEMENT|FEATURE|MINOR)\s?\]\s*?\[(.*)\]\s*?\-\s*?(.*)/
+      @releaseNotesRegex = /\[\s?(?<category>General|iOS|Android|.*)\s?\]\s*?\[\s?(?<type>Added|Changed|Deprecated|Removed|Fixed|Security)\s?\]\s?\-\s?(?<message>.*)/
     end
 
     def perform
@@ -95,18 +95,12 @@ module Bot
       if releaseNotesCaptureGroups
         labels.push @label_has_release_notes unless pr.labels.include?(@label_has_release_notes)
 
-        platform = releaseNotesCaptureGroups["platform"]
-        category = releaseNotesCaptureGroups["category"]
+        category = releaseNotesCaptureGroups["category"].upcase
+        type = releaseNotesCaptureGroups["type"].upcase
 
-        case platform
+        case category
           when "ANDROID"
             label = "🔷Android"
-            labels.push label
-          when  "CLI"
-            label = "💻CLI"
-            labels.push label
-          when  "DOCS"
-            label = "🚫Docs"
             labels.push label
           when  "IOS"
             label = "🔷iOS"
@@ -125,21 +119,15 @@ module Bot
             labels.push label
         end
 
-        case category
-          when "BREAKING"
-            label = ":boom:Breaking Change"
-            labels.push label
-          when "BUGFIX"
-            label = "🐛Bug Fix"
-            labels.push label
-          when "ENHANCEMENT"
+        case type
+          when "ADDED"
             label = "🌟Enhancement PR"
             labels.push label
-          when "FEATURE"
-            label = "🌟Feature Request"
+          when "FIXED"
+            label = "🐛Bug Fix"
             labels.push label
-          when "MINOR"
-            label = "Minor"
+          when "BREAKING"
+            label = "💥Breaking Change"
             labels.push label
         end
 
