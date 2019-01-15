@@ -8,8 +8,8 @@ module Bot
       @repo = repo
       @label_no_test_plan = "📋No Test Plan"
       @label_has_test_plan = "✅Test Plan"
-      @label_no_release_notes = "📋No Release Notes"
-      @label_has_release_notes = "✅Release Notes"
+      @label_no_release_notes = "📋No Changelog"
+      @label_has_release_notes = "✅Changelog"
       @label_large_pr = "‼ Large PR"
       @label_core_team = "Core Team"
       @core_contributors = [
