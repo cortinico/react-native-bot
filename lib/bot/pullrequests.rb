@@ -6,11 +6,10 @@ module Bot
 
     def initialize(repo)
       @repo = repo
-      @label_no_test_plan = "📋No Test Plan"
-      @label_has_test_plan = "✅Test Plan"
-      @label_no_changelog = "📋No Changelog"
-      @label_has_changelog = "✅Changelog"
-      @label_large_pr = "‼ Large PR"
+      @label_no_test_plan = "PR: Missing Test Plan"
+      @label_has_test_plan = "PR: Includes Test Plan"
+      @label_no_changelog = "PR: Missing Changelog"
+      @label_has_changelog = "PR: Includes Changelog"
       @label_core_team = "Core Team"
       @core_contributors = [
         "anp",
@@ -100,34 +99,43 @@ module Bot
 
         case category
           when "ANDROID"
-            label = "🔷Android"
+            label = "Platform: Android"
             labels.push label
           when  "IOS"
-            label = "🔷iOS"
+            label = "Platform: iOS"
             labels.push label
           when  "TVOS"
-            label = "🔷tvOS"
+            label = "Platform: tvOS"
             labels.push label
           when  "WINDOWS"
-            label = "🔷Windows"
+            label = "Platform: Windows"
             labels.push label
           when  "MACOS"
-            label = "🔷macOS"
+            label = "Platform: macOS"
             labels.push label
           when  "LINUX"
-            label = "🔷Linux"
+            label = "Platform: Linux"
             labels.push label
         end
 
         case type
           when "ADDED"
-            label = "🌟Enhancement PR"
+            label = "Type: Enhancement"
             labels.push label
           when "FIXED"
-            label = "🐛Bug Fix"
+            label = "Type: Bug Fix🐛"
+            labels.push label
+          when "DEPRECATED"
+            label = "Type: Deprecation"
+            labels.push label
+          when "REMOVED"
+            label = "Type: Removal"
+            labels.push label
+          when "SECURITY"
+            label = "Type: Security"
             labels.push label
           when "BREAKING"
-            label = "💥Breaking Change"
+            label = "Type: Breaking Change💥"
             labels.push label
         end
 
@@ -142,7 +150,6 @@ module Bot
     def lint_pr(pr)
       labels = []
       comments = Octokit.issue_comments(@repo, pr.number)
-      labels.push @label_large_pr if comments.any? { |c| c.body =~ /:exclamation: Big PR/ }
 
       body = strip_comments(pr.body)
       has_test_plan = body.downcase =~ /test plan/

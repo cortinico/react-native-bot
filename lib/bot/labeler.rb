@@ -32,20 +32,15 @@ module Bot
         "thesavior"
       ]
       @label_core_team = "Core Team"
-      @label_android = "🔷Android"
-      @label_ios = "🔷iOS"
-      @label_tvos = "🔷tvOS"
+      @label_android = "Platform: Android"
+      @label_ios = "Platform: iOS"
+      @label_tvos = "Platform: tvOS"
 
-      @label_components = "🔶Components"
-
-      @label_lists = "🔶Lists"
-
-      @label_apis = "🔶APIs"
       @label_networking = "🌐Networking"
 
       @label_bundler = "📦Bundler"
       @label_cli = "💻CLI"
-      @label_regression = "⚠️Regression"
+      @label_regression = "Regression"
       @label_ci_test_failure = "❌CI Test Failure"
 
       @components = [
@@ -141,9 +136,6 @@ module Bot
         "bundling": @label_bundler,
         "packager": @label_bundler,
         "unable to resolve module": @label_bundler,
-        "sectionlist": @label_lists,
-        "flatlist": @label_lists,
-        "virtualizedlist": @label_lists,
         "android": @label_android,
         "ios": @label_ios,
         "tvos": @label_tvos,
@@ -191,14 +183,12 @@ module Bot
       labels.push @label_ci_test_failure if issue_title =~ /\[CI\] Test failure - ([D][0-9]{5,})/
 
       @components.each do |component|
-        labels.push @label_components if issue_title =~ /#{component.downcase}/
-        labels.push "🔶#{component}" if issue_title =~ /#{component.downcase}/
+        labels.push "Component: #{component}" if issue_title =~ /#{component.downcase}/
       end
 
 
       @apis.each do |api|
-        labels.push @label_apis if issue_title =~ /#{api.downcase}/
-        labels.push "🔶#{api}" if issue_title =~ /#{api.downcase}/
+        labels.push "API: #{api}" if issue_title =~ /#{api.downcase}/
       end
 
       @topics.each do |topic, label|
@@ -220,14 +210,14 @@ module Bot
         case envinfo["OS"]
           # when "Windows"
           #   puts "Skipping Windows"
-          #   # label = "🔷Windows"
+          #   # label = "Platform: Windows"
           #   # new_labels.push label
           when "Linux"
-            label = "🔷Linux"
+            label = "Platform: Linux"
             new_labels.push label
           # when "macOS"
           #   puts "Skipping macOS"
-          #   # label = "🔷macOS"
+          #   # label = "Platform: macOS"
           #   # new_labels.push label
         end
       end
