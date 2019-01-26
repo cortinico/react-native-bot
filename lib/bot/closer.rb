@@ -9,6 +9,7 @@ module Bot
       @label_old_version = "⏪Old Version"
       @label_for_stack_overflow = "🚫For Stack Overflow"
       @label_question = "Question"
+      @label_no_template = "📋No Template"
       @label_no_envinfo = "📋No Environment Info"
       @label_for_discussion = "For Discussion"
       @label_help_wanted = "Help Wanted :octocat:"
@@ -20,7 +21,7 @@ module Bot
 
     def perform
       candidates.each do |candidate|
-        issues = Octokit.search_issues(candidate[:search])
+        issues = Octokit.search_issues(candidate[:search], { :per_page => 100 })
         issues.items.each do |issue|
           nag(issue, candidate)
         end
@@ -38,11 +39,6 @@ module Bot
           :search => "repo:#{@repo} is:issue is:open label:\"#{@label_for_stack_overflow}\"",
           :message => "Please use [Stack Overflow](http://stackoverflow.com/questions/tagged/react-native) for this type of question.",
           :close_reason => "For Stack Overflow"
-        },
-        {
-          :search => "repo:#{@repo} is:issue is:open label:\"📋No Template\" -label:\"#{@label_core_team}\" -label:\"#{@label_for_discussion}\" -label:\"#{@label_good_first_issue}\" -label:\"#{@label_help_wanted}\" -label:\"#{@label_pr_pending}\" updated:<#{2.days.ago.to_date.to_s}",
-          :message => "If you are still encountering the issue described here, please open a new issue and make sure to fill out the [Issue Template](https://github.com/facebook/react-native/issues/new/choose) when doing so.",
-          :close_reason => "No template, issue not updated in last two days"
         },
         {
           :search => "repo:#{@repo} is:issue is:open label:\"#{@label_old_version}\" -label:\"#{@label_core_team}\" -label:\"#{@label_for_discussion}\" -label:\"#{@label_pr_pending}\" comments:<5 updated:<#{14.days.ago.to_date.to_s}",

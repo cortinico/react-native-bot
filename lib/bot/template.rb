@@ -7,19 +7,24 @@ module Bot
 
     def initialize(repo)
       @repo = repo
+      @label_bug_report = "Bug Report"
       @label_no_template = "📋No Template"
       @label_stale = "Stale"
       @label_for_discussion = "For Discussion"
       @label_core_team = "Core Team"
       @label_for_stack_overflow = "🚫For Stack Overflow"
-      @label_ci_test_failure = ":x:CI Test Failure"
+      @label_ci_test_failure = "❌CI Test Failure"
+      @label_feature_request = "🌟Feature Request"
+      @label_docs = "🚫Docs"
+      @label_good_first_issue = "Good first issue"
+      @label_tests = "🔩Test Infrastructure"
     end
 
     def perform
       Octokit.auto_paginate = true
 
       candidates.each do |candidate|
-        issues = Octokit.search_issues(candidate[:search])
+        issues = Octokit.search_issues(candidate[:search], { :per_page => 100 })
         issues.items.each do |issue|
           process(issue, candidate)
         end
@@ -29,16 +34,8 @@ module Bot
     def candidates
       [
         {
-          :search => "repo:#{@repo} is:issue is:open \"For Discussion\" in:body -label:\"#{@label_for_discussion}\"created:>=2018-05-29",
-          :action => 'label_for_discussion'
-        },
-        {
-          :search => "repo:#{@repo} is:issue is:open NOT \"Environment\" NOT \"For Discussion\" in:body NOT \"cherry-pick\" in:title -label:\"#{@label_for_discussion}\" -label:\"#{@label_stale}\" -label:\"🌟Feature Request\" -label:\"Core Team\" -label:\"🚫Docs\" -label:\"#{@label_for_stack_overflow}\" -label:\"Good first issue\" -label:\"#{@label_no_template}\" -label:\"🔩Tests\" -label:\"#{@label_ci_test_failure}\" created:>=2018-06-01",
+          :search => "repo:#{@repo} is:issue -label:\"#{@label_for_discussion}\" -label:\"#{@label_core_team}\" -label:\"#{@label_ci_test_failure}\" -label:\"#{@label_bug_report}\" -label:\"#{@label_docs}\" -label:\"#{@label_for_stack_overflow}\" -label:\"#{@label_good_first_issue}\" -label:\"#{@label_no_template}\" -label:\"#{@label_tests}\" -label:\"#{@label_ci_test_failure}\" created:>=2019-01-26",
           :action => 'close_template'
-        },
-        {
-          :search => "repo:#{@repo} is:issue is:open \"Click \\\"Preview\\\" for a nicer view!\" in:body -label:\"#{@label_stale}\" -label:\"#{@label_for_stack_overflow}\" created:>=#{1.day.ago.to_date.to_s}",
-          :action => 'close_question'
         }
       ]
     end

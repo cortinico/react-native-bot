@@ -14,6 +14,7 @@ module Bot
         "charpeni",
         "dlowder-salesforce",
         "dryganets",
+        "dulmandakh",
         "empyrical",
         "gengjiawen",
         "grabbou",
@@ -32,6 +33,7 @@ module Bot
         "thesavior"
       ]
       @label_core_team = "Core Team"
+      @label_bug_report = "Bug Report"
       @label_android = "Platform: Android"
       @label_ios = "Platform: iOS"
       @label_tvos = "Platform: tvOS"
@@ -42,6 +44,8 @@ module Bot
       @label_cli = "💻CLI"
       @label_regression = "Regression"
       @label_ci_test_failure = "❌CI Test Failure"
+      @label_no_template = "📋No Template"
+      @label_discussion = "For Discussion"
 
       @components = [
         "ActivityIndicator",
@@ -149,11 +153,9 @@ module Bot
 
     def perform
       candidates.each do |candidate|
-        issues = Octokit.search_issues(candidate[:search])
+        issues = Octokit.search_issues(candidate[:search], { :per_page => 100 })
         issues.items.each do |issue|
-          label_based_on_title(issue)
-          label_based_on_envinfo(issue)
-          label_based_on_author(issue)
+          process(issue, candidate)
         end
       end
     end
@@ -163,9 +165,30 @@ module Bot
         {
           :search => "repo:#{@repo} is:open created:>=#{1.day.ago.to_date.to_s}",
           :action => "label"
+        },
+        {
+          :search => "repo:#{@repo} is:issue is:open -label:\"#{@label_no_template}\" -label:\"#{@label_discussion}\" -label:\"#{@label_ci_test_failure}\" -label:\"#{@label_bug_report}\"",
+          :action => "backfill"
         }
+
       ]
     end
+
+    def process(issue, candidate)
+      if candidate[:action] == 'label'
+        label_based_on_title(issue)
+        label_based_on_envinfo(issue)
+        label_based_on_author(issue)
+      end
+      if candidate[:action] == 'backfill'
+        backfill_labels(issue)
+      end
+    end
+
+    def backfill_labels(issue)
+      add_labels!(issue, [@label_bug_report])
+    end
+
 
     def label_based_on_author(issue)
       labels = []
@@ -245,6 +268,11 @@ module Bot
         Octokit.add_labels_to_an_issue(@repo, issue.number, new_labels)
       end
     end
+
+    def add_labels!(issue, new_labels)
+      puts "#{@repo}: [LABELS] 📍 #{issue.html_url} --> Adding #{new_labels}"
+      Octokit.add_labels_to_an_issue(@repo, issue.number, new_labels)
+  end
 
     def issue_contains_label(issue, label)
       existing_labels = []

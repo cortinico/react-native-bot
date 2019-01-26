@@ -25,7 +25,7 @@ module Bot
 
       # close issues that mention an old version
       candidates.each do |candidate|
-        issues = Octokit.search_issues(candidate[:search])
+        issues = Octokit.search_issues(candidate[:search], { :per_page => 100 })
         issues.items.each do |issue|
           process(issue, candidate)
         end

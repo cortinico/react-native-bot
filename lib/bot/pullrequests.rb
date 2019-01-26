@@ -37,7 +37,7 @@ module Bot
 
     def perform
       candidates.each do |candidate|
-        prs = Octokit.search_issues(candidate[:search])
+        prs = Octokit.search_issues(candidate[:search], { :per_page => 100 })
         prs.items.each do |pr|
           process(pr, candidate)
         end

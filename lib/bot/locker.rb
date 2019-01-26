@@ -13,7 +13,7 @@ module Bot
     def perform
       candidates.each do |candidate|
         Octokit.auto_paginate = true
-        issues = Octokit.search_issues(candidate[:search])
+        issues = Octokit.search_issues(candidate[:search], { :per_page => 100 })
         issues.items.each do |issue|
           lock(issue, candidate)
         end
