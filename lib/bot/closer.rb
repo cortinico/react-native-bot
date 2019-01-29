@@ -7,7 +7,7 @@ module Bot
     def initialize(repo)
       @repo = repo
       @label_old_version = "⏪Old Version"
-      @label_for_stack_overflow = "🚫For Stack Overflow"
+      @label_for_stack_overflow = "Resolution: For Stack Overflow"
       @label_question = "Question"
       @label_no_template = "📋No Template"
       @label_no_envinfo = "📋No Environment Info"

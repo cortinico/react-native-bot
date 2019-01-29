@@ -12,7 +12,7 @@ module Bot
       @label_stale = "Stale"
       @label_for_discussion = "For Discussion"
       @label_core_team = "Core Team"
-      @label_for_stack_overflow = "🚫For Stack Overflow"
+      @label_for_stack_overflow = "Resolution: For Stack Overflow"
       @label_ci_test_failure = "❌CI Test Failure"
       @label_feature_request = "🌟Feature Request"
       @label_docs = "🚫Docs"
