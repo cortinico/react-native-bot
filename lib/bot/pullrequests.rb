@@ -10,6 +10,8 @@ module Bot
       @label_has_test_plan = "PR: Includes Test Plan"
       @label_no_changelog = "PR: Missing Changelog"
       @label_has_changelog = "PR: Includes Changelog"
+      @label_cla_true = "CLA Signed"
+      @label_cla_false = "PR: No CLA"
       @label_core_team = "Core Team"
       @core_contributors = [
         "anp",
@@ -46,6 +48,14 @@ module Bot
 
     def candidates
       [
+        {
+          :search => "repo:#{@repo} is:pr is:open -label:\"#{@label_cla_true}\" created:<=#{1.days.ago.to_date.to_s}",
+          :action => 'add_cla_false'
+        },
+        {
+          :search => "repo:#{@repo} is:pr is:open label:\"#{@label_cla_false}\" label:\"#{@label_cla_true}\"",
+          :action => 'remove_cla_false'
+        },
         {
           :search => "repo:#{@repo} is:pr is:open created:>=#{2.days.ago.to_date.to_s}",
           :action => 'lint_pr'
@@ -85,6 +95,20 @@ module Bot
       if candidate[:action] == 'lint_pr'
         lint_pr(pr)
       end
+      if candidate[:action] == 'add_cla_false'
+        add_cla_false(pr)
+      end
+      if candidate[:action] == 'remove_cla_false'
+        remove_cla_false(pr)
+      end
+    end
+
+    def add_cla_false(pr)
+      add_labels(pr, [@label_cla_false])
+    end
+
+    def remove_cla_false(pr)
+      remove_label(pr, @label_cla_false)
     end
 
     def check_changelog(pr)
