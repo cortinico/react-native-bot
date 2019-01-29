@@ -6,6 +6,7 @@ module Bot
 
     def initialize(repo)
       @repo = repo
+      @label_pr_merged = "PR: Merged"
     end
 
     def perform
@@ -33,7 +34,7 @@ module Bot
                 end
                 Octokit.add_comment(@repo, pr_number, "#{commit_author} merged commit **#{commit.sha}** into `facebook:master`.")
                 Octokit.lock_issue(@repo, pr_number, { :lock_reason => "resolved", :accept => "application/vnd.github.sailor-v-preview+json" })
-                Octokit.add_labels_to_an_issue(@repo, pr_number, ["Merged"])
+                Octokit.add_labels_to_an_issue(@repo, pr_number, [@label_pr_merged])
               end
             end
           end
@@ -55,7 +56,7 @@ module Bot
 
     def already_labeled_merged?(pr_number)
       labels_for_issue(pr_number).each do |label|
-        if label.name == "Merged"
+        if label.name == @label_pr_merged
           return true
         end
       end
