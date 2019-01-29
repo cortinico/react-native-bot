@@ -13,7 +13,7 @@ module Bot
 
       @label_no_envinfo = "Resolution: Missing Environment Info"
       @label_pr_pending = "PR Submitted"
-      @label_old_version = "⏪Old Version"
+      @label_old_version = "Resolution: Old Version"
       @label_good_first_issue = "Good first issue"
       @label_core_team = "Core Team"
       @label_for_discussion = "Type: Discussion"
