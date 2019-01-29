@@ -42,9 +42,9 @@ module Bot
 
       @label_bundler = "📦Bundler"
       @label_cli = "💻CLI"
-      @label_regression = "Regression"
+      @label_regression = "Impact: Regression"
       @label_ci_test_failure = "❌CI Test Failure"
-      @label_no_template = "📋No Template"
+      @label_no_template = "Resolution: No Template"
       @label_discussion = "Type: Discussion"
 
       @components = [

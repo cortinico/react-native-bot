@@ -11,7 +11,7 @@ module Bot
       version_info = /v(?<major_minor>[0-9]{1,2}\.[0-9]{1,2})\.(?<patch>[0-9]{1,2})/.match(@latest_release.tag_name)
       @latest_release_version_major_minor = version_info['major_minor']
 
-      @label_no_envinfo = "📋No Environment Info"
+      @label_no_envinfo = "Resolution: Missing Environment Info"
       @label_pr_pending = "PR Submitted"
       @label_old_version = "⏪Old Version"
       @label_good_first_issue = "Good first issue"
