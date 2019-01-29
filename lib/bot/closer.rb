@@ -15,7 +15,7 @@ module Bot
       @label_help_wanted = "Help Wanted :octocat:"
       @label_good_first_issue = "Good first issue"
       @label_core_team = "Core Team"
-      @label_invalid = "Invalid"
+      @label_invalid = "Type: Invalid"
       @label_pr_pending = "PR Submitted"
     end
 
