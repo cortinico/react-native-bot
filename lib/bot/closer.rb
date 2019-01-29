@@ -11,7 +11,7 @@ module Bot
       @label_question = "Question"
       @label_no_template = "📋No Template"
       @label_no_envinfo = "📋No Environment Info"
-      @label_for_discussion = "For Discussion"
+      @label_for_discussion = "Type: Discussion"
       @label_help_wanted = "Help Wanted :octocat:"
       @label_good_first_issue = "Good first issue"
       @label_core_team = "Core Team"

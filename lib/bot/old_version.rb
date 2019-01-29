@@ -16,7 +16,7 @@ module Bot
       @label_old_version = "⏪Old Version"
       @label_good_first_issue = "Good first issue"
       @label_core_team = "Core Team"
-      @label_for_discussion = "For Discussion"
+      @label_for_discussion = "Type: Discussion"
       @label_stale = "Stale"
     end
 

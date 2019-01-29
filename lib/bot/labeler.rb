@@ -45,7 +45,7 @@ module Bot
       @label_regression = "Regression"
       @label_ci_test_failure = "❌CI Test Failure"
       @label_no_template = "📋No Template"
-      @label_discussion = "For Discussion"
+      @label_discussion = "Type: Discussion"
 
       @components = [
         "ActivityIndicator",

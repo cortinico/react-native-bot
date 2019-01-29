@@ -10,7 +10,7 @@ module Bot
       @label_bug_report = "Bug Report"
       @label_no_template = "📋No Template"
       @label_stale = "Stale"
-      @label_for_discussion = "For Discussion"
+      @label_for_discussion = "Type: Discussion"
       @label_core_team = "Core Team"
       @label_for_stack_overflow = "Resolution: For Stack Overflow"
       @label_ci_test_failure = "❌CI Test Failure"
