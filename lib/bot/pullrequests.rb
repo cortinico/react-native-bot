@@ -49,7 +49,7 @@ module Bot
     def candidates
       [
         {
-          :search => "repo:#{@repo} is:pr is:open -label:\"#{@label_cla_true}\" created:<=#{1.days.ago.to_date.to_s}",
+          :search => "repo:#{@repo} is:pr is:open -label:\"#{@label_cla_true}\" -label:\"#{@label_cla_false}\" created:<=#{1.days.ago.to_date.to_s}",
           :action => 'add_cla_false'
         },
         {
