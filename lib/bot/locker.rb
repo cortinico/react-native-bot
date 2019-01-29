@@ -6,7 +6,7 @@ module Bot
 
     def initialize(repo)
       @repo = repo
-      @label_resolved = "Resolved"
+      @label_resolved = "Resolution: Locked"
       @label_stale = "Stale"
     end
 
