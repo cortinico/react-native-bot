@@ -12,7 +12,7 @@ module Bot
       @latest_release_version_major_minor = version_info['major_minor']
 
       @label_no_envinfo = "Resolution: Missing Environment Info"
-      @label_pr_pending = "PR Submitted"
+      @label_pr_pending = "Resolution: PR Submitted"
       @label_old_version = "Resolution: Old Version"
       @label_good_first_issue = "Good first issue"
       @label_core_team = "Core Team"

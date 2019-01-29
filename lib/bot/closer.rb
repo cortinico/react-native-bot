@@ -16,7 +16,7 @@ module Bot
       @label_good_first_issue = "Good first issue"
       @label_core_team = "Core Team"
       @label_invalid = "Type: Invalid"
-      @label_pr_pending = "PR Submitted"
+      @label_pr_pending = "Resolution: PR Submitted"
     end
 
     def perform
