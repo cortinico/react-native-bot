@@ -8,7 +8,7 @@ module Bot
     def initialize(repo)
       @repo = repo
       @label_bug_report = "Bug Report"
-      @label_no_template = "📋No Template"
+      @label_no_template = "Resolution: No Template"
       @label_stale = "Stale"
       @label_for_discussion = "Type: Discussion"
       @label_core_team = "Core Team"
