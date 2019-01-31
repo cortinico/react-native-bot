@@ -7,32 +7,6 @@ module Bot
     def initialize(repo)
       @repo = repo
 
-      @flag_prs_by_these_authors = [
-        "acoates-ms",
-    	  "anp",
-        "brentvatne",
-        "charpeni",
-        "dlowder-salesforce",
-        "dryganets",
-        "dulmandakh",
-        "empyrical",
-        "gengjiawen",
-        "grabbou",
-        "hramos",
-        "ide",
-        "janicduplessis",
-        "kelset",
-        "lelandrichardson",
-        "matthargett",
-        "psivaram",
-        "rigdern",
-        "rozele",
-        "satya164",
-        "shergin",
-        "skevy",
-        "thesavior"
-      ]
-      @label_core_team = "Core Team"
       @label_bug_report = "Bug Report"
       @label_android = "Platform: Android"
       @label_ios = "Platform: iOS"
@@ -178,7 +152,6 @@ module Bot
       if candidate[:action] == 'label'
         label_based_on_title(issue)
         label_based_on_envinfo(issue)
-        label_based_on_author(issue)
       end
       if candidate[:action] == 'backfill'
         backfill_labels(issue)
@@ -187,14 +160,6 @@ module Bot
 
     def backfill_labels(issue)
       add_labels!(issue, [@label_bug_report])
-    end
-
-
-    def label_based_on_author(issue)
-      labels = []
-      labels.push @label_core_team if @flag_prs_by_these_authors.include? issue.user.login.downcase
-
-      add_labels(issue, labels)
     end
 
     def label_based_on_title(issue)

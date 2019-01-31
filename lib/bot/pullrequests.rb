@@ -12,28 +12,7 @@ module Bot
       @label_has_changelog = "PR: Includes Changelog"
       @label_cla_true = "CLA Signed"
       @label_cla_false = "PR: No CLA"
-      @label_core_team = "Core Team"
-      @core_contributors = [
-        "anp",
-        "ide",
-        "shergin",
-        "brentvatne",
-        "charpeni",
-        "dlowder-salesforce",
-        "grabbou",
-        "kelset",
-        "lelandrichardson",
-        "skevy",
-        "rozele",
-        "satya164",
-        "janicduplessis",
-        "matthargett",
-        "hramos",
-        "dryganets",
-        "rigdern",
-        "kudo",
-        "fkgozali"
-      ]
+
       @changelogRegex = /\[\s?(?<category>General|iOS|Android|.*)\s?\]\s*?\[\s?(?<type>Added|Changed|Deprecated|Removed|Fixed|Security)\s?\]\s?\-\s?(?<message>.*)/
     end
 
@@ -88,9 +67,6 @@ module Bot
     def process(pr, candidate)
       if candidate[:action] == 'check_changelog'
         check_changelog(pr)
-      end
-      if candidate[:action] == 'check_core_team'
-        check_core_team(pr)
       end
       if candidate[:action] == 'lint_pr'
         lint_pr(pr)
@@ -187,8 +163,6 @@ module Bot
         labels.push @label_has_changelog
         remove_label(pr, @label_no_changelog)
       end
-
-      labels.push @label_core_team if @core_contributors.include? pr.user.login
 
       add_labels(pr, labels)
     end

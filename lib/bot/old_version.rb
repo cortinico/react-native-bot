@@ -16,6 +16,7 @@ module Bot
       @label_old_version = "Resolution: Old Version"
       @label_good_first_issue = "Good first issue"
       @label_core_team = "Core Team"
+      @label_customer = "Customer"
       @label_for_discussion = "Type: Discussion"
       @label_stale = "Stale"
     end
@@ -35,15 +36,15 @@ module Bot
     def candidates
       [
         {
-          :search => "repo:#{@repo} is:issue is:open \"Environment\" in:body -label:\"#{@label_core_team}\" -label:\"#{@label_for_discussion}\" -label:\"#{@label_stale}\" -label:\"#{@label_pr_pending}\" -label:\"#{@label_old_version}\" created:>#{1.day.ago.to_date.to_s}",
+          :search => "repo:#{@repo} is:issue is:open \"Environment\" in:body -label:\"#{@label_core_team}\" -label:\"#{@label_customer}\" -label:\"#{@label_for_discussion}\" -label:\"#{@label_stale}\" -label:\"#{@label_pr_pending}\" -label:\"#{@label_old_version}\" created:>#{1.day.ago.to_date.to_s}",
           :action => "nag_old_version"
         },
         {
-          :search => "repo:#{@repo} is:issue is:open \"Environment\" in:body -label:\"#{@label_core_team}\" -label:\"#{@label_for_discussion}\" -label:\"#{@label_stale}\" -label:\"#{@label_good_first_issue}\" -label:\"#{@label_pr_pending}\" -label:\"#{@label_old_version}\" created:>#{7.day.ago.to_date.to_s} updated:>#{2.day.ago.to_date.to_s}",
+          :search => "repo:#{@repo} is:issue is:open \"Environment\" in:body -label:\"#{@label_core_team}\" -label:\"#{@label_customer}\" -label:\"#{@label_for_discussion}\" -label:\"#{@label_stale}\" -label:\"#{@label_good_first_issue}\" -label:\"#{@label_pr_pending}\" -label:\"#{@label_old_version}\" created:>#{7.day.ago.to_date.to_s} updated:>#{2.day.ago.to_date.to_s}",
           :action => "nag_old_version"
         },
         {
-          :search => "repo:#{@repo} is:issue is:open \"Environment\" in:body -label:\"#{@label_core_team}\" -label:\"#{@label_for_discussion}\" -label:\"#{@label_stale}\" -label:\"#{@label_good_first_issue}\" -label:\"#{@label_pr_pending}\" -label:\"#{@label_old_version}\"  label:\"#{@label_no_envinfo}\" created:>#{7.day.ago.to_date.to_s} updated:>#{2.day.ago.to_date.to_s}",
+          :search => "repo:#{@repo} is:issue is:open \"Environment\" in:body -label:\"#{@label_core_team}\" -label:\"#{@label_customer}\" -label:\"#{@label_for_discussion}\" -label:\"#{@label_stale}\" -label:\"#{@label_good_first_issue}\" -label:\"#{@label_pr_pending}\" -label:\"#{@label_old_version}\"  label:\"#{@label_no_envinfo}\" created:>#{7.day.ago.to_date.to_s} updated:>#{2.day.ago.to_date.to_s}",
           :action => "nag_old_version"
         },
         {

@@ -12,6 +12,7 @@ module Bot
       @label_stale = "Stale"
       @label_for_discussion = "Type: Discussion"
       @label_core_team = "Core Team"
+      @label_customer = "Customer"
       @label_for_stack_overflow = "Resolution: For Stack Overflow"
       @label_ci_test_failure = "❌CI Test Failure"
       @label_feature_request = "Type: Feature Request"
@@ -34,7 +35,7 @@ module Bot
     def candidates
       [
         {
-          :search => "repo:#{@repo} is:open is:issue -label:\"#{@label_for_discussion}\" -label:\"#{@label_core_team}\" -label:\"#{@label_ci_test_failure}\" -label:\"#{@label_bug_report}\" -label:\"#{@label_docs}\" -label:\"#{@label_for_stack_overflow}\" -label:\"#{@label_good_first_issue}\" -label:\"#{@label_no_template}\" -label:\"#{@label_tests}\" -label:\"#{@label_ci_test_failure}\" created:>=2019-01-26",
+          :search => "repo:#{@repo} is:open is:issue -label:\"#{@label_for_discussion}\" -label:\"#{@label_core_team}\" -label:\"#{@label_customer}\" -label:\"#{@label_ci_test_failure}\" -label:\"#{@label_bug_report}\" -label:\"#{@label_docs}\" -label:\"#{@label_for_stack_overflow}\" -label:\"#{@label_good_first_issue}\" -label:\"#{@label_no_template}\" -label:\"#{@label_tests}\" -label:\"#{@label_ci_test_failure}\" created:>=2019-01-26",
           :action => 'close_template'
         }
       ]
