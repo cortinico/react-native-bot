@@ -47,14 +47,14 @@ module Bot
         {
           :search => "repo:#{@repo} is:open is:issue -label:\"#{@label_core_team}\" -label:\"#{@label_customer}\" -label:\"#{@label_needs_more_info}\" label:\"#{@bug_report}\" NOT \"environment\" in:body created:>=2019-01-30",
           :action => 'nag_template'
-        },
-        {
-          :search => "repo:#{@repo} is:open is:issue -label:\"#{@label_core_team}\" -label:\"#{@label_customer}\" -label:\"#{@label_needs_more_info}\" label:\"#{@bug_report}\" NOT \"description\" in:body created:>=2019-01-30",
-          :action => 'nag_template'
-        },
-        {
-          :search => "repo:#{@repo} is:open is:issue -label:\"#{@label_core_team}\" -label:\"#{@label_customer}\" -label:\"#{@label_needs_more_info}\" label:\"#{@bug_report}\" NOT \"reproducible demo\" in:body created:>=2019-01-30",
-          :action => 'nag_template'
+        # },
+        # {
+        #   :search => "repo:#{@repo} is:open is:issue -label:\"#{@label_core_team}\" -label:\"#{@label_customer}\" -label:\"#{@label_needs_more_info}\" label:\"#{@bug_report}\" NOT \"description\" in:body created:>=2019-01-30",
+        #   :action => 'nag_template'
+        # },
+        # {
+        #   :search => "repo:#{@repo} is:open is:issue -label:\"#{@label_core_team}\" -label:\"#{@label_customer}\" -label:\"#{@label_needs_more_info}\" label:\"#{@bug_report}\" NOT \"reproducible demo\" in:body created:>=2019-01-30",
+        #   :action => 'nag_template'
         }
       ]
     end
