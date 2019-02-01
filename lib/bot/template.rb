@@ -9,6 +9,7 @@ module Bot
       @repo = repo
       @label_bug_report = "Bug Report"
       @label_no_template = "Resolution: No Template"
+      @label_needs_more_info = "Resolution: Needs More Information"
       @label_stale = "Stale"
       @label_for_discussion = "Type: Discussion"
       @label_core_team = "Core Team"
@@ -42,14 +43,28 @@ module Bot
         {
           :search => "repo:#{@repo} is:open is:issue -label:\"#{@label_core_team}\" -label:\"#{@label_customer}\" label:\"#{@label_no_template}\" created:>=2019-01-26",
           :action => 'close_template'
+        },
+        {
+          :search => "repo:#{@repo} is:open is:issue -label:\"#{@label_core_team}\" -label:\"#{@label_customer}\" -label:\"#{@label_needs_more_info}\" label:\"#{@bug_report}\" NOT \"environment\" in:body created:>=2019-01-30",
+          :action => 'nag_template'
+        },
+        {
+          :search => "repo:#{@repo} is:open is:issue -label:\"#{@label_core_team}\" -label:\"#{@label_customer}\" -label:\"#{@label_needs_more_info}\" label:\"#{@bug_report}\" NOT \"description\" in:body created:>=2019-01-30",
+          :action => 'nag_template'
+        },
+        {
+          :search => "repo:#{@repo} is:open is:issue -label:\"#{@label_core_team}\" -label:\"#{@label_customer}\" -label:\"#{@label_needs_more_info}\" label:\"#{@bug_report}\" NOT \"reproducible demo\" in:body created:>=2019-01-30",
+          :action => 'nag_template'
         }
-
       ]
     end
 
     def process(issue, candidate)
       if candidate[:action] == 'close_template'
         close_template(issue)
+      end
+      if candidate[:action] == 'nag_template'
+        nag_template(issue)
       end
     end
 
@@ -65,13 +80,27 @@ module Bot
       return if issue_contains_label(issue, @label_customer)
 
       unless already_nagged?(issue.number)
-        Octokit.add_comment(@repo, issue.number, message)
+        Octokit.add_comment(@repo, issue.number, close_message)
       end
 
       Octokit.close_issue(@repo, issue.number)
       labels.push @label_ran_commands
       add_labels(issue, labels)
       puts "#{@repo}: ️[TEMPLATE] ❗📋  #{issue.html_url}: #{issue.title} -> Missing template, closed"
+    end
+
+    def nag_template(issue)
+      labels = [@label_needs_more_info];
+
+      return if issue_contains_label(issue, @label_core_team)
+      return if issue_contains_label(issue, @label_customer)
+
+      unless already_nagged?(issue.number)
+        Octokit.add_comment(@repo, issue.number, nag_message)
+        labels.push @label_ran_commands
+        add_labels(issue, labels)
+        puts "#{@repo}: ️[TEMPLATE] ❗📋  #{issue.html_url}: #{issue.title} -> Incomplete template, nagged"
+      end
     end
 
     def add_labels(issue, labels)
@@ -106,7 +135,7 @@ module Bot
       existing_labels.include? label
     end
 
-    def message
+    def close_message
       <<-MSG.strip_heredoc
       <!--
         {
@@ -119,5 +148,20 @@ module Bot
       👉 [Click here if you want to report a reproducible bug or regression in React Native.](https://github.com/facebook/react-native/issues/new?template=bug_report.md)
       MSG
     end
+
+    def nag_message
+      <<-MSG.strip_heredoc
+      <!--
+        {
+          "flagged_by":"react-native-bot",
+          "nag_reason": "incomplete-template"
+        }
+      -->
+      Thanks for submitting your issue. Can you take another look at your description and make sure the issue template has been filled in its entirety?
+
+      👉 [Click here if you want to take another look at the Bug Report issue template.](https://github.com/facebook/react-native/issues/new?template=bug_report.md)
+      MSG
+    end
+
   end
 end
