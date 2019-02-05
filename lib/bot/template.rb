@@ -8,6 +8,7 @@ module Bot
     def initialize(repo)
       @repo = repo
       @label_bug_report = "Bug Report"
+      @label_type_bug_report = "Type: Bug Report"
       @label_no_template = "Resolution: No Template"
       @label_needs_more_info = "Resolution: Needs More Information"
       @label_stale = "Stale"
@@ -37,7 +38,7 @@ module Bot
     def candidates
       [
         {
-          :search => "repo:#{@repo} is:open is:issue -label:\"#{@label_for_discussion}\" -label:\"#{@label_core_team}\" -label:\"#{@label_customer}\" -label:\"#{@label_ci_test_failure}\" -label:\"#{@label_bug_report}\" -label:\"#{@label_docs}\" -label:\"#{@label_for_stack_overflow}\" -label:\"#{@label_good_first_issue}\" -label:\"#{@label_no_template}\" -label:\"#{@label_tests}\" -label:\"#{@label_ci_test_failure}\" created:>=2019-01-26",
+          :search => "repo:#{@repo} is:open is:issue -label:\"#{@label_for_discussion}\" -label:\"#{@label_core_team}\" -label:\"#{@label_customer}\" -label:\"#{@label_ci_test_failure}\" -label:\"#{@label_bug_report}\" -label:\"#{@label_type_bug_report}\" -label:\"#{@label_docs}\" -label:\"#{@label_for_stack_overflow}\" -label:\"#{@label_good_first_issue}\" -label:\"#{@label_no_template}\" -label:\"#{@label_tests}\" -label:\"#{@label_ci_test_failure}\" created:>=2019-01-26",
           :action => 'close_template'
         },
         {
@@ -45,16 +46,12 @@ module Bot
           :action => 'close_template'
         },
         {
-          :search => "repo:#{@repo} is:open is:issue -label:\"#{@label_core_team}\" -label:\"#{@label_customer}\" -label:\"#{@label_needs_more_info}\" label:\"#{@bug_report}\" NOT \"environment\" in:body created:>=2019-01-30",
+          :search => "repo:#{@repo} is:open is:issue -label:\"#{@label_core_team}\" -label:\"#{@label_customer}\" -label:\"#{@label_needs_more_info}\" label:\"#{@label_bug_report}\" NOT \"environment\" in:body created:>=2019-01-30",
           :action => 'nag_template'
-        # },
-        # {
-        #   :search => "repo:#{@repo} is:open is:issue -label:\"#{@label_core_team}\" -label:\"#{@label_customer}\" -label:\"#{@label_needs_more_info}\" label:\"#{@bug_report}\" NOT \"description\" in:body created:>=2019-01-30",
-        #   :action => 'nag_template'
-        # },
-        # {
-        #   :search => "repo:#{@repo} is:open is:issue -label:\"#{@label_core_team}\" -label:\"#{@label_customer}\" -label:\"#{@label_needs_more_info}\" label:\"#{@bug_report}\" NOT \"reproducible demo\" in:body created:>=2019-01-30",
-        #   :action => 'nag_template'
+        },
+        {
+          :search => "repo:#{@repo} is:open is:issue -label:\"#{@label_core_team}\" -label:\"#{@label_customer}\" -label:\"#{@label_needs_more_info}\" label:\"#{@label_type_bug_report}\" NOT \"environment\" in:body created:>=2019-01-30",
+          :action => 'nag_template'
         }
       ]
     end
