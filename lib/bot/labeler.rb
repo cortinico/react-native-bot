@@ -7,7 +7,7 @@ module Bot
     def initialize(repo)
       @repo = repo
 
-      @label_bug_report = "Bug Report"
+      @label_type_bug_report = "Type: Bug Report"
       @label_android = "Platform: Android"
       @label_ios = "Platform: iOS"
       @label_tvos = "Platform: tvOS"
@@ -139,12 +139,7 @@ module Bot
         {
           :search => "repo:#{@repo} is:open created:>=#{1.day.ago.to_date.to_s}",
           :action => "label"
-        },
-        {
-          :search => "repo:#{@repo} is:issue is:open -label:\"#{@label_no_template}\" -label:\"#{@label_discussion}\" -label:\"#{@label_ci_test_failure}\" -label:\"#{@label_bug_report}\"",
-          :action => "backfill"
         }
-
       ]
     end
 
@@ -159,7 +154,7 @@ module Bot
     end
 
     def backfill_labels(issue)
-      add_labels!(issue, [@label_bug_report])
+      add_labels!(issue, [@label_type_bug_report])
     end
 
     def label_based_on_title(issue)
