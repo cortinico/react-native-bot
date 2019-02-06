@@ -7,6 +7,11 @@ module Bot
     def initialize(repo)
       @repo = repo
       @label_pr_merged = "PR: Merged"
+      @label_import_started = "Import Started"
+      @label_import_failed = "Import Failed"
+      @label_pr_blocked_on_fb = "PR: Blocked on FB"
+      @label_pr_needs_review = "PR: Internal Diff Needs Review"
+      @label_pr_needs_love = "PR: Internal Diff Needs FB Love"
     end
 
     def perform
@@ -35,6 +40,11 @@ module Bot
                 Octokit.add_comment(@repo, pr_number, "#{commit_author} merged commit **#{commit.sha}** into `facebook:master`.")
                 Octokit.lock_issue(@repo, pr_number, { :lock_reason => "resolved", :accept => "application/vnd.github.sailor-v-preview+json" })
                 Octokit.add_labels_to_an_issue(@repo, pr_number, [@label_pr_merged])
+                remove_label(issue, @label_import_failed)
+                remove_label(issue, @label_import_started)
+                remove_label(issue, @label_pr_blocked_on_fb)
+                remove_label(issue, @label_pr_needs_love)
+                remove_label(issue, @label_pr_needs_review)
               end
             end
           end
@@ -71,6 +81,23 @@ module Bot
 
     def labels_for_issue(issue_number)
       existing_labels = Octokit.labels_for_issue(@repo, issue_number)
+    end
+
+    def remove_label(issue, label)
+      if issue_contains_label(issue,label)
+        puts "#{@repo}: [LABELS] ✂️ #{issue.html_url}: #{issue.title} --> Removing #{label}"
+        Octokit.remove_label(@repo, issue.number, label)
+      end
+    end    
+
+    def issue_contains_label(issue, label)
+      existing_labels = []
+
+      issue.labels.each do |issue_label|
+        existing_labels.push issue_label.name if issue_label.name
+      end
+
+      existing_labels.include? label
     end
   end
 end
