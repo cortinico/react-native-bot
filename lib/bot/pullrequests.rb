@@ -12,7 +12,13 @@ module Bot
       @label_has_changelog = "PR: Includes Changelog"
       @label_cla_true = "CLA Signed"
       @label_cla_false = "PR: No CLA"
-
+      @label_pr_merged = "PR: Merged"
+      @label_import_started = "Import Started"
+      @label_import_failed = "Import Failed"
+      @label_pr_blocked_on_fb = "PR: Blocked on FB"
+      @label_pr_needs_review = "PR: Internal Diff Needs Review"
+      @label_pr_needs_love = "PR: Internal Diff Needs FB Love"
+      
       @changelogRegex = /\[\s?(?<category>General|iOS|Android|.*)\s?\]\s*?\[\s?(?<type>Added|Changed|Deprecated|Removed|Fixed|Security)\s?\]\s?\-\s?(?<message>.*)/
     end
 
@@ -55,6 +61,10 @@ module Bot
           :search => "repo:#{@repo} is:open is:pr label:\"#{@label_no_changelog}\"",
           :action => 'check_changelog'
         },
+        {
+          :search => "repo:#{@repo} is:closed is:pr label:\"#{@label_pr_merged}\"",
+          :action => 'remove_import_labels'
+        },
       ]
     end
 
@@ -85,6 +95,13 @@ module Bot
 
     def remove_cla_false(pr)
       remove_label(pr, @label_cla_false)
+    end
+
+    def remove_import_labels(pr)
+      remove_labels = [ @label_import_failed, @label_import_started, @label_pr_blocked_on_fb, @label_pr_needs_love, @label_pr_needs_review]
+      remove_labels.each do |label|
+        remove_label(pr, label)
+      end
     end
 
     def check_changelog(pr)

@@ -37,19 +37,10 @@ module Bot
                 if full_commit && full_commit.author && full_commit.author.login
                   commit_author = "@#{full_commit.author.login}"
                 end
+
                 Octokit.add_comment(@repo, pr_number, "This pull request was successfully merged by #{commit_author} in **#{commit.sha}**.\n\n<sup>[When will my fix make it into a release?](https://github.com/react-native-community/react-native-releases#when-will-my-fix-make-it-into-a-release) | [Upcoming Releases](https://github.com/react-native-community/react-native-releases/issues)</sup>")
-
+                Octokit.add_labels_to_an_issue(@repo, pr_number, [@label_pr_merged])
                 # Octokit.lock_issue(@repo, pr_number, { :lock_reason => "resolved", :accept => "application/vnd.github.sailor-v-preview+json" })
-
-                remove_labels = [ @label_import_failed, @label_import_started, @label_pr_blocked_on_fb, @label_pr_needs_love, @label_pr_needs_review]
-                new_labels = [ @label_pr_merged ]
-                existing_labels = labels_for_issue(pr_number)
-                existing_labels.each do |label|
-                  unless remove_labels.include? label.name
-                    new_labels.push label.name
-                  end
-                end
-                Octokit.replace_all_labels(@repo, pr_number, new_labels.uniq)
               end
             end
           end
@@ -81,7 +72,7 @@ module Bot
 
     def already_nagged_closing_commit?(pr_number, commit)
       comments = Octokit.issue_comments(@repo, pr_number)
-      comments.any? { |c| c.user.login == "react-native-bot" && (c.body.include?("merged commit") || c.body.include?("pull requested was closed by") ) }
+      comments.any? { |c| c.user.login == "react-native-bot" && (c.body.include?("merged commit") || c.body.include?("pull requested was closed by") || c.body.include?("pull requested was successfully merged") ) }
     end
 
     def labels_for_issue(issue_number)
