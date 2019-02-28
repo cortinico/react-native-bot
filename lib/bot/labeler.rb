@@ -232,7 +232,7 @@ module Bot
     def add_labels!(issue, new_labels)
       puts "#{@repo}: [LABELS] 📍 #{issue.html_url} --> Adding #{new_labels}"
       Octokit.add_labels_to_an_issue(@repo, issue.number, new_labels)
-  end
+    end
 
     def issue_contains_label(issue, label)
       existing_labels = []

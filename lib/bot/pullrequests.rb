@@ -87,6 +87,9 @@ module Bot
       if candidate[:action] == 'remove_cla_false'
         remove_cla_false(pr)
       end
+      if candidate[:action] == 'remove_import_labels'
+        remove_import_labels(pr)
+      end
     end
 
     def add_cla_false(pr)
@@ -98,7 +101,7 @@ module Bot
     end
 
     def remove_import_labels(pr)
-      remove_labels = [ @label_import_failed, @label_import_started, @label_pr_blocked_on_fb, @label_pr_needs_love, @label_pr_needs_review]
+      remove_labels = [ @label_import_started, @label_import_failed, @label_pr_blocked_on_fb, @label_pr_needs_love, @label_pr_needs_review]
       remove_labels.each do |label|
         remove_label(pr, label)
       end
@@ -192,14 +195,14 @@ module Bot
       end
 
       if new_labels.count > 0
-        puts "#{@repo}: [LABELS] 📍 #{issue.html_url}: #{issue.title} --> Adding #{new_labels}"
+        puts "#{@repo}: [PULLREQUESTS][LABELS] 📍 #{issue.html_url}: #{issue.title} --> Adding #{new_labels}"
         Octokit.add_labels_to_an_issue(@repo, issue.number, new_labels)
       end
     end
 
     def remove_label(issue, label)
       if issue_contains_label(issue,label)
-        puts "#{@repo}: [LABELS] ✂️ #{issue.html_url}: #{issue.title} --> Removing #{label}"
+        puts "#{@repo}: [PULLREQUESTS][LABELS] ✂️ #{issue.html_url}: #{issue.title} --> Removing #{label}"
         Octokit.remove_label(@repo, issue.number, label)
       end
     end
