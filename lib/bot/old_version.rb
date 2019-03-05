@@ -106,6 +106,7 @@ module Bot
       if contains_envinfo?(issue)
         # Contains envinfo block
         remove_label(issue, @label_no_envinfo)
+        # TODO: Hide our comment asking for envinfo
 
         version_info = /(\sreact-native:)\s?[\^~]?(?<requested_version>[0-9]{1,2}\.[0-9]{1,2}\.[0-9]{1,2})\s=>\s(?<installed_version_major_minor>[0-9]{1,2}\.[0-9]{1,2})\.[0-9]{1,2}/.match(body)
 
@@ -175,7 +176,9 @@ The "#{@label_old_version}" label will be removed automatically once you edit yo
         MSG
       when "no_envinfo"
         <<-MSG.strip_heredoc
-Can you run `react-native info` and edit your issue to include these results under the **Environment** section?\n\nIf you believe this information is irrelevant to the reported issue, you may write `[skip envinfo]` under **Environment** to let us know.
+Can you run `react-native info` and edit your issue to include these results under the **Environment** section?
+
+<details>If you believe this information is irrelevant to the reported issue, you may write `[skip envinfo]` alongside an explanation in your Environment: section.</detail>
         MSG
       end
     end
