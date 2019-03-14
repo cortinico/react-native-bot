@@ -19,7 +19,7 @@ module Bot
       @label_pr_needs_review = "Internal Diff Needs Review"
       @label_pr_needs_love = "Internal Diff Needs FB Love"
 
-      @changelogRegex = /\[\s?(?<category>General|iOS|Android|.*)\s?\]\s*?\[\s?(?<type>Added|Changed|Deprecated|Removed|Fixed|Security)\s?\]\s?\-\s?(?<message>.*)/
+      @changelogRegex = /\[\s?(?<category>General|iOS|Android|.*)\s?\]\s*?\[\s?(?<type>Add.*|Change.?|Deprecate.?|Remove.?|Fix.*|Security)\s?\]\s?\-\s?(?<message>.*)/
     end
 
     def perform
