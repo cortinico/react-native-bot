@@ -6,18 +6,18 @@ module Bot
 
     def initialize(repo)
       @repo = repo
-      @label_no_test_plan = "PR: Missing Test Plan"
-      @label_has_test_plan = "PR: Includes Test Plan"
-      @label_no_changelog = "PR: Missing Changelog"
-      @label_has_changelog = "PR: Includes Changelog"
+      @label_no_test_plan = "Missing Test Plan"
+      @label_has_test_plan = "Includes Test Plan"
+      @label_no_changelog = "Missing Changelog"
+      @label_has_changelog = "Includes Changelog"
       @label_cla_true = "CLA Signed"
-      @label_cla_false = "PR: No CLA"
+      @label_cla_false = "No CLA"
       @label_pr_merged = "Merged"
       @label_import_started = "Import Started"
       @label_import_failed = "Import Failed"
-      @label_pr_blocked_on_fb = "PR: Blocked on FB"
-      @label_pr_needs_review = "PR: Internal Diff Needs Review"
-      @label_pr_needs_love = "PR: Internal Diff Needs FB Love"
+      @label_pr_blocked_on_fb = "Blocked on FB"
+      @label_pr_needs_review = "Internal Diff Needs Review"
+      @label_pr_needs_love = "Internal Diff Needs FB Love"
 
       @changelogRegex = /\[\s?(?<category>General|iOS|Android|.*)\s?\]\s*?\[\s?(?<type>Added|Changed|Deprecated|Removed|Fixed|Security)\s?\]\s?\-\s?(?<message>.*)/
     end

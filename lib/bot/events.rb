@@ -9,9 +9,9 @@ module Bot
       @label_pr_merged = "Merged"
       @label_import_started = "Import Started"
       @label_import_failed = "Import Failed"
-      @label_pr_blocked_on_fb = "PR: Blocked on FB"
-      @label_pr_needs_review = "PR: Internal Diff Needs Review"
-      @label_pr_needs_love = "PR: Internal Diff Needs FB Love"
+      @label_pr_blocked_on_fb = "Blocked on FB"
+      @label_pr_needs_review = "Internal Diff Needs Review"
+      @label_pr_needs_love = "Internal Diff Needs FB Love"
     end
 
     def perform
