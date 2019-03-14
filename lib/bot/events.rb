@@ -6,7 +6,7 @@ module Bot
 
     def initialize(repo)
       @repo = repo
-      @label_pr_merged = "PR: Merged"
+      @label_pr_merged = "Merged"
       @label_import_started = "Import Started"
       @label_import_failed = "Import Failed"
       @label_pr_blocked_on_fb = "PR: Blocked on FB"
@@ -84,7 +84,7 @@ module Bot
         puts "#{@repo}: [LABELS] ✂️ #{issue.html_url}: #{issue.title} --> Removing #{label}"
         Octokit.remove_label(@repo, issue.number, label)
       end
-    end    
+    end
 
     def issue_contains_label(issue, label)
       existing_labels = []
