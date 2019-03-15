@@ -21,6 +21,7 @@ module Bot
 
       @label_platform_android = "Platform: Android"
       @label_platform_ios = "Platform: iOS"
+      @label_platform_tvos = "Platform: tvOS"
       @label_platform_windows = "Platform: Windows"
       @label_platform_macos = "Platform: macOS"
       @label_platform_linux = "Platform: Linux"
@@ -132,44 +133,32 @@ module Bot
 
         case category
           when "ANDROID"
-            label = @label_platform_android
-            labels.push label
+            labels.push @label_platform_android
           when  "IOS"
-            label = @label_platform_ios
-            labels.push label
+            labels.push @label_platform_ios
           when  "TVOS"
-            label = "Platform: tvOS"
-            labels.push label
+            labels.push @label_platform_tvos
           when  "WINDOWS"
-            label = @label_platform_windows
-            labels.push label
+            labels.push @label_platform_windows
           when  "MACOS"
-            label = @label_platform_macos
-            labels.push label
+            labels.push @label_platform_macos
           when  "LINUX"
-            label = @label_platform_linux
-            labels.push label
+            labels.push @label_platform_linux
         end
 
         case type
           when "ADDED"
-            label = @label_type_added
-            labels.push label
+            labels.push @label_type_added
           when "FIXED"
-            label = @label_type_fixed
-            labels.push label
+            labels.push @label_type_fixed
           when "DEPRECATED"
-            label = @label_type_deprecated
-            labels.push label
+            labels.push @label_type_deprecated
           when "REMOVED"
-            label = @label_type_removed
-            labels.push label
+            labels.push @label_type_removed
           when "SECURITY"
-            label = @label_type_security
-            labels.push label
+            labels.push @label_type_security
           when "BREAKING"
-            label = @label_type_breaking
-            labels.push label
+            labels.push @label_type_breaking
         end
 
         remove_label(pr, @label_no_changelog)
