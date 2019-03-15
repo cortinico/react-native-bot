@@ -18,7 +18,7 @@ module Bot
       @label_partner = "Partner"
       @label_for_stack_overflow = "Resolution: For Stack Overflow"
       @label_ci_test_failure = "❌CI Test Failure"
-      @label_feature_request = "Type: Feature Request"
+      @label_feature_request = "Type: Enhancement"
       @label_docs = "Type: Docs"
       @label_good_first_issue = "Good first issue"
       @label_tests = "🔩Test Infrastructure"

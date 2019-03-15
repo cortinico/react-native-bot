@@ -19,6 +19,19 @@ module Bot
       @label_pr_needs_review = "Internal Diff Needs Review"
       @label_pr_needs_love = "Internal Diff Needs FB Love"
 
+      @label_platform_android = "Platform: Android"
+      @label_platform_ios = "Platform: iOS"
+      @label_platform_windows = "Platform: Windows"
+      @label_platform_macos = "Platform: macOS"
+      @label_platform_linux = "Platform: Linux"
+
+      @label_type_added = "Type: Enhancement"
+      @label_type_fixed = "Bug"
+      @label_type_deprecated = "Type: Deprecation"
+      @label_type_removed = "Type: Removal"
+      @label_type_security = "Type: Security"
+      @label_type_breaking = "Type: Breaking Change💥"
+
       @changelogRegex = /\[\s?(?<category>General|iOS|Android|.*)\s?\]\s*?\[\s?(?<type>Add.*|Change.?|Deprecate.?|Remove.?|Fix.*|Security)\s?\]\s?\-\s?(?<message>.*)/
     end
 
@@ -119,43 +132,43 @@ module Bot
 
         case category
           when "ANDROID"
-            label = "Platform: Android"
+            label = @label_platform_android
             labels.push label
           when  "IOS"
-            label = "Platform: iOS"
+            label = @label_platform_ios
             labels.push label
           when  "TVOS"
             label = "Platform: tvOS"
             labels.push label
           when  "WINDOWS"
-            label = "Platform: Windows"
+            label = @label_platform_windows
             labels.push label
           when  "MACOS"
-            label = "Platform: macOS"
+            label = @label_platform_macos
             labels.push label
           when  "LINUX"
-            label = "Platform: Linux"
+            label = @label_platform_linux
             labels.push label
         end
 
         case type
           when "ADDED"
-            label = "Type: Enhancement"
+            label = @label_type_added
             labels.push label
           when "FIXED"
-            label = "Type: Bug Fix🐛"
+            label = @label_type_fixed
             labels.push label
           when "DEPRECATED"
-            label = "Type: Deprecation"
+            label = @label_type_deprecated
             labels.push label
           when "REMOVED"
-            label = "Type: Removal"
+            label = @label_type_removed
             labels.push label
           when "SECURITY"
-            label = "Type: Security"
+            label = @label_type_security
             labels.push label
           when "BREAKING"
-            label = "Type: Breaking Change💥"
+            label = @label_type_breaking
             labels.push label
         end
 
