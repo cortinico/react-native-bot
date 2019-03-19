@@ -39,7 +39,7 @@ module Bot
                 end
 
                 Octokit.add_comment(@repo, pr_number, "This pull request was successfully merged by #{commit_author} in **#{commit.sha}**.\n\n<sup>[When will my fix make it into a release?](https://github.com/react-native-community/react-native-releases#when-will-my-fix-make-it-into-a-release) | [Upcoming Releases](https://github.com/react-native-community/react-native-releases/issues)</sup>")
-                #Octokit.add_labels_to_an_issue(@repo, pr_number, [@label_pr_merged])
+                Octokit.add_labels_to_an_issue(@repo, pr_number, [@label_pr_merged])
                 # Octokit.lock_issue(@repo, pr_number, { :lock_reason => "resolved", :accept => "application/vnd.github.sailor-v-preview+json" })
               end
             end
