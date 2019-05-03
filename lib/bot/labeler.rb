@@ -8,6 +8,7 @@ module Bot
       @repo = repo
 
       @label_type_bug_report = "Type: Bug Report"
+      @label_bug = "Bug"
       @label_android = "Platform: Android"
       @label_ios = "Platform: iOS"
       @label_tvos = "Platform: tvOS"
@@ -139,7 +140,12 @@ module Bot
         {
           :search => "repo:#{@repo} is:open created:>=#{1.day.ago.to_date.to_s}",
           :action => "label"
+        },
+        {
+          :search => "repo:#{@repo} is:issue label:\"#{@label_type_bug_report}\" -label:\"#{@label_bug}\"",
+          :action => "backfill"
         }
+
       ]
     end
 
@@ -154,7 +160,7 @@ module Bot
     end
 
     def backfill_labels(issue)
-      add_labels!(issue, [@label_type_bug_report])
+      add_labels!(issue, [@label_bug])
     end
 
     def label_based_on_title(issue)
