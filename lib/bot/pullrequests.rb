@@ -68,7 +68,7 @@ module Bot
           :action => 'lint_pr'
         },
         {
-          :search => "repo:#{@repo} is:open is:pr -label:\"#{@label_has_changelog}\" -label:\"#{@label_no_changelog}\"",
+          :search => "repo:#{@repo} is:open is:pr -label:\"#{@label_no_changelog}\"",
           :action => 'check_changelog'
         },
         {
@@ -126,7 +126,7 @@ module Bot
       changelogCaptureGroups = @changelogRegex.match(body)
       labels = []
       if changelogCaptureGroups
-        labels.push @label_has_changelog
+        # labels.push @label_has_changelog
 
         category = changelogCaptureGroups["category"].upcase
         type = changelogCaptureGroups["type"].upcase
@@ -176,13 +176,13 @@ module Bot
       body = strip_comments(pr.body)
       has_test_plan = body.downcase =~ /test plan/
 
-      if ! has_test_plan
-        remove_label(pr, @label_has_test_plan)
-      end
+      # if ! has_test_plan
+      #   remove_label(pr, @label_has_test_plan)
+      # end
 
       changelogCaptureGroups = @changelogRegex.match(body)
       if changelogCaptureGroups
-        labels.push @label_has_changelog
+        # labels.push @label_has_changelog
         remove_label(pr, @label_no_changelog)
       end
 
@@ -208,7 +208,6 @@ module Bot
         Octokit.remove_label(@repo, issue.number, label)
       end
     end
-
 
     def issue_contains_label(issue, label)
       existing_labels = []
