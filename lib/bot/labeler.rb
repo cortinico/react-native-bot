@@ -8,7 +8,9 @@ module Bot
       @repo = repo
 
       @label_type_bug_report = "Type: Bug Report"
+      @label_type_bug_fix = "Type: Bug Fix🐛"
       @label_bug = "Bug"
+      @label_impact_bug = "Impact: Bug"
       @label_android = "Platform: Android"
       @label_ios = "Platform: iOS"
       @label_tvos = "Platform: tvOS"
@@ -144,8 +146,15 @@ module Bot
         {
           :search => "repo:#{@repo} is:issue label:\"#{@label_type_bug_report}\" -label:\"#{@label_bug}\"",
           :action => "backfill"
+        },
+        {
+          :search => "repo:#{@repo} is:pr label:\"#{@label_type_bug_fix}\" -label:\"#{@label_bug}\"",
+          :action => "backfill"
+        },
+        {
+          :search => "repo:#{@repo} label:\"#{@label_impact_bug}\" -label:\"#{@label_bug}\"",
+          :action => "backfill"
         }
-
       ]
     end
 
