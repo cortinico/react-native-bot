@@ -49,15 +49,7 @@ module Bot
           :action => 'close_template'
         },
         {
-          :search => "repo:#{@repo} is:open is:issue -label:\"#{@label_core_team}\" -label:\"#{@label_contributor}\" -label:\"#{@label_customer}\" -label:\"#{@label_partner}\" -label:\"#{@label_needs_more_info}\" label:\"#{@label_bug_report}\" NOT \"environment\" in:body created:>=2019-05-03",
-          :action => 'nag_template'
-        },
-        {
-          :search => "repo:#{@repo} is:open is:issue -label:\"#{@label_core_team}\" -label:\"#{@label_contributor}\" -label:\"#{@label_customer}\" -label:\"#{@label_partner}\" -label:\"#{@label_needs_more_info}\" label:\"#{@label_type_bug_report}\" NOT \"environment\" in:body created:>=2019-05-03",
-          :action => 'nag_template'
-        },
-        {
-          :search => "repo:#{@repo} is:open is:issue -label:\"#{@label_core_team}\" -label:\"#{@label_contributor}\" -label:\"#{@label_customer}\" -label:\"#{@label_partner}\" -label:\"#{@label_needs_more_info}\" label:\"#{@label_bug_report_alt}\" NOT \"environment\" in:body created:>=2019-05-03",
+          :search => "repo:#{@repo} is:open is:issue -label:\"#{@label_core_team}\" -label:\"#{@label_contributor}\" -label:\"#{@label_customer}\" -label:\"#{@label_partner}\" -label:\"#{@label_needs_more_info}\" label:\"#{@label_bug_report}\" NOT \"React Native version\" in:body created:>=2019-05-08",
           :action => 'nag_template'
         }
       ]
@@ -75,6 +67,17 @@ module Bot
     def already_nagged?(issue)
       comments = Octokit.issue_comments(@repo, issue)
       comments.any? { |c| c.body =~ /issue template/ }
+    end
+
+    def contains_envinfo?(issue)
+      body = strip_comments(issue.body)
+      body =~ /Packages: \(wanted => installed\)/ || body =~ /React Native Environment Info:/ || body =~ /Environment:/ || body =~ /React Native version:/
+    end
+
+    def strip_comments(text)
+      return "" unless text
+      regex = /(?=<!--)([\s\S]*?-->)/m
+      text.gsub(regex, "")
     end
 
     def close_template(issue)
@@ -98,17 +101,17 @@ module Bot
     def nag_template(issue)
       labels = [@label_needs_more_info];
 
+      return if contains_envinfo?(issue)
       return if issue_contains_label(issue, @label_core_team)
       return if issue_contains_label(issue, @label_contributor)
       return if issue_contains_label(issue, @label_customer)
       return if issue_contains_label(issue, @label_partner)
+      return if already_nagged?(issue.number)
 
-      unless already_nagged?(issue.number)
-        Octokit.add_comment(@repo, issue.number, nag_message)
-        labels.push @label_ran_commands
-        add_labels(issue, labels)
-        puts "#{@repo}: ️[TEMPLATE] ❗📋  #{issue.html_url}: #{issue.title} -> Incomplete template, nagged"
-      end
+      Octokit.add_comment(@repo, issue.number, nag_message)
+      labels.push @label_ran_commands
+      add_labels(issue, labels)
+      puts "#{@repo}: ️[TEMPLATE] ❗📋  #{issue.html_url}: #{issue.title} -> Incomplete template, nagged"
     end
 
     def add_labels(issue, labels)
