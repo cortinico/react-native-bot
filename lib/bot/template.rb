@@ -49,10 +49,6 @@ module Bot
           :action => 'close_template'
         },
         {
-          :search => "repo:#{@repo} is:open is:issue -label:\"#{@label_core_team}\" -label:\"#{@label_rn_team}\" -label:\"#{@label_contributor}\" -label:\"#{@label_customer}\" -label:\"#{@label_partner}\" label:\"#{@label_needs_issue_template}\" created:>=2020-01-17",
-          :action => 'close_template'
-        },
-        {
           :search => "repo:#{@repo} is:open is:issue -label:\"#{@label_core_team}\" -label:\"#{@label_rn_team}\" -label:\"#{@label_contributor}\" -label:\"#{@label_customer}\" -label:\"#{@label_partner}\" -label:\"#{@label_needs_author_feedback}\" -label:\"#{@label_resolution_needs_more_information}\" label:\"#{@label_bug_report}\" NOT \"React Native version\" in:body created:>=2019-05-08",
           :action => 'nag_template'
         }
@@ -98,13 +94,12 @@ module Bot
       end
 
       Octokit.close_issue(@repo, issue.number)
-      labels.push @label_ran_commands
       add_labels(issue, labels)
       puts "#{@repo}: ️[TEMPLATE] ❗📋  #{issue.html_url}: #{issue.title} -> Missing template, closed"
     end
 
     def nag_template(issue)
-      labels = [@label_needs_author_feedback];
+      labels = [@label_needs_issue_template];
 
       return if contains_envinfo?(issue)
       return if issue_contains_label(issue, @label_core_team)
@@ -115,7 +110,6 @@ module Bot
       return if already_nagged?(issue.number)
 
       Octokit.add_comment(@repo, issue.number, nag_message)
-      labels.push @label_ran_commands
       add_labels(issue, labels)
       puts "#{@repo}: ️[TEMPLATE] ❗📋  #{issue.html_url}: #{issue.title} -> Incomplete template, nagged"
     end
