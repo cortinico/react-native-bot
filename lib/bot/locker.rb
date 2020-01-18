@@ -37,7 +37,9 @@ module Bot
 
     def lock(issue, reason)
       unless issue.locked
-        Octokit.lock_issue(@repo, issue.number, { :lock_reason => reason[:lock_reason], :accept => "application/vnd.github.sailor-v-preview+json" })
+        unless ENV['READ_ONLY'].present?
+          Octokit.lock_issue(@repo, issue.number, { :lock_reason => reason[:lock_reason], :accept => "application/vnd.github.sailor-v-preview+json" })
+        end
         puts "#{@repo}: [LOCKERS] 🔒 #{issue.html_url}: #{issue.title} --> #{reason[:lock_message]}"
       end
       add_labels(issue, [@label_resolved]) unless issue_contains_label(issue, @label_stale)
@@ -53,8 +55,10 @@ module Bot
       end
 
       if new_labels.count > 0
+        unless ENV['READ_ONLY'].present?
+          Octokit.add_labels_to_an_issue(@repo, issue.number, new_labels)
+        end
         puts "#{@repo}: [LABELS] 📍 #{issue.html_url} --> Adding #{new_labels}"
-        Octokit.add_labels_to_an_issue(@repo, issue.number, new_labels)
       end
     end
 

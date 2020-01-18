@@ -10,11 +10,15 @@ module Bot
       @label_bug_report_alt = "Bug Report"
       @label_bug_report = "Bug"
       @label_type_bug_report = "Type: Bug Report"
-      @label_no_template = "Resolution: No Template"
-      @label_needs_more_info = "Resolution: Needs More Information"
+      @label_resolution_no_template = "Resolution: No Template"
+      @label_needs_issue_template = "Needs: Issue Template"
+      @label_needs_author_feedback = "Needs: Author Feedback"
+      @label_resolution_needs_more_information = "Resolution: Needs More Information"
+      @label_needs_triage = "Needs: Triage"
       @label_stale = "Stale"
       @label_for_discussion = "Type: Discussion"
       @label_core_team = "Core Team"
+      @label_rn_team = "RN Team"
       @label_contributor = "Contributor"
       @label_customer = "Customer"
       @label_partner = "Partner"
@@ -41,15 +45,15 @@ module Bot
     def candidates
       [
         {
-          :search => "repo:#{@repo} is:open is:issue -label:\"#{@label_for_discussion}\" -label:\"#{@label_core_team}\" -label:\"#{@label_contributor}\" -label:\"#{@label_customer}\" -label:\"#{@label_partner}\" -label:\"#{@label_ci_test_failure}\" -label:\"#{@label_bug_report}\" -label:\"#{@label_bug_report_alt}\" -label:\"#{@label_type_bug_report}\" -label:\"#{@label_docs}\" -label:\"#{@label_for_stack_overflow}\" -label:\"#{@label_good_first_issue}\" -label:\"#{@label_no_template}\" -label:\"#{@label_tests}\" -label:\"#{@label_ci_test_failure}\" created:>=2019-01-26",
+          :search => "repo:#{@repo} is:open is:issue -label:\"#{@label_for_discussion}\" -label:\"#{@label_core_team}\" -label:\"#{@label_rn_team}\" -label:\"#{@label_contributor}\" -label:\"#{@label_customer}\" -label:\"#{@label_partner}\" -label:\"#{@label_ci_test_failure}\" -label:\"#{@label_bug_report}\" -label:\"#{@label_bug_report_alt}\" -label:\"#{@label_type_bug_report}\" -label:\"#{@label_docs}\" -label:\"#{@label_for_stack_overflow}\" -label:\"#{@label_good_first_issue}\" -label:\"#{@label_resolution_no_template} -label:\"#{@label_needs_issue_template}\" -label:\"#{@label_tests}\" -label:\"#{@label_ci_test_failure}\" created:>=2020-01-17",
           :action => 'close_template'
         },
         {
-          :search => "repo:#{@repo} is:open is:issue -label:\"#{@label_core_team}\" -label:\"#{@label_contributor}\" -label:\"#{@label_customer}\" -label:\"#{@label_partner}\" label:\"#{@label_no_template}\" created:>=2019-01-26",
+          :search => "repo:#{@repo} is:open is:issue -label:\"#{@label_core_team}\" -label:\"#{@label_rn_team}\" -label:\"#{@label_contributor}\" -label:\"#{@label_customer}\" -label:\"#{@label_partner}\" label:\"#{@label_needs_issue_template}\" created:>=2020-01-17",
           :action => 'close_template'
         },
         {
-          :search => "repo:#{@repo} is:open is:issue -label:\"#{@label_core_team}\" -label:\"#{@label_contributor}\" -label:\"#{@label_customer}\" -label:\"#{@label_partner}\" -label:\"#{@label_needs_more_info}\" label:\"#{@label_bug_report}\" NOT \"React Native version\" in:body created:>=2019-05-08",
+          :search => "repo:#{@repo} is:open is:issue -label:\"#{@label_core_team}\" -label:\"#{@label_rn_team}\" -label:\"#{@label_contributor}\" -label:\"#{@label_customer}\" -label:\"#{@label_partner}\" -label:\"#{@label_needs_author_feedback}\" -label:\"#{@label_resolution_needs_more_information}\" label:\"#{@label_bug_report}\" NOT \"React Native version\" in:body created:>=2019-05-08",
           :action => 'nag_template'
         }
       ]
@@ -81,9 +85,10 @@ module Bot
     end
 
     def close_template(issue)
-      labels = [@label_no_template];
+      labels = [@label_needs_issue_template];
 
       return if issue_contains_label(issue, @label_core_team)
+      return if issue_contains_label(issue, @label_rn_team)
       return if issue_contains_label(issue, @label_contributor)
       return if issue_contains_label(issue, @label_customer)
       return if issue_contains_label(issue, @label_partner)
@@ -99,10 +104,11 @@ module Bot
     end
 
     def nag_template(issue)
-      labels = [@label_needs_more_info];
+      labels = [@label_needs_author_feedback];
 
       return if contains_envinfo?(issue)
       return if issue_contains_label(issue, @label_core_team)
+      return if issue_contains_label(issue, @label_rn_team)
       return if issue_contains_label(issue, @label_contributor)
       return if issue_contains_label(issue, @label_customer)
       return if issue_contains_label(issue, @label_partner)

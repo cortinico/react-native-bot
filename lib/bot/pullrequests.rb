@@ -16,8 +16,8 @@ module Bot
       @label_import_started = "Import Started"
       @label_import_failed = "Import Failed"
       @label_pr_blocked_on_fb = "Blocked on FB"
-      @label_pr_needs_review = "Internal Diff Needs Review"
-      @label_pr_needs_love = "Internal Diff Needs FB Love"
+      @label_needs_imported_diff_review = "Needs: Imported Diff Review"
+      @label_needs_imported_diff_waiting_on_fb = "Needs: Imported Diff Waiting on Facebook"
 
       @label_platform_android = "Platform: Android"
       @label_platform_ios = "Platform: iOS"
@@ -115,7 +115,7 @@ module Bot
     end
 
     def remove_import_labels(pr)
-      remove_labels = [ @label_import_started, @label_import_failed, @label_pr_blocked_on_fb, @label_pr_needs_love, @label_pr_needs_review]
+      remove_labels = [ @label_import_started, @label_import_failed, @label_pr_blocked_on_fb, @label_needs_imported_diff_waiting_on_fb, @label_needs_imported_diff_review]
       remove_labels.each do |label|
         remove_label(pr, label)
       end

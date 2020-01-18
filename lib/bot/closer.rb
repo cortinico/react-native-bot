@@ -6,16 +6,16 @@ module Bot
 
     def initialize(repo)
       @repo = repo
-      @label_old_version = "Resolution: Old Version"
+      @label_needs_verify_on_latest_version = "Needs: Verify on Latest Version"
       @label_for_stack_overflow = "Resolution: For Stack Overflow"
       @label_question = "Question"
       @label_type_question = "Type: Question"
-      @label_no_template = "Resolution: No Template"
-      @label_no_envinfo = "Resolution: Missing Environment Info"
+      @label_needs_envinfo = "Needs: Environment Info"
       @label_for_discussion = "Type: Discussion"
       @label_help_wanted = "Help Wanted :octocat:"
       @label_good_first_issue = "Good first issue"
       @label_core_team = "Core Team"
+      @label_rn_team = "RN Team"
       @label_contributor = "Contributor"
       @label_customer = "Customer"
       @label_partner = "Partner"
@@ -55,12 +55,12 @@ module Bot
           :close_reason => "Issue does not belong here."
         },
         {
-          :search => "repo:#{@repo} is:issue is:open label:\"#{@label_old_version}\" -label:\"#{@label_core_team}\" -label:\"#{@label_contributor}\" -label:\"#{@label_customer}\" -label:\"#{@label_partner}\" -label:\"#{@label_for_discussion}\" -label:\"#{@label_pr_pending}\" comments:<5 updated:<#{14.days.ago.to_date.to_s}",
+          :search => "repo:#{@repo} is:issue is:open label:\"#{@label_needs_verify_on_latest_version}\" -label:\"#{@label_core_team}\" -label:\"#{@label_rn_team}\" -label:\"#{@label_contributor}\" -label:\"#{@label_customer}\" -label:\"#{@label_partner}\" -label:\"#{@label_for_discussion}\" -label:\"#{@label_pr_pending}\" comments:<5 updated:<#{14.days.ago.to_date.to_s}",
           :message => "I am closing this issue because it does not appear to have been verified on the latest release, and there has been no followup in a while.\n\nIf you found this thread after encountering the same issue in the [latest release](https://github.com/facebook/react-native/releases), please feel free to create a new issue with up-to-date information by clicking [here](https://github.com/facebook/react-native/issues/new).",
           :close_reason => "Old version, issue not updated in last fourteen days"
         },
         {
-          :search => "repo:#{@repo} is:issue is:open label:\"#{@label_no_envinfo}\" -label:\"#{@label_core_team}\" -label:\"#{@label_customer}\" -label:\"#{@label_contributor}\" -label:\"#{@label_partner}\" -label:\"#{@label_for_discussion}\" -label:\"#{@label_pr_pending}\" updated:<#{7.days.ago.to_date.to_s}",
+          :search => "repo:#{@repo} is:issue is:open label:\"#{@label_needs_envinfo}\" -label:\"#{@label_core_team}\" -label:\"#{@label_rn_team}\" -label:\"#{@label_customer}\" -label:\"#{@label_contributor}\" -label:\"#{@label_partner}\" -label:\"#{@label_for_discussion}\" -label:\"#{@label_pr_pending}\" updated:<#{7.days.ago.to_date.to_s}",
           :message => "I am closing this issue because it does not contain the necessary environment info, and there has been no followup in a while.\n\nIf you found this thread after encountering the same issue in the [latest release](https://github.com/facebook/react-native/releases), please feel free to create a new issue with up-to-date information by clicking [here](https://github.com/facebook/react-native/issues/new).",
           :close_reason => "No environment info, issue not updated in last seven days"
         }
@@ -68,9 +68,11 @@ module Bot
     end
 
     def nag(issue, reason)
-      add_labels(issue, ["Ran Commands"])
-      Octokit.add_comment(@repo, issue.number, reason[:message])
-      Octokit.close_issue(@repo, issue.number)
+      unless ENV['READ_ONLY'].present?
+        add_labels(issue, ["Ran Commands"])
+        Octokit.add_comment(@repo, issue.number, reason[:message])
+        Octokit.close_issue(@repo, issue.number)
+      end
 
       puts "#{@repo}: [CLOSERS] 🚫 #{issue.html_url}: #{issue.title} --> #{reason[:close_reason]}"
     end

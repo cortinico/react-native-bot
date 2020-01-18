@@ -21,7 +21,6 @@ module Bot
       @label_cli = "💻CLI"
       @label_regression = "Impact: Regression"
       @label_ci_test_failure = "❌CI Test Failure"
-      @label_no_template = "Resolution: No Template"
       @label_discussion = "Type: Discussion"
 
       @components = [
@@ -239,14 +238,18 @@ module Bot
       end
 
       if new_labels.count > 0
+        unless ENV['READ_ONLY'].present?
+          Octokit.add_labels_to_an_issue(@repo, issue.number, new_labels)
+        end
         puts "#{@repo}: [LABELS] 📍 #{issue.html_url} --> Adding #{new_labels}"
-        Octokit.add_labels_to_an_issue(@repo, issue.number, new_labels)
       end
     end
 
     def add_labels!(issue, new_labels)
+      unless ENV['READ_ONLY'].present?
+        Octokit.add_labels_to_an_issue(@repo, issue.number, new_labels)
+      end
       puts "#{@repo}: [LABELS] 📍 #{issue.html_url} --> Adding #{new_labels}"
-      Octokit.add_labels_to_an_issue(@repo, issue.number, new_labels)
     end
 
     def issue_contains_label(issue, label)

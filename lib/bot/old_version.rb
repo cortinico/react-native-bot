@@ -12,10 +12,13 @@ module Bot
       @latest_release_version_major_minor = version_info['major_minor']
 
       @label_no_envinfo = "Resolution: Missing Environment Info"
+      @label_needs_envinfo = "Needs: Environment Info"
       @label_pr_pending = "Resolution: PR Submitted"
       @label_old_version = "Resolution: Old Version"
+      @label_needs_verify_on_latest_version = "Needs: Verify on Latest Version"
       @label_good_first_issue = "Good first issue"
       @label_core_team = "Core Team"
+      @label_rn_team = "RN Team"
       @label_customer = "Customer"
       @label_contributor = "Contributor"
       @label_partner = "Partner"
@@ -38,27 +41,27 @@ module Bot
     def candidates
       [
         {
-          :search => "repo:#{@repo} is:issue is:open \"React Native version:\" in:body -label:\"#{@label_core_team}\" -label:\"#{@label_contributor}\" -label:\"#{@label_customer}\" -label:\"#{@label_partner}\" -label:\"#{@label_for_discussion}\" -label:\"#{@label_stale}\" -label:\"#{@label_pr_pending}\" -label:\"#{@label_old_version}\" created:>#{1.day.ago.to_date.to_s}",
+          :search => "repo:#{@repo} is:issue is:open \"React Native version:\" in:body -label:\"#{@label_core_team}\" -label:\"#{@label_rn_team}\" -label:\"#{@label_contributor}\" -label:\"#{@label_customer}\" -label:\"#{@label_partner}\" -label:\"#{@label_for_discussion}\" -label:\"#{@label_stale}\" -label:\"#{@label_pr_pending}\" -label:\"#{@label_old_version}\" -label:\"#{@label_needs_verify_on_latest_version}\" created:>#{1.day.ago.to_date.to_s}",
           :action => "nag_old_version"
         },
         {
-          :search => "repo:#{@repo} is:issue is:open \"React Native version:\" in:body -label:\"#{@label_core_team}\" -label:\"#{@label_contributor}\" -label:\"#{@label_customer}\" -label:\"#{@label_partner}\" -label:\"#{@label_for_discussion}\" -label:\"#{@label_stale}\" -label:\"#{@label_good_first_issue}\" -label:\"#{@label_pr_pending}\" -label:\"#{@label_old_version}\" created:>#{7.day.ago.to_date.to_s} updated:>#{2.day.ago.to_date.to_s}",
+          :search => "repo:#{@repo} is:issue is:open \"React Native version:\" in:body -label:\"#{@label_core_team}\" -label:\"#{@label_rn_team}\" -label:\"#{@label_contributor}\" -label:\"#{@label_customer}\" -label:\"#{@label_partner}\" -label:\"#{@label_for_discussion}\" -label:\"#{@label_stale}\" -label:\"#{@label_good_first_issue}\" -label:\"#{@label_pr_pending}\" -label:\"#{@label_old_version}\" -label:\"#{@label_needs_verify_on_latest_version}\" created:>#{7.day.ago.to_date.to_s} updated:>#{2.day.ago.to_date.to_s}",
           :action => "nag_old_version"
         },
         {
-          :search => "repo:#{@repo} is:issue is:open \"React Native version:\" in:body -label:\"#{@label_core_team}\" -label:\"#{@label_contributor}\" -label:\"#{@label_customer}\" -label:\"#{@label_partner}\" -label:\"#{@label_for_discussion}\" -label:\"#{@label_stale}\" -label:\"#{@label_good_first_issue}\" -label:\"#{@label_pr_pending}\" -label:\"#{@label_old_version}\"  label:\"#{@label_no_envinfo}\" created:>#{7.day.ago.to_date.to_s} updated:>#{2.day.ago.to_date.to_s}",
+          :search => "repo:#{@repo} is:issue is:open \"React Native version:\" in:body -label:\"#{@label_core_team}\" -label:\"#{@label_rn_team}\" -label:\"#{@label_contributor}\" -label:\"#{@label_customer}\" -label:\"#{@label_partner}\" -label:\"#{@label_for_discussion}\" -label:\"#{@label_stale}\" -label:\"#{@label_good_first_issue}\" -label:\"#{@label_pr_pending}\" -label:\"#{@label_old_version}\" -label:\"#{@label_needs_verify_on_latest_version}\" label:\"#{@label_needs_envinfo}\" created:>#{7.day.ago.to_date.to_s} updated:>#{2.day.ago.to_date.to_s}",
           :action => "nag_old_version"
         },
         {
-          :search => "repo:#{@repo} is:issue is:open \"Environment\" in:body label:\"#{@label_old_version}\" -label:\"#{@label_stale}\" updated:>#{2.day.ago.to_date.to_s}",
+          :search => "repo:#{@repo} is:issue is:open \"Environment\" in:body label:\"#{@label_needs_verify_on_latest_version}\" -label:\"#{@label_stale}\" updated:>#{2.day.ago.to_date.to_s}",
           :action => "remove_label_if_latest_version"
         },
         {
-          :search => "repo:#{@repo} is:issue is:open \"React Native version:\" in:body label:\"#{@label_old_version}\" -label:\"#{@label_stale}\" updated:>#{2.day.ago.to_date.to_s}",
+          :search => "repo:#{@repo} is:issue is:open \"React Native version:\" in:body label:\"#{@label_needs_verify_on_latest_version}\" -label:\"#{@label_stale}\" updated:>#{2.day.ago.to_date.to_s}",
           :action => "remove_label_if_latest_version"
         },
         {
-          :search => "repo:#{@repo} is:issue is:open label:\"#{@label_no_envinfo}\"",
+          :search => "repo:#{@repo} is:issue is:open label:\"#{@label_needs_envinfo}\"",
           :action => "remove_label_if_contains_envinfo"
         }
       ]
@@ -111,6 +114,7 @@ module Bot
       if contains_envinfo?(issue)
         # Contains envinfo block
         remove_label(issue, @label_no_envinfo)
+        remove_label(issue, @label_needs_envinfo)
         # TODO: Hide our comment asking for envinfo
 
         version_info = /(\sreact-native:)\s?[\^~]?(?<requested_version>[0-9]{1,2}\.[0-9]{1,2}\.[0-9]{1,2})\s=>\s(?<installed_version_major_minor>[0-9]{1,2}\.[0-9]{1,2})\.[0-9]{1,2}/.match(body)
@@ -121,8 +125,10 @@ module Bot
             if already_nagged_oldversion?(issue.number) || already_nagged_latest?(issue.number)
               puts "#{@repo}: [OLD VERSION] ❗⏪ #{issue.html_url}: #{issue.title} --> Skipping as already nagged, wanted #{@latest_release_version_major_minor} got #{version_info["installed_version_major_minor"]}"
             else
-              add_labels(issue, [@label_old_version])
-              Octokit.add_comment(@repo, issue.number, message("old_version"))
+              unless ENV['READ_ONLY'].present?
+                add_labels(issue, [@label_needs_verify_on_latest_version])
+                Octokit.add_comment(@repo, issue.number, message("old_version"))
+              end
               puts "#{@repo}: [OLD VERSION] ❗⏪ #{issue.html_url}: #{issue.title} --> Nagged, wanted #{@latest_release_version_major_minor} got #{version_info["installed_version_major_minor"]}"
             end
           end
@@ -132,8 +138,10 @@ module Bot
         return
       else
         # No envinfo block?
-        Octokit.add_comment(@repo, issue.number, message("no_envinfo"))
-        add_labels(issue, [@label_no_envinfo])
+        unless ENV['READ_ONLY'].present?
+          Octokit.add_comment(@repo, issue.number, message("no_envinfo"))
+          add_labels(issue, [@label_needs_envinfo])
+        end
         puts "️#{@repo}: [NO ENV INFO] ❗❔ #{issue.html_url}: #{issue.title} --> Nagged, no envinfo found"
       end
     end
@@ -144,6 +152,7 @@ module Bot
       if contains_envinfo?(issue)
         # Contains envinfo block
         remove_label(issue, @label_no_envinfo)
+        remove_label(issue, @label_needs_envinfo)
 
         version_info = /(\sreact-native:)\s?[\^~]?(?<requested_version>[0-9]{1,2}\.[0-9]{1,2}\.[0-9]{1,2})\s=>\s(?<installed_version_major_minor>[0-9]{1,2}\.[0-9]{1,2})\.[0-9]{1,2}/.match(body)
 
@@ -152,6 +161,7 @@ module Bot
           if version_info["installed_version_major_minor"] == @latest_release_version_major_minor
             puts "#{@repo}: [OLD VERSION] ⏪ #{issue.html_url}: #{issue.title} --> Latest is #{@latest_release_version_major_minor}, got #{version_info["installed_version_major_minor"]}, should remove label."
             remove_label(issue, @label_old_version)
+            remove_label(issue, @label_needs_verify_on_latest_version)
           end
         end
       end
@@ -160,6 +170,7 @@ module Bot
     def remove_label_if_contains_envinfo(issue, reason)
       if contains_envinfo?(issue) || optout_envinfo?(issue)
         remove_label(issue, @label_no_envinfo)
+        remove_label(issue, @label_needs_envinfo)
       end
     end
 
@@ -177,7 +188,7 @@ module Bot
         <<-MSG.strip_heredoc
 It looks like you are using an older version of React Native. Please update to the #{latest_release} and verify if the issue still exists.
 
-<details>The "#{@label_old_version}" label will be removed automatically once you edit your original post with the results of running `react-native info` on a project using the latest release.</details>
+<details>The "#{@label_needs_verify_on_latest_version}" label will be removed automatically once you edit your original post with the results of running `react-native info` on a project using the latest release.</details>
         MSG
       when "no_envinfo"
         <<-MSG.strip_heredoc
@@ -196,15 +207,19 @@ Can you run `react-native info` and edit your issue to include these results und
       end
 
       if new_labels.count > 0
+        unless ENV['READ_ONLY'].present?
+          Octokit.add_labels_to_an_issue(@repo, issue.number, new_labels)
+        end
         puts "#{@repo}: [LABELS] 📍 #{issue.html_url}: #{issue.title} --> Adding #{new_labels}"
-        Octokit.add_labels_to_an_issue(@repo, issue.number, new_labels)
       end
     end
 
     def remove_label(issue, label)
       if issue_contains_label(issue,label)
+        unless ENV['READ_ONLY'].present?
+          Octokit.remove_label(@repo, issue.number, label)
+        end
         puts "#{@repo}: [LABELS] ✂️ #{issue.html_url}: #{issue.title} --> Removing #{label}"
-        Octokit.remove_label(@repo, issue.number, label)
       end
     end
 
