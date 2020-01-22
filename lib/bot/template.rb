@@ -13,8 +13,9 @@ module Bot
       @label_resolution_no_template = "Resolution: No Template"
       @label_needs_issue_template = "Needs: Issue Template"
       @label_needs_author_feedback = "Needs: Author Feedback"
+      @label_needs_environment_info = "Needs: Environment Info"
+      @label_needs_triage = "Needs: Triage :mag:"
       @label_resolution_needs_more_information = "Resolution: Needs More Information"
-      @label_needs_triage = "Needs: Triage"
       @label_stale = "Stale"
       @label_for_discussion = "Type: Discussion"
       @label_core_team = "Core Team"
@@ -45,12 +46,12 @@ module Bot
     def candidates
       [
         {
-          :search => "repo:#{@repo} is:open is:issue -label:\"#{@label_for_discussion}\" -label:\"#{@label_core_team}\" -label:\"#{@label_rn_team}\" -label:\"#{@label_contributor}\" -label:\"#{@label_customer}\" -label:\"#{@label_partner}\" -label:\"#{@label_ci_test_failure}\" -label:\"#{@label_bug_report}\" -label:\"#{@label_bug_report_alt}\" -label:\"#{@label_type_bug_report}\" -label:\"#{@label_docs}\" -label:\"#{@label_for_stack_overflow}\" -label:\"#{@label_good_first_issue}\" -label:\"#{@label_resolution_no_template} -label:\"#{@label_needs_issue_template}\" -label:\"#{@label_tests}\" -label:\"#{@label_ci_test_failure}\" created:>=2020-01-17",
-          :action => 'close_template'
+          :search => "repo:#{@repo} is:open is:issue -label:\"#{@label_core_team}\" -label:\"#{@label_rn_team}\" -label:\"#{@label_contributor}\" -label:\"#{@label_customer}\" -label:\"#{@label_partner}\" -label:\"#{@label_needs_author_feedback}\" -label:\"#{@label_resolution_needs_more_information}\" -label:\"#{@label_needs_triage}\" -label:\"#{@label_bug_report}\" in:body created:>=#{1.hour.ago.to_date.to_s}",
+          :action => 'nag_template_missing'
         },
         {
-          :search => "repo:#{@repo} is:open is:issue -label:\"#{@label_core_team}\" -label:\"#{@label_rn_team}\" -label:\"#{@label_contributor}\" -label:\"#{@label_customer}\" -label:\"#{@label_partner}\" -label:\"#{@label_needs_author_feedback}\" -label:\"#{@label_resolution_needs_more_information}\" label:\"#{@label_bug_report}\" NOT \"React Native version\" in:body created:>=2019-05-08",
-          :action => 'nag_template'
+          :search => "repo:#{@repo} is:open is:issue -label:\"#{@label_core_team}\" -label:\"#{@label_rn_team}\" -label:\"#{@label_contributor}\" -label:\"#{@label_customer}\" -label:\"#{@label_partner}\" -label:\"#{@label_needs_author_feedback}\" -label:\"#{@label_resolution_needs_more_information}\" label:\"#{@label_needs_triage}\" NOT \"React Native version\" in:body created:>=2020-01-22",
+          :action => 'nag_template_envinfo'
         }
       ]
     end
@@ -59,8 +60,11 @@ module Bot
       if candidate[:action] == 'close_template'
         close_template(issue)
       end
-      if candidate[:action] == 'nag_template'
-        nag_template(issue)
+      if candidate[:action] == 'nag_template_missing'
+        nag_template_missing(issue)
+      end
+      if candidate[:action] == 'nag_template_envinfo'
+        nag_template_envinfo(issue)
       end
     end
 
@@ -80,6 +84,7 @@ module Bot
       text.gsub(regex, "")
     end
 
+    # not used at this time
     def close_template(issue)
       labels = [@label_needs_issue_template];
 
@@ -98,10 +103,18 @@ module Bot
       puts "#{@repo}: ️[TEMPLATE] ❗📋  #{issue.html_url}: #{issue.title} -> Missing template, closed"
     end
 
-    def nag_template(issue)
-      labels = [@label_needs_issue_template];
+    def nag_template_missing(issue)
+      add_comment(issue, nag_message)
+      add_labels(issue, [@label_needs_issue_template])
+    end
 
+    def nag_template_envinfo(issue)
       return if contains_envinfo?(issue)
+      add_nag_comment(issue, nag_message)
+      add_labels(issue, [@label_needs_environment_info])
+    end
+
+    def add_nag_comment(issue, message)
       return if issue_contains_label(issue, @label_core_team)
       return if issue_contains_label(issue, @label_rn_team)
       return if issue_contains_label(issue, @label_contributor)
@@ -109,9 +122,8 @@ module Bot
       return if issue_contains_label(issue, @label_partner)
       return if already_nagged?(issue.number)
 
-      Octokit.add_comment(@repo, issue.number, nag_message)
-      add_labels(issue, labels)
-      puts "#{@repo}: ️[TEMPLATE] ❗📋  #{issue.html_url}: #{issue.title} -> Incomplete template, nagged"
+      Octokit.add_comment(@repo, issue.number, message)
+      puts "#{@repo}: ️[TEMPLATE] ❗📋  #{issue.html_url}: #{issue.title}"
     end
 
     def add_labels(issue, labels)
@@ -127,14 +139,12 @@ module Bot
       end
     end
 
-
     def remove_label(issue, label)
       if issue_contains_label(issue,label)
         puts "#{@repo}: [LABELS] ✂️ #{issue.html_url}: #{issue.title} --> Removing #{label}"
         Octokit.remove_label(@repo, issue.number, label)
       end
     end
-
 
     def issue_contains_label(issue, label)
       existing_labels = []
