@@ -104,7 +104,7 @@ module Bot
     end
 
     def nag_template_missing(issue)
-      add_comment(issue, nag_message)
+      add_nag_comment(issue, nag_message)
       add_labels(issue, [@label_needs_issue_template])
     end
 
