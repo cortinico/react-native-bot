@@ -7,7 +7,6 @@ module Bot
     def initialize(repo)
       @repo = repo
 
-      @label_needs_triage = "Needs: Triage :mag:"
       @label_needs_environment_info = "Needs: Environment Info"
       @label_type_bug_report = "Type: Bug Report"
       @label_type_bug_fix = "Type: Bug Fix🐛"
@@ -141,16 +140,8 @@ module Bot
     def candidates
       [
         {
-          :search => "repo:#{@repo} is:issue label:\"#{@label_type_bug_report}\" -label:\"#{@label_bug}\"",
-          :action => "backfill"
-        },
-        {
-          :search => "repo:#{@repo} is:pr label:\"#{@label_type_bug_fix}\" -label:\"#{@label_bug}\"",
-          :action => "backfill"
-        },
-        {
-          :search => "repo:#{@repo} label:\"#{@label_impact_bug}\" -label:\"#{@label_bug}\"",
-          :action => "backfill"
+          :search => "repo:#{@repo} label:\"#{@label_bug}\" created:>=#{1.hour.ago.to_date.to_s}",
+          :action => "label"
         }
       ]
     end
@@ -159,7 +150,6 @@ module Bot
       if candidate[:action] == 'label'
         label_based_on_title(issue)
         label_based_on_envinfo(issue)
-        label_needs_triage(issue)
       end
       if candidate[:action] == 'backfill'
         backfill_labels(issue)
@@ -168,10 +158,6 @@ module Bot
 
     def backfill_labels(issue)
       add_labels!(issue, [@label_bug])
-    end
-
-    def label_needs_triage
-      labels = [@label_needs_triage]
     end
 
     def label_based_on_title(issue)

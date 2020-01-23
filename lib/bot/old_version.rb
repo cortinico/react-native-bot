@@ -41,28 +41,12 @@ module Bot
     def candidates
       [
         {
-          :search => "repo:#{@repo} is:issue is:open \"React Native version:\" in:body -label:\"#{@label_core_team}\" -label:\"#{@label_rn_team}\" -label:\"#{@label_contributor}\" -label:\"#{@label_customer}\" -label:\"#{@label_partner}\" -label:\"#{@label_for_discussion}\" -label:\"#{@label_stale}\" -label:\"#{@label_pr_pending}\" -label:\"#{@label_old_version}\" -label:\"#{@label_needs_verify_on_latest_version}\" created:>#{1.day.ago.to_date.to_s}",
+          :search => "repo:#{@repo} is:issue is:open \"React Native version:\" in:body -label:\"#{@label_core_team}\" -label:\"#{@label_rn_team}\" -label:\"#{@label_contributor}\" -label:\"#{@label_customer}\" -label:\"#{@label_partner}\" -label:\"#{@label_for_discussion}\" -label:\"#{@label_stale}\" -label:\"#{@label_pr_pending}\" -label:\"#{@label_old_version}\" -label:\"#{@label_needs_verify_on_latest_version}\" created:>#{1.hour.ago.to_date.to_s}",
           :action => "nag_old_version"
         },
         {
-          :search => "repo:#{@repo} is:issue is:open \"React Native version:\" in:body -label:\"#{@label_core_team}\" -label:\"#{@label_rn_team}\" -label:\"#{@label_contributor}\" -label:\"#{@label_customer}\" -label:\"#{@label_partner}\" -label:\"#{@label_for_discussion}\" -label:\"#{@label_stale}\" -label:\"#{@label_good_first_issue}\" -label:\"#{@label_pr_pending}\" -label:\"#{@label_old_version}\" -label:\"#{@label_needs_verify_on_latest_version}\" created:>#{7.day.ago.to_date.to_s} updated:>#{2.day.ago.to_date.to_s}",
-          :action => "nag_old_version"
-        },
-        {
-          :search => "repo:#{@repo} is:issue is:open \"React Native version:\" in:body -label:\"#{@label_core_team}\" -label:\"#{@label_rn_team}\" -label:\"#{@label_contributor}\" -label:\"#{@label_customer}\" -label:\"#{@label_partner}\" -label:\"#{@label_for_discussion}\" -label:\"#{@label_stale}\" -label:\"#{@label_good_first_issue}\" -label:\"#{@label_pr_pending}\" -label:\"#{@label_old_version}\" -label:\"#{@label_needs_verify_on_latest_version}\" label:\"#{@label_needs_envinfo}\" created:>#{7.day.ago.to_date.to_s} updated:>#{2.day.ago.to_date.to_s}",
-          :action => "nag_old_version"
-        },
-        {
-          :search => "repo:#{@repo} is:issue is:open \"Environment\" in:body label:\"#{@label_needs_verify_on_latest_version}\" -label:\"#{@label_stale}\" updated:>#{2.day.ago.to_date.to_s}",
+          :search => "repo:#{@repo} is:issue is:open label:\"#{@label_needs_verify_on_latest_version}\" -label:\"#{@label_stale}\" updated:>#{1.hour.ago.to_date.to_s}",
           :action => "remove_label_if_latest_version"
-        },
-        {
-          :search => "repo:#{@repo} is:issue is:open \"React Native version:\" in:body label:\"#{@label_needs_verify_on_latest_version}\" -label:\"#{@label_stale}\" updated:>#{2.day.ago.to_date.to_s}",
-          :action => "remove_label_if_latest_version"
-        },
-        {
-          :search => "repo:#{@repo} is:issue is:open label:\"#{@label_needs_envinfo}\"",
-          :action => "remove_label_if_contains_envinfo"
         }
       ]
     end
