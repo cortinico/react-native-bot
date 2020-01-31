@@ -9,10 +9,10 @@ module Bot
   ]
 
   @@hourlyOperations = [
-    Bot::Closer,
-    Bot::Labeler,
+    # Bot::Closer,
+    # Bot::Labeler,
     Bot::Template,
-    Bot::PullRequests,
+    # Bot::PullRequests,
     Bot::OldVersion
   ]
 

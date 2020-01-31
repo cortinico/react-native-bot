@@ -45,11 +45,11 @@ module Bot
     def candidates
       [
         {
-          :search => "repo:#{@repo} is:open is:issue -label:\"#{@label_core_team}\" -label:\"#{@label_rn_team}\" -label:\"#{@label_contributor}\" -label:\"#{@label_customer}\" -label:\"#{@label_partner}\" -label:\"#{@label_needs_author_feedback}\" -label:\"#{@label_resolution_needs_more_information}\" label:\"#{@label_needs_triage}\" NOT \"React Native version\" in:body created:>=2020-01-22",
+          :search => "repo:#{@repo} is:open is:issue -label:\"#{@label_core_team}\" -label:\"#{@label_rn_team}\" -label:\"#{@label_contributor}\" -label:\"#{@label_customer}\" -label:\"#{@label_partner}\" -label:\"#{@label_needs_environment_info}\" label:\"#{@label_needs_triage}\" created:>=#{2.hour.ago.to_date.to_s}",
           :action => 'nag_template_envinfo'
         },
         {
-          :search => "repo:#{@repo} is:open is:issue label:\"#{@label_needs_environment_info}\"",
+          :search => "repo:#{@repo} is:open is:issue label:\"#{@label_needs_environment_info}\" updated:>=#{2.hour.ago.to_date.to_s}",
           :action => 'verify_if_envinfo_added'
         }
 
