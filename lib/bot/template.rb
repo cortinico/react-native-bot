@@ -46,10 +46,6 @@ module Bot
     def candidates
       [
         {
-          :search => "repo:#{@repo} is:open is:issue -label:\"#{@label_core_team}\" -label:\"#{@label_rn_team}\" -label:\"#{@label_contributor}\" -label:\"#{@label_customer}\" -label:\"#{@label_partner}\" -label:\"#{@label_needs_author_feedback}\" -label:\"#{@label_resolution_needs_more_information}\" -label:\"#{@label_needs_triage}\" -label:\"#{@label_bug_report}\" in:body created:>=#{1.hour.ago.to_date.to_s}",
-          :action => 'nag_template_missing'
-        },
-        {
           :search => "repo:#{@repo} is:open is:issue -label:\"#{@label_core_team}\" -label:\"#{@label_rn_team}\" -label:\"#{@label_contributor}\" -label:\"#{@label_customer}\" -label:\"#{@label_partner}\" -label:\"#{@label_needs_author_feedback}\" -label:\"#{@label_resolution_needs_more_information}\" label:\"#{@label_needs_triage}\" NOT \"React Native version\" in:body created:>=2020-01-22",
           :action => 'nag_template_envinfo'
         }
@@ -57,12 +53,6 @@ module Bot
     end
 
     def process(issue, candidate)
-      if candidate[:action] == 'close_template'
-        close_template(issue)
-      end
-      if candidate[:action] == 'nag_template_missing'
-        nag_template_missing(issue)
-      end
       if candidate[:action] == 'nag_template_envinfo'
         nag_template_envinfo(issue)
       end
@@ -82,30 +72,6 @@ module Bot
       return "" unless text
       regex = /(?=<!--)([\s\S]*?-->)/m
       text.gsub(regex, "")
-    end
-
-    # not used at this time
-    def close_template(issue)
-      labels = [@label_needs_issue_template];
-
-      return if issue_contains_label(issue, @label_core_team)
-      return if issue_contains_label(issue, @label_rn_team)
-      return if issue_contains_label(issue, @label_contributor)
-      return if issue_contains_label(issue, @label_customer)
-      return if issue_contains_label(issue, @label_partner)
-
-      unless already_nagged?(issue.number)
-        Octokit.add_comment(@repo, issue.number, close_message)
-      end
-
-      Octokit.close_issue(@repo, issue.number)
-      add_labels(issue, labels)
-      puts "#{@repo}: ️[TEMPLATE] ❗📋  #{issue.html_url}: #{issue.title} -> Missing template, closed"
-    end
-
-    def nag_template_missing(issue)
-      add_nag_comment(issue, nag_message)
-      add_labels(issue, [@label_needs_issue_template])
     end
 
     def nag_template_envinfo(issue)
@@ -154,20 +120,6 @@ module Bot
       end
 
       existing_labels.include? label
-    end
-
-    def close_message
-      <<-MSG.strip_heredoc
-      <!--
-        {
-          "flagged_by":"react-native-bot",
-          "nag_reason": "no-template"
-        }
-      -->
-      We are automatically closing this issue because it does not appear to follow any of the provided [issue templates](https://github.com/facebook/react-native/issues/new/choose).
-
-      👉 [Click here if you want to report a reproducible bug or regression in React Native.](https://github.com/facebook/react-native/issues/new?template=bug_report.md)
-      MSG
     end
 
     def nag_message
