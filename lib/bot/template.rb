@@ -11,7 +11,6 @@ module Bot
       @label_bug_report = "Bug"
       @label_type_bug_report = "Type: Bug Report"
       @label_resolution_no_template = "Resolution: No Template"
-      @label_needs_issue_template = "Needs: Issue Template"
       @label_needs_author_feedback = "Needs: Author Feedback"
       @label_needs_environment_info = "Needs: Environment Info"
       @label_needs_triage = "Needs: Triage :mag:"
@@ -48,13 +47,21 @@ module Bot
         {
           :search => "repo:#{@repo} is:open is:issue -label:\"#{@label_core_team}\" -label:\"#{@label_rn_team}\" -label:\"#{@label_contributor}\" -label:\"#{@label_customer}\" -label:\"#{@label_partner}\" -label:\"#{@label_needs_author_feedback}\" -label:\"#{@label_resolution_needs_more_information}\" label:\"#{@label_needs_triage}\" NOT \"React Native version\" in:body created:>=2020-01-22",
           :action => 'nag_template_envinfo'
+        },
+        {
+          :search => "repo:#{@repo} is:open is:issue label:\"#{@label_needs_environment_info}\"",
+          :action => 'verify_if_envinfo_added'
         }
+
       ]
     end
 
     def process(issue, candidate)
       if candidate[:action] == 'nag_template_envinfo'
         nag_template_envinfo(issue)
+      end
+      if candidate[:action] == 'verify_if_envinfo_added'
+        verify_if_envinfo_added(issue)
       end
     end
 
@@ -78,6 +85,10 @@ module Bot
       return if contains_envinfo?(issue)
       add_nag_comment(issue, nag_message)
       add_labels(issue, [@label_needs_environment_info])
+    end
+
+    def verify_if_envinfo_added(issue)
+      remove_label(issue, @label_needs_environment_info) if contains_envinfo?(issue)
     end
 
     def add_nag_comment(issue, message)
