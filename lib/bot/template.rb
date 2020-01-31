@@ -130,7 +130,7 @@ module Bot
           "nag_reason": "incomplete-template"
         }
       -->
-      Thanks for submitting your issue. Can you take another look at your description and make sure the issue template has been filled in its entirety?
+      Thanks for submitting your issue. Please run `react-native info` in your terminal and copy the results into your issue description after "React Native version:". If you have already done this, please disregard this message.
 
       👉 [Click here if you want to take another look at the Bug Report issue template.](https://github.com/facebook/react-native/issues/new?template=bug_report.md)
       MSG
