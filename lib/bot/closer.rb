@@ -36,12 +36,12 @@ module Bot
     def candidates
       [
         {
-          :search => "repo:#{@repo} is:issue is:open label:\"#{@label_type_question}\"",
+          :search => "repo:#{@repo} is:issue is:open label:\"#{@label_type_question}\" updated:>=#{1.week.ago.to_date.to_s}",
           :message => "We are using GitHub issues exclusively to track bugs in React Native. GitHub may not be the ideal place to ask a question, but you can try asking over on [Stack Overflow](http://stackoverflow.com/questions/tagged/react-native), or on [Reactiflux](https://www.reactiflux.com/). You may also use [discuss.reactjs.org/](https://discuss.reactjs.org/) to discuss best practices.",
           :close_reason => "Issue is a Question"
         },
         {
-          :search => "repo:#{@repo} is:issue is:open label:\"#{@label_for_stack_overflow}\"",
+          :search => "repo:#{@repo} is:issue is:open label:\"#{@label_for_stack_overflow}\" updated:>=#{1.week.ago.to_date.to_s}",
           :message => "Please use [Stack Overflow](http://stackoverflow.com/questions/tagged/react-native) for this type of question.",
           :close_reason => "For Stack Overflow"
         },
@@ -64,11 +64,9 @@ module Bot
     end
 
     def nag(issue, reason)
-      unless ENV['READ_ONLY'].present?
-        add_labels(issue, ["Ran Commands"])
-        Octokit.add_comment(@repo, issue.number, reason[:message])
-        Octokit.close_issue(@repo, issue.number)
-      end
+      add_labels(issue, ["Ran Commands"])
+      Octokit.add_comment(@repo, issue.number, reason[:message])
+      Octokit.close_issue(@repo, issue.number)
 
       puts "#{@repo}: [CLOSERS] 🚫 #{issue.html_url}: #{issue.title} --> #{reason[:close_reason]}"
     end
