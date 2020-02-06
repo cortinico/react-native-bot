@@ -37,7 +37,7 @@ module Bot
       [
         {
           :search => "repo:#{@repo} is:issue is:open label:\"#{@label_type_question}\" updated:>=#{1.week.ago.to_date.to_s}",
-          :message => "We are using GitHub issues exclusively to track bugs in React Native. GitHub may not be the ideal place to ask a question, but you can try asking over on [Stack Overflow](http://stackoverflow.com/questions/tagged/react-native), or on [Reactiflux](https://www.reactiflux.com/). You may also use [discuss.reactjs.org/](https://discuss.reactjs.org/) to discuss best practices.",
+          :message => "We are using GitHub issues exclusively to track bugs in React Native. GitHub may not be the ideal place to ask a question, but you can try asking over on [Stack Overflow](http://stackoverflow.com/questions/tagged/react-native), or on [Reactiflux](https://www.reactiflux.com/).",
           :close_reason => "Issue is a Question"
         },
         {
