@@ -62,7 +62,7 @@ module Bot
           :close_reason => "No environment info, issue not updated in last seven days"
         },
         {
-          :search => "repo:#{@repo} is:issue is:open no:label created:>=#{1.week.ago.to_date.to_s}",
+          :search => "repo:#{@repo} is:issue is:open no:label created:>=#{2.hour.ago.to_date.to_s}",
           :message => "Based on the lack of labels applied to this issue, I am assuming it was created without following the issue template. To keep the backlog clean and actionable, please choose one of the issue templates when opening an issue: https://github.com/facebook/react-native/issues/new/choose.",
           :close_reason => "Issue has no labels, likely did not use a template"
         }
