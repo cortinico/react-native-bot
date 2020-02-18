@@ -60,11 +60,6 @@ module Bot
           :search => "repo:#{@repo} is:issue is:open label:\"#{@label_needs_envinfo}\" -label:\"#{@label_core_team}\" -label:\"#{@label_rn_team}\" -label:\"#{@label_customer}\" -label:\"#{@label_contributor}\" -label:\"#{@label_partner}\" -label:\"#{@label_for_discussion}\" -label:\"#{@label_pr_pending}\" updated:<#{7.days.ago.to_date.to_s}",
           :message => "I am closing this issue because it does not contain the necessary environment info, and there has been no followup in a while.\n\nIf you found this thread after encountering the same issue in the [latest release](https://github.com/facebook/react-native/releases), please feel free to create a new issue with up-to-date information by clicking [here](https://github.com/facebook/react-native/issues/new).",
           :close_reason => "No environment info, issue not updated in last seven days"
-        },
-        {
-          :search => "repo:#{@repo} is:issue is:open no:label created:>=#{2.hour.ago.to_date.to_s}",
-          :message => "Based on the lack of labels applied to this issue, I am assuming it was created without following the issue template. To keep the backlog clean and actionable, please choose one of the issue templates when opening an issue: https://github.com/facebook/react-native/issues/new/choose.",
-          :close_reason => "Issue has no labels, likely did not use a template"
         }
       ]
     end
