@@ -17,7 +17,6 @@ module Bot
   ]
 
   @@dailyOperations = [
-    Bot::Locker
   ]
 
   def self.runDaily

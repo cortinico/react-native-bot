@@ -11,7 +11,6 @@ module Bot
       @label_bug_report = "Bug"
       @label_type_bug_report = "Type: Bug Report"
       @label_resolution_no_template = "Resolution: No Template"
-      @label_needs_author_feedback = "Needs: Author Feedback"
       @label_needs_environment_info = "Needs: Environment Info"
       @label_needs_triage = "Needs: Triage :mag:"
       @label_resolution_needs_more_information = "Resolution: Needs More Information"
