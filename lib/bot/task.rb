@@ -9,7 +9,7 @@ module Bot
   ]
 
   @@hourlyOperations = [
-    Bot::Closer,
+    # Bot::Closer, # Disabled as label-actions and needs-attention take care of these
     Bot::Labeler,
     Bot::Template,
     Bot::PullRequests,

@@ -11,8 +11,10 @@ module Bot
       version_info = /v(?<major_minor>[0-9]{1,2}\.[0-9]{1,2})\.(?<patch>[0-9]{1,2})/.match(@latest_release.tag_name)
       @latest_release_version_major_minor = version_info['major_minor']
 
-      @label_no_envinfo = "Resolution: Missing Environment Info"
+      @label_no_envinfo = "Resolution: Missing Environment Info" # old unused label
       @label_needs_envinfo = "Needs: Environment Info"
+      @label_needs_author_feedback = "Needs: Author Feedback"
+      @label_needs_triage = "Needs: Triage :mag:"
       @label_pr_pending = "Resolution: PR Submitted"
       @label_old_version = "Resolution: Old Version"
       @label_needs_verify_on_latest_version = "Needs: Verify on Latest Version"
@@ -110,8 +112,9 @@ module Bot
               puts "#{@repo}: [OLD VERSION] ❗⏪ #{issue.html_url}: #{issue.title} --> Skipping as already nagged, wanted #{@latest_release_version_major_minor} got #{version_info["installed_version_major_minor"]}"
             else
               unless ENV['READ_ONLY'].present?
-                add_labels(issue, [@label_needs_verify_on_latest_version])
-                Octokit.add_comment(@repo, issue.number, message("old_version"))
+                add_labels(issue, [@label_needs_verify_on_latest_version, @label_needs_author_feedback])
+                remove_label(issue, @label_needs_triage)
+                # Octokit.add_comment(@repo, issue.number, message("old_version"))
               end
               puts "#{@repo}: [OLD VERSION] ❗⏪ #{issue.html_url}: #{issue.title} --> Nagged, wanted #{@latest_release_version_major_minor} got #{version_info["installed_version_major_minor"]}"
             end
@@ -123,8 +126,9 @@ module Bot
       else
         # No envinfo block?
         unless ENV['READ_ONLY'].present?
-          Octokit.add_comment(@repo, issue.number, message("no_envinfo"))
-          add_labels(issue, [@label_needs_envinfo])
+          # Octokit.add_comment(@repo, issue.number, message("no_envinfo"))
+          add_labels(issue, [@label_needs_envinfo, @label_needs_author_feedback])
+          remove_label(issue, @label_needs_triage)
         end
         puts "️#{@repo}: [NO ENV INFO] ❗❔ #{issue.html_url}: #{issue.title} --> Nagged, no envinfo found"
       end

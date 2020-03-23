@@ -12,6 +12,7 @@ module Bot
       @label_type_bug_report = "Type: Bug Report"
       @label_resolution_no_template = "Resolution: No Template"
       @label_needs_environment_info = "Needs: Environment Info"
+      @label_needs_author_feedback = "Needs: Author Feedback"
       @label_needs_triage = "Needs: Triage :mag:"
       @label_resolution_needs_more_information = "Resolution: Needs More Information"
       @label_stale = "Stale"
@@ -82,8 +83,9 @@ module Bot
 
     def nag_template_envinfo(issue)
       return if contains_envinfo?(issue)
-      add_nag_comment(issue, nag_message)
-      add_labels(issue, [@label_needs_environment_info])
+      # add_nag_comment(issue, nag_message)
+      add_labels(issue, [@label_needs_environment_info, @label_needs_author_feedback])
+      remove_label(issue, @label_needs_triage)
     end
 
     def verify_if_envinfo_added(issue)
