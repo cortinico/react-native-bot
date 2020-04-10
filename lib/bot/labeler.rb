@@ -11,6 +11,7 @@ module Bot
       @label_type_bug_report = "Type: Bug Report"
       @label_type_bug_fix = "Type: Bug Fix🐛"
       @label_bug = "Bug"
+      @label_needs_triage = "Needs: Triage :mag:"
       @label_impact_bug = "Impact: Bug"
       @label_android = "Platform: Android"
       @label_ios = "Platform: iOS"
@@ -140,7 +141,7 @@ module Bot
     def candidates
       [
         {
-          :search => "repo:#{@repo} label:\"#{@label_bug}\" created:>=#{1.hour.ago.to_date.to_s}",
+          :search => "repo:#{@repo} label:\"#{@label_needs_triage}\" created:>=#{1.hour.ago.to_date.to_s}",
           :action => "label"
         }
       ]
@@ -157,7 +158,7 @@ module Bot
     end
 
     def backfill_labels(issue)
-      add_labels!(issue, [@label_bug])
+      # add_labels!(issue, [@label_bug])
     end
 
     def label_based_on_title(issue)
