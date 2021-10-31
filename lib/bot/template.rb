@@ -72,7 +72,7 @@ module Bot
 
     def contains_envinfo?(issue)
       body = strip_comments(issue.body)
-      body =~ /Packages: \(wanted => installed\)/ || body =~ /React Native Environment Info:/ || body =~ /Environment:/ || body =~ /React Native version:/
+      body =~ /Packages: \(wanted => installed\)/ || body =~ /React Native Environment Info:/ || body =~ /Environment:/ || body =~ /React Native version:/ || body =~ /Output of `react-native info`/
     end
 
     def strip_comments(text)
